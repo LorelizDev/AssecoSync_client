@@ -2,7 +2,6 @@ import globals from 'globals';
 import pluginReact from 'eslint-plugin-react';
 import prettierPlugin from 'eslint-plugin-prettier';
 import eslintJs from '@eslint/js';
-import * as tseslint from 'typescript-eslint';
 
 export default [
 	// Configuración global
@@ -49,7 +48,4 @@ export default [
 
 	// Reglas recomendadas de ESLint
 	eslintJs.configs.recommended,
-
-	// Reglas recomendadas de TypeScript
-	...tseslint.configs.recommended,
 ];
