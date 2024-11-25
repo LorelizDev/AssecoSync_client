@@ -1,17 +1,41 @@
 {
-  "name": "client",
+  "name": "assecosync_client",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Running tests...\"",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "prepare": "husky"
+  },
+  "comentarios": {
+    "lint": "Este script ejecuta ESLint en todo el proyecto para verificar si hay errores.",
+    "lint:fix": " Este script ejecuta ESLint y corrige automáticamente los problemas que puedan solucionarse.",
+    "format": "Este script ejecuta Prettier para formatear todos los archivos en el proyecto."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@eslint/js": "^9.15.0",
+    "eslint": "^9.15.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "globals": "^15.12.0",
+    "prettier": "^3.3.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --cache --fix",
+      "prettier --write"
+    ]
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
