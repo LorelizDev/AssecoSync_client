@@ -8,10 +8,10 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
-    "prepare": "husky install",
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "prepare": "husky"
   },
   "comentarios": {
     "lint": "Este script ejecuta ESLint en todo el proyecto para verificar si hay errores.",
@@ -41,6 +41,7 @@
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.0.0",
     "globals": "^15.12.0",
+    "husky": "^9.1.7",
     "prettier": "^3.3.3",
     "typescript-eslint": "^8.15.0",
     "vite": "^5.4.11",
