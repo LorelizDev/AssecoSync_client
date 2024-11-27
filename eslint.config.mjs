@@ -7,6 +7,7 @@ export default [
 	// Configuración global
 	{
 		languageOptions: {
+			parser: '@babel/eslint-parser',
 			globals: { ...globals.browser, ...globals.node },
 		},
 		plugins: {

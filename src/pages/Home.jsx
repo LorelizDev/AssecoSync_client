@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import CustomButton from '../components/Button';
 import Input from '../components/Input';
+import { TimeClock } from '../components/TimeClock';
 
 const Home = () => {
   // Estado para manejar el valor del input
@@ -26,6 +27,7 @@ const Home = () => {
         placeholder="Escribe algo..."
       />
       <CustomButton onClick={handleButtonClick}>Iniciar sesión</CustomButton>
+      <TimeClock />
     </div>
   );
 };
