@@ -5,6 +5,7 @@ import EmployeeList from '../components/EmployeeList'; // Import the EmployeeLis
 const AdminEmployeeList = () => {
   const employees = [
     {
+      profilePicture: '../src/assets/images/profile-pictures/alan.jpg',
       id: '0001',
       name: 'Alan',
       lastName: 'Montalvo Amador',
@@ -12,6 +13,7 @@ const AdminEmployeeList = () => {
       position: 'Office Manager',
     },
     {
+      profilePicture: '../src/assets/images/profile-pictures/alejandro.jpg',
       id: '0002',
       name: 'Alejandro',
       lastName: 'Iglesias Linares',
@@ -20,6 +22,7 @@ const AdminEmployeeList = () => {
     },
 
     {
+      profilePicture: '../src/assets/images/profile-pictures/ana.jpg',
       id: '00003',
       name: 'Ana',
       lastName: 'García',
@@ -27,6 +30,7 @@ const AdminEmployeeList = () => {
       position: 'UI Designer',
     },
     {
+      profilePicture: '../src/assets/images/profile-pictures/carla.jpg',
       id: '00004',
       name: 'Carla',
       lastName: 'Vásquez Aguirre',
@@ -34,6 +38,7 @@ const AdminEmployeeList = () => {
       position: 'PR Manager',
     },
     {
+      profilePicture: '../src/assets/images/profile-pictures/carlos.jpg',
       id: '00005',
       name: 'Carlos',
       lastName: 'Solís Reynoso',
@@ -41,6 +46,7 @@ const AdminEmployeeList = () => {
       position: 'Head of IT',
     },
     {
+      profilePicture: '../src/assets/images/profile-pictures/catalina.jpg',
       id: '00006',
       name: 'Catalina',
       lastName: 'Martín Blanco',
@@ -48,6 +54,7 @@ const AdminEmployeeList = () => {
       position: 'Senior Backend Developer',
     },
     {
+      profilePicture: '../src/assets/images/profile-pictures/cristian.jpg',
       id: '00007',
       name: 'Cristian',
       lastName: 'Mena Sarmiento',
@@ -55,6 +62,7 @@ const AdminEmployeeList = () => {
       position: 'Budget Analyst',
     },
     {
+      profilePicture: '../src/assets/images/profile-pictures/daniela.jpg',
       id: '00008',
       name: 'Daniela',
       lastName: 'Suárez Gil',
@@ -62,6 +70,7 @@ const AdminEmployeeList = () => {
       position: 'Head of HR',
     },
     {
+      profilePicture: '../src/assets/images/profile-pictures/diego.jpg',
       id: '00009',
       name: 'Diego',
       lastName: 'Colón Sánchez',
