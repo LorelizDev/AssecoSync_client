@@ -8,6 +8,11 @@ module.exports = {
       colors: {
         primary: '#00A3E0',
         hoverButton: '#31B8EA',
+        font: '#1D1D1D',
+        primarybg: '#F6FAFD',
+        secondarybg: '#EEF6FB',
+        grayicon: '#868686',
+        darkicon: '#1D1D1D',
       },
       fontFamily: {
         mainFont: ['Roboto', 'sans-serif'],

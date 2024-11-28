@@ -1,4 +1,26 @@
 import { createBrowserRouter } from 'react-router-dom';
+import Layout from '../layout/Layout';
+import LoginPage from '../pages/Login';
+import Dashboard from '../pages/Dashboard';
+
+export const router = createBrowserRouter([{
+    path : '/',
+    element: <Layout/>,
+    children: [
+      {
+        index: true,
+        element: <LoginPage />,
+      },
+      {
+        // Nueva ruta para el Dashboard
+        path: 'dashboard',
+        element: <Dashboard />,
+      },
+    ],
+  },
+]);
+
+import { createBrowserRouter } from 'react-router-dom';
 //import { Layout } from '../layout/Layout.jsx';
 // import { EmployeeRoutes, AdminRoutes } from '../layout/PrivateRoutes.jsx';
 // import {
@@ -17,10 +39,10 @@ import { createBrowserRouter } from 'react-router-dom';
 //     Stadistics
 // } from '../pages';
 
-export const router = createBrowserRouter([{
-    path : '/',
-    element: <Layout/>,
-    children: [
+// export const router = createBrowserRouter([{
+//     path : '/',
+//     element: <Layout/>,
+//     children: [
 //             {
 //                 path:'login',
 //                 element: <Login/>
@@ -29,11 +51,11 @@ export const router = createBrowserRouter([{
 //             path : 'auth',
 //             element: <AuthRoutes/>,
 //             children: [
-                {
-                    index: true,
-                    path: 'home',
-                    element: <Home/>
-                },
+                // {
+                //     index: true,
+                //     path: 'home',
+                //     element: <Home/>
+                // },
 //                 {
 //                     path : 'employee',
 //                     element: <EmployeeRoutes/>,
@@ -124,5 +146,5 @@ export const router = createBrowserRouter([{
 //                     },
 //             ],
 //             },
-        ],
-}])
+//         ],
+// }])
