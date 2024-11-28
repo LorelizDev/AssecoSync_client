@@ -6,6 +6,7 @@ const EmployeeList = ({ employees }) => {
       <table className="w-full text-xs">
         <thead className="bg-[#fcfcfc]">
           <tr>
+            <th className="p-3 text-left">Profile</th>
             <th className="p-3 text-left">ID</th>
             <th className="p-3 text-left">Nombres</th>
             <th className="p-3 text-left">Apellidos</th>
@@ -16,6 +17,13 @@ const EmployeeList = ({ employees }) => {
         <tbody>
           {employees.map((employee, index) => (
             <tr key={index} className="border-b">
+              <td className="p-3">
+                <img
+                  src={employee.profilePicture}
+                  alt={`${employee.name} ${employee.lastName}`}
+                  className="w-10 h-10 rounded-full"
+                />
+              </td>
               <td className="p-3">{employee.id}</td>
               <td className="p-3">{employee.name}</td>
               <td className="p-3">{employee.lastName}</td>
