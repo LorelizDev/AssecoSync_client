@@ -1,7 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { FaPlay } from "react-icons/fa6";
 import { FaStop } from "react-icons/fa6";
 import { FaPause } from "react-icons/fa";
+import { LocationSelector } from '../components/LocationSelector';
 
 // Componente de Cronómetro
 export const TimeClock = () => {
@@ -108,72 +109,81 @@ export const TimeClock = () => {
 
   return (
     <div className="flex flex-col items-center bg-primarybg font-mainFont">
+      <LocationSelector />
       <div className="flex items-center max-w-2xl p-4 bg-white rounded-lg shadow-md">
-
-      <div className="flex items-center space-x-4">
-        {!timer.isRunning ? (
-          <button 
-            onClick={startTimer} 
-            className="text-primary border border-primary px-6 py-4 rounded hover:bg-hoverButton"
-          >
-            <FaPlay />
-          </button>
-        ) : (
-          <button 
-            onClick={pauseTimer} 
-            className= "text-primary border border-primary px-6 py-4 rounded hover:bg-hoverButton"
-          >
-            <FaPause />
-          </button>
-        )}
-        <div/>
-
-      <div className="relative w-44 h-44">
-        {/* Círculo de fondo */}
-        <div 
-          className="absolute inset-0 rounded-full border-8 border-primary"
-          style={{
-            transform: 'rotate(-90deg)',
-            transformOrigin: 'center'
-          }}
-        />
-        
-        {/* Círculo de progreso */}
-        <div 
-          className="absolute inset-0 rounded-full border-8 border-primary transition-all duration-1000 ease-linear"
-          style={{
-            clipPath: `path('M50,50 L50,0 A50,50 0 ${progressPercentage > 50 ? 1 : 0},1 ${
-              50 + 50 * Math.sin(Math.PI * 2 * progressPercentage / 100)
-            },${
-              50 - 50 * Math.cos(Math.PI * 2 * progressPercentage / 100)
-            } Z')`,
-            transform: 'rotate(-90deg)',
-            transformOrigin: 'center',
-            backgroundColor: circleColor,
-            opacity: 0.7
-          }}
-        />
-
-        {/* Contenedor del tiempo */}
-        <div className="absolute inset-0 flex items-center justify-center z-10">
-          <div className="text-center">
-            <div className="text-4xl font-bold text-font">
-              {formatTime(timer.hours)}:{formatTime(timer.minutes)}:{formatTime(timer.seconds)}
+        <div className="flex items-center space-x-4">
+          <div className="flex flex-col items-center">
+            
+  
+            {/* Botón de Play/Pause */}
+            {!timer.isRunning ? (
+              <button
+                onClick={startTimer}
+                className="text-primary border border-primary px-6 py-4 rounded hover:bg-hoverButton"
+              >
+                <FaPlay />
+              </button>
+            ) : (
+              <button
+                onClick={pauseTimer}
+                className="text-primary border border-primary px-6 py-4 rounded hover:bg-hoverButton"
+              >
+                <FaPause />
+              </button>
+            )}
+          </div>
+  
+          {/* Círculo de Progreso */}
+          <div className="relative w-44 h-44">
+            {/* Círculo de fondo */}
+            <div
+              className="absolute inset-0 rounded-full border-8 border-primary"
+              style={{
+                transform: 'rotate(-90deg)',
+                transformOrigin: 'center',
+              }}
+            />
+  
+            {/* Círculo de progreso */}
+            <div
+              className="absolute inset-0 rounded-full border-8 border-primary transition-all duration-1000 ease-linear"
+              style={{
+                clipPath: `path('M50,50 L50,0 A50,50 0 ${
+                  progressPercentage > 50 ? 1 : 0
+                },1 ${
+                  50 + 50 * Math.sin((Math.PI * 2 * progressPercentage) / 100)
+                },${
+                  50 - 50 * Math.cos((Math.PI * 2 * progressPercentage) / 100)
+                } Z')`,
+                transform: 'rotate(-90deg)',
+                transformOrigin: 'center',
+                backgroundColor: circleColor,
+                opacity: 0.7,
+              }}
+            />
+  
+            {/* Contenedor del tiempo */}
+            <div className="absolute inset-0 flex items-center justify-center z-10">
+              <div className="text-center">
+                <div className="text-4xl font-bold text-font">
+                  {formatTime(timer.hours)}:{formatTime(timer.minutes)}:
+                  {formatTime(timer.seconds)}
+                </div>
+              </div>
             </div>
+          </div>
+  
+          {/* Botón de Stop */}
+          <div className="flex items-center">
+            <button
+              onClick={stopTimer}
+              className="text-primary border border-primary px-6 py-4 rounded hover:bg-hoverButton"
+            >
+              <FaStop />
+            </button>
           </div>
         </div>
       </div>
-
-        <div className="flex items-center">
-          <button 
-            onClick={stopTimer} 
-            className="text-primary border border-primary px-6 py-4 rounded hover:bg-hoverButton"
-          >
-            <FaStop />
-          </button>
-        </div>
-      </div>
     </div>
-    </div>
-  );
-};
+  )};
+  
