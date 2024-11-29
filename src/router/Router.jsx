@@ -20,7 +20,7 @@ export const router = createBrowserRouter([{
   },
 ]);
 
-import { createBrowserRouter } from 'react-router-dom';
+// import { createBrowserRouter } from 'react-router-dom';
 //import { Layout } from '../layout/Layout.jsx';
 // import { EmployeeRoutes, AdminRoutes } from '../layout/PrivateRoutes.jsx';
 // import {
