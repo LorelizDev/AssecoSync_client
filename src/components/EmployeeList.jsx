@@ -2,7 +2,7 @@ import React from 'react';
 
 const EmployeeList = ({ employees }) => {
   return (
-    <div className="w-[1360] bg-white rounded-[14px] border border[#b8b8b8] overflow-hidden">
+    <div className="w-full overflow-x-auto bg-white rounded-[14px] border border[#b8b8b8]">
       <table className="w-full text-xs">
         <thead className="bg-[#fcfcfc]">
           <tr>

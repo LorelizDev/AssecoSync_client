@@ -87,18 +87,21 @@ const AdminEmployeeList = () => {
         <Sidebar />
       </div>
 
-      {/* Área principal (80% del ancho) */}
-      <div className="w-4/5 bg-primarybg">
-        <div className="container mx-auto p-6">
+      {/* Main Area */}
+      <div className="relative w-4/5 bg-primarybg">
+        <div className="container mx-auto px-6 py-6">
           <h1 className="text-1xl text-primary font-bold mb-6">
             Lista de empleados
           </h1>
-          <EmployeeList employees={employees} />{' '}
-          {/* Use the EmployeeList component */}
+
+          {/* Wrapper to break out of container */}
+          <div className="absolute -right-[22%] w-[120%]">
+            <EmployeeList employees={employees} />
+          </div>
         </div>
       </div>
 
-      {/* Lado derecho (20% del ancho) */}
+      {/* Right Side */}
       <div className="w-1/5 bg-secondarybg"></div>
     </div>
   );
