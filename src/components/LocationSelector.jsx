@@ -9,7 +9,6 @@ export const LocationSelector = () => {
   
     return (
       <div className="flex items-center gap-4">
-        {/* Ícono de Casa */}
         <div
           className={`flex items-center transition-opacity ${
             isRemote ? 'opacity-50' : 'opacity-100'
@@ -20,7 +19,6 @@ export const LocationSelector = () => {
           
         </div>
   
-        {/* Switch */}
         <FormControlLabel
           control={
             <Switch
@@ -31,7 +29,6 @@ export const LocationSelector = () => {
           }
         />
   
-        {/* Ícono de Oficina */}
         <div
           className={`flex transition-opacity ${
             isRemote ? 'opacity-100' : 'opacity-50'

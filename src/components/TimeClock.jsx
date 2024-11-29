@@ -113,9 +113,6 @@ export const TimeClock = () => {
       <div className="flex items-center max-w-2xl p-4 bg-white rounded-lg shadow-md">
         <div className="flex items-center space-x-4">
           <div className="flex flex-col items-center">
-            
-  
-            {/* Botón de Play/Pause */}
             {!timer.isRunning ? (
               <button
                 onClick={startTimer}
@@ -132,10 +129,8 @@ export const TimeClock = () => {
               </button>
             )}
           </div>
-  
-          {/* Círculo de Progreso */}
+
           <div className="relative w-44 h-44">
-            {/* Círculo de fondo */}
             <div
               className="absolute inset-0 rounded-full border-8 border-primary"
               style={{
@@ -143,8 +138,6 @@ export const TimeClock = () => {
                 transformOrigin: 'center',
               }}
             />
-  
-            {/* Círculo de progreso */}
             <div
               className="absolute inset-0 rounded-full border-8 border-primary transition-all duration-1000 ease-linear"
               style={{
@@ -162,7 +155,6 @@ export const TimeClock = () => {
               }}
             />
   
-            {/* Contenedor del tiempo */}
             <div className="absolute inset-0 flex items-center justify-center z-10">
               <div className="text-center">
                 <div className="text-4xl font-bold text-font">
@@ -173,7 +165,6 @@ export const TimeClock = () => {
             </div>
           </div>
   
-          {/* Botón de Stop */}
           <div className="flex items-center">
             <button
               onClick={stopTimer}
