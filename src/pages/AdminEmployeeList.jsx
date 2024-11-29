@@ -1,6 +1,7 @@
 import React from 'react';
 import Sidebar from '../components/Sidebar';
 import EmployeeList from '../components/EmployeeList'; // Import the EmployeeList component
+import EmployeeFilter from '../components/EmployeeFilter';
 
 const AdminEmployeeList = () => {
   const employees = [
@@ -95,6 +96,9 @@ const AdminEmployeeList = () => {
           </h1>
 
           {/* Wrapper to break out of container */}
+        </div>
+        <div className="absolute -right-[22%] w-[120%]">
+          <EmployeeFilter />
           <div className="absolute -right-[22%] w-[120%]">
             <EmployeeList employees={employees} />
           </div>
