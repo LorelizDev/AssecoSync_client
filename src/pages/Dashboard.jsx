@@ -5,6 +5,8 @@ import CalendarComponent from '../components/Calendar';
 import Button from '../components/Button';
 import StatusVacations from '../components/StatusVacations';
 import { TimeClock } from '../components/TimeClock';
+import { TimeRegister } from '../components/TimeRegister';
+import { StartTime } from '../components/StartTime';
 
 const Dashboard = () => {
   const navigate = useNavigate(); // Inicializar navegación
@@ -22,8 +24,10 @@ const Dashboard = () => {
 
       {/* Área principal (80% del ancho) */}
       <div className="w-4/5 bg-primarybg flex justify-between items-start pt-8">
-        <div className="w-1/2 flex flex-col items-center space-y-4">
+        <div className="w-1/2 flex flex-col justify-center items-center space-y-4">
+          <StartTime />
           <TimeClock />
+          <TimeRegister />
         </div>
 
         <div className="w-1/2 flex flex-col items-center space-y-4">

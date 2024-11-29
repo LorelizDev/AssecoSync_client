@@ -107,8 +107,8 @@ export const TimeClock = () => {
   const circleColor = `rgba(0, 163, 224, ${1 - progressPercentage / 100})`;
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen bg-primarybg font-mainFont">
-      <div className="relative flex items-center max-w-2xl p-6 bg-white rounded-lg shadow-md">
+    <div className="flex flex-col items-center bg-primarybg font-mainFont">
+      <div className="flex items-center max-w-2xl p-4 bg-white rounded-lg shadow-md">
 
       <div className="flex items-center space-x-4">
         {!timer.isRunning ? (
