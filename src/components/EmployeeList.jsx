@@ -5,7 +5,7 @@ const EmployeeList = ({ employees }) => {
     <div className="w-full overflow-x-auto bg-white rounded-[14px] border border[#b8b8b8]">
       <table className="w-full text-xs">
         <thead className="bg-[#fcfcfc]">
-          <tr>
+          <tr className="text-base">
             <th className="p-3 text-left">Profile</th>
             <th className="p-3 text-left">ID</th>
             <th className="p-3 text-left">Nombres</th>
@@ -14,7 +14,7 @@ const EmployeeList = ({ employees }) => {
             <th className="p-3 text-left">Cargo</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="text-base">
           {employees.map((employee, index) => (
             <tr key={index} className="border-b">
               <td className="p-3">

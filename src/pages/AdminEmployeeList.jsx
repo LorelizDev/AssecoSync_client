@@ -82,26 +82,28 @@ const AdminEmployeeList = () => {
   ];
 
   return (
-    <div className="flex h-screen">
+    <div
+      className="flex flex-col md:flex-row 
+    h-screen"
+    >
       {/* Sidebar */}
-      <div className="relative w-20 bg-primarybg">
+      <div className="hidden md:block md:relative md:w-20 bg-primarybg">
         <Sidebar />
       </div>
 
       {/* Main Area */}
-      <div className="relative w-4/5 bg-primarybg">
+      <div className="w-full md:w-4/5 bg-primarybg relative">
         <div className="container mx-auto px-6 py-6">
-          <h1 className="text-1xl text-primary font-bold mb-6">
+          <h1 className="text-1xl text-primary font-bold mb-4">
             Lista de empleados
           </h1>
-
           {/* Wrapper to break out of container */}
         </div>
-        <div className="absolute -right-[22%] w-[120%]">
+        <div className="relative px-4 md:pl-[1.2rem] pb-4 max-w-fit">
           <EmployeeFilter />
-          <div className="absolute -right-[22%] w-[120%]">
-            <EmployeeList employees={employees} />
-          </div>
+        </div>
+        <div className="w-full md:absolute md:-right-[22%] md:w-[120%]">
+          <EmployeeList employees={employees} />
         </div>
       </div>
 
