@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import Layout from '../layout/Layout';
 import LoginPage from '../pages/Login';
 import Dashboard from '../pages/Dashboard';
+import AdminEmployeeList from '../pages/AdminEmployeeList';
 import { RegisterForm } from '../pages/Register';
 
 export const router = createBrowserRouter([{
@@ -16,6 +17,11 @@ export const router = createBrowserRouter([{
         // Nueva ruta para el Dashboard
         path: 'dashboard',
         element: <Dashboard />,
+      },
+      {
+        // New rout AdminEmployeeList
+        path: 'AdminEmployeeList',
+        element: <AdminEmployeeList />,
       },
       {
         path: 'register',
