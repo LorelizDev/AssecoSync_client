@@ -17,6 +17,11 @@ const EmployeeFilter = ({ onSearch }) => {
     onSearch({ [selectedFilter]: filterValue });
   };
 
+  const handleFilterChange = (e) => {
+    setSelectedFilter(e.target.value);
+    setFilterValue(''); // Reset the text input
+  };
+
   return (
     <div className="flex flex-col md:flex-row items-center bg-white border rounded-lg w-full max-w-4xl">
       {/* Filter Icon and Label */}
@@ -31,7 +36,7 @@ const EmployeeFilter = ({ onSearch }) => {
         {/* Dropdown for Filter Selection */}
         <select
           value={selectedFilter}
-          onChange={(e) => setSelectedFilter(e.target.value)}
+          onChange={handleFilterChange}
           className="border rounded p-1 text-sm"
         >
           {filters.map((filter) => (
