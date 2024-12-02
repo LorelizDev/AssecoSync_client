@@ -87,7 +87,7 @@ const AdminEmployeeList = () => {
     h-screen"
     >
       {/* Sidebar */}
-      <div className="hidden md:block md:relative md:w-20 bg-primarybg">
+      <div className="z-10 hidden md:block md:relative md:w-20 bg-primarybg">
         <Sidebar />
       </div>
 
