@@ -37,7 +37,7 @@ const EmployeeFilter = ({ onSearch }) => {
         <select
           value={selectedFilter}
           onChange={handleFilterChange}
-          className="border rounded p-1 text-sm"
+          className="border rounded p-1 text-sm focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
         >
           {filters.map((filter) => (
             <option key={filter.key} value={filter.key}>
@@ -54,7 +54,7 @@ const EmployeeFilter = ({ onSearch }) => {
           placeholder={`Buscar por ${selectedFilter}`}
           value={filterValue}
           onChange={(e) => setFilterValue(e.target.value)}
-          className="w-full pl-2 h-10 border border-gray-300 rounded"
+          className="w-full pl-2 h-10 border border-gray-300 rounded focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
         />
       </div>
 
