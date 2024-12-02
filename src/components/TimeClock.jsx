@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import { FaPlay } from "react-icons/fa6";
-import { FaStop } from "react-icons/fa6";
-import { FaPause } from "react-icons/fa";
+import { FaPlay } from 'react-icons/fa6';
+import { FaStop } from 'react-icons/fa6';
+import { FaPause } from 'react-icons/fa';
 import { LocationSelector } from '../components/LocationSelector';
 
 // Componente de Cronómetro
@@ -11,7 +11,7 @@ export const TimeClock = () => {
     seconds: 0,
     minutes: 0,
     hours: 0,
-    isRunning: false
+    isRunning: false,
   });
 
   // Referencia para manejar el intervalo
@@ -20,45 +20,51 @@ export const TimeClock = () => {
 
   const calculateProgressPercentage = () => {
     const TOTAL_SECONDS_IN_8_HOURS = 8 * 60 * 60; // 8 horas en segundos
-    const currentProgress = (totalSecondsRef.current / TOTAL_SECONDS_IN_8_HOURS) * 100;
+    const currentProgress =
+      (totalSecondsRef.current / TOTAL_SECONDS_IN_8_HOURS) * 100;
     return Math.min(currentProgress, 100);
   };
 
   // Función para pasar los números a formato string
-  const formatTime = (value) => 
-    value.toString().padStart(2, '0'); //padStart indica que el string sea de longitud 2 y el segundo parámetro '0' es el valor que se añade al string si es menor a dos dígitos
-//   formatTime(5)   // Resultado: "05"
-//   formatTime(12)  // Resultado: "12"
-//   formatTime(0)   // Resultado: "00"
+  const formatTime = (value) => value.toString().padStart(2, '0'); //padStart indica que el string sea de longitud 2 y el segundo parámetro '0' es el valor que se añade al string si es menor a dos dígitos
+  //   formatTime(5)   // Resultado: "05"
+  //   formatTime(12)  // Resultado: "12"
+  //   formatTime(0)   // Resultado: "00"
 
   // Función para iniciar el cronómetro
   const startTimer = () => {
-    if (!timer.isRunning) { // Impide que se ejecute la función si el cronómetro está en ejecución
-      intervalRef.current = setInterval(() => { //guarda la referencia del intervalo de setInterval que ejecuta el temporizador cada segundo y current permite accder a la referencia guardada
-        setTimer(prevTimer => { //prevTimer trae los datos del estado anterior del temporizador para actualizarlos
+    if (!timer.isRunning) {
+      // Impide que se ejecute la función si el cronómetro está en ejecución
+      intervalRef.current = setInterval(() => {
+        //guarda la referencia del intervalo de setInterval que ejecuta el temporizador cada segundo y current permite accder a la referencia guardada
+        setTimer((prevTimer) => {
+          //prevTimer trae los datos del estado anterior del temporizador para actualizarlos
           let newSeconds = prevTimer.seconds + 1;
           let newMinutes = prevTimer.minutes;
           let newHours = prevTimer.hours;
 
-           // Incrementar contador de segundos totales
-           totalSecondsRef.current += 1;
+          // Incrementar contador de segundos totales
+          totalSecondsRef.current += 1;
 
-          if (newSeconds === 60) { //Cuando los segundos llegan a 60, se resetean a 0 y se suma 1 minuto
+          if (newSeconds === 60) {
+            //Cuando los segundos llegan a 60, se resetean a 0 y se suma 1 minuto
             newSeconds = 0;
             newMinutes += 1;
           }
 
-          if (newMinutes === 60) { //Cuando los minutos llegan a 60, se resetean a 0 y se suma 1 hora
+          if (newMinutes === 60) {
+            //Cuando los minutos llegan a 60, se resetean a 0 y se suma 1 hora
             newMinutes = 0;
             newHours += 1;
           }
 
-          return { //Devuelve el estado actualizado del temporizador, es decir, pone en marcha el temporizador
+          return {
+            //Devuelve el estado actualizado del temporizador, es decir, pone en marcha el temporizador
             ...prevTimer,
             seconds: newSeconds,
             minutes: newMinutes,
             hours: newHours,
-            isRunning: true
+            isRunning: true,
           };
         });
       }, 1000);
@@ -67,38 +73,43 @@ export const TimeClock = () => {
 
   // Función para pausar el cronómetro
   const pauseTimer = () => {
-    if (intervalRef.current) { //Verifica si el cronómetro está en marcha
+    if (intervalRef.current) {
+      //Verifica si el cronómetro está en marcha
       clearInterval(intervalRef.current); //Pausa el temporrizador
       intervalRef.current = null; //Limpia la referencia del intervalo
-      setTimer(prevTimer => ({ //Actualiza el estado del temporizador y se pasa isRunning a false para indicar que el temporizador ha sido pausado
+      setTimer((prevTimer) => ({
+        //Actualiza el estado del temporizador y se pasa isRunning a false para indicar que el temporizador ha sido pausado
         ...prevTimer,
-        isRunning: false
+        isRunning: false,
       }));
     }
   };
 
   // Función para detener y resetear el cronómetro
   const stopTimer = () => {
-    if (intervalRef.current) { //Comprueba que el cronómetro está en marcha o pausado
+    if (intervalRef.current) {
+      //Comprueba que el cronómetro está en marcha o pausado
       clearInterval(intervalRef.current); //Detiene el temporizador
       intervalRef.current = null; //Indica que no hay ningún intervalo en marcha
     }
 
-       // Resetear también los segundos totales
-       totalSecondsRef.current = 0;
-    
-    setTimer({ //Reestablece todas las propiedades de 0
+    // Resetear también los segundos totales
+    totalSecondsRef.current = 0;
+
+    setTimer({
+      //Reestablece todas las propiedades de 0
       seconds: 0,
       minutes: 0,
       hours: 0,
-      isRunning: false
+      isRunning: false,
     });
   };
 
   // Limpiar intervalo al desmontar el componente
   useEffect(() => {
     return () => {
-      if (intervalRef.current) { //Si el intervalo sigue activo lo para con "clearInterval"
+      if (intervalRef.current) {
+        //Si el intervalo sigue activo lo para con "clearInterval"
         clearInterval(intervalRef.current);
       }
     };
@@ -154,7 +165,7 @@ export const TimeClock = () => {
                 opacity: 0.7,
               }}
             />
-  
+
             <div className="absolute inset-0 flex items-center justify-center z-10">
               <div className="text-center">
                 <div className="text-4xl font-bold text-font">
@@ -164,7 +175,7 @@ export const TimeClock = () => {
               </div>
             </div>
           </div>
-  
+
           <div className="flex items-center">
             <button
               onClick={stopTimer}
@@ -176,5 +187,5 @@ export const TimeClock = () => {
         </div>
       </div>
     </div>
-  )};
-  
+  );
+};
