@@ -16,7 +16,7 @@ const EmployeeList = ({ employees }) => {
         </thead>
         <tbody className="text-base">
           {employees.map((employee, index) => (
-            <tr key={index} className="border-b">
+            <tr key={index} className="border-b hover:bg-gray-100">
               <td className="p-3">
                 <img
                   src={employee.profilePicture}
