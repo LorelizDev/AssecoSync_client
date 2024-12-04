@@ -2,10 +2,15 @@ import React, { useState } from 'react';
 import Button from '../components/Button';
 import Input from '../components/Input';
 import logo from '../assets/images/logo.png';
+import { useNavigate } from 'react-router-dom';  // Importa useNavigate para redirección
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+
+  const navigate = useNavigate();  // Usamos el hook de navegación
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -15,10 +20,33 @@ const LoginPage = () => {
     setPassword(event.target.value);
   };
 
-  const handleLogin = () => {
-    // Aquí iría la lógica de inicio de sesión
-    console.log('Correo:', email);
-    console.log('Contraseña:', password);
+  const handleLogin = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/users');
+      if (!response.ok) {
+        throw new Error('Error al conectar con el servidor');
+      }
+
+      const users = await response.json();
+      const user = users.find(
+        (user) => user.email === email && user.password === password
+      );
+
+      if (user) {
+        setSuccess(true);
+        setError('');
+        console.log('Inicio de sesión exitoso:', user);
+        
+        // Redirigir al dashboard
+        navigate('/dashboard');
+      } else {
+        setSuccess(false);
+        setError('Tus datos no se reconocen en el sistema');
+      }
+    } catch (err) {
+      setError('Hubo un problema al iniciar sesión');
+      console.error('Error:', err);
+    }
   };
 
   return (
@@ -46,6 +74,7 @@ const LoginPage = () => {
             onChange={handlePasswordChange}
             placeholder="Ingresa tu contraseña"
           />
+          {error && <p className="text-red-500">{error}</p>}  {/* Muestra el mensaje de error */}
           <Button onClick={handleLogin}>Iniciar sesión</Button>
         </div>
       </div>
