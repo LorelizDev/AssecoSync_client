@@ -3,6 +3,7 @@ import Layout from '../layout/Layout';
 import LoginPage from '../pages/Login';
 import Dashboard from '../pages/Dashboard';
 import AdminEmployeeList from '../pages/AdminEmployeeList';
+import { RegisterForm } from '../pages/Register';
 
 export const router = createBrowserRouter([{
     path : '/',
@@ -21,6 +22,10 @@ export const router = createBrowserRouter([{
         // New rout AdminEmployeeList
         path: 'AdminEmployeeList',
         element: <AdminEmployeeList />,
+      },
+      {
+        path: 'register',
+        element: <RegisterForm />,
       },
     ],
   },
