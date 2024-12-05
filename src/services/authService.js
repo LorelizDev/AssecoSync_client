@@ -1,5 +1,5 @@
-import axios from 'axios';
-import useAuthStore from './authStore';
+// import axios from 'axios';
+import useAuthStore from '../context/authStore';
 
 const URL = 'http://localhost:8000';
 

@@ -2,51 +2,26 @@ import React, { useState } from 'react';
 import Button from '../components/Button';
 import Input from '../components/Input';
 import logo from '../assets/images/logo.png';
-import { useNavigate } from 'react-router-dom';  // Importa useNavigate para redirección
+import { useNavigate } from 'react-router-dom';
+import { loginEmployee } from '../services/authService';
+import { useForm } from 'react-hook-form';
+import useAuthStore from '../context/authStore';
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
-
-  const navigate = useNavigate();  // Usamos el hook de navegación
-
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
-  };
-
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
-  };
-
-  const handleLogin = async () => {
-    try {
-      const response = await fetch('http://localhost:3001/users');
-      if (!response.ok) {
-        throw new Error('Error al conectar con el servidor');
-      }
-
-      const users = await response.json();
-      const user = users.find(
-        (user) => user.email === email && user.password === password
-      );
-
-      if (user) {
-        setSuccess(true);
-        setError('');
-        console.log('Inicio de sesión exitoso:', user);
-        
-        // Redirigir al dashboard
-        navigate('/dashboard');
+const { login } = useAuthStore();
+const { register, formState: { errors }, handleSubmit} = useForm();
+const navigate = useNavigate();
+const [loginError, setLoginError] = useState(null);
+  const handleLogin = async (loginData) => {
+      const result = await loginEmployee(loginData);
+  
+      if (result.success) {
+        login(result.userData.token, result.userData.user.role);
+        navigate("/");
       } else {
-        setSuccess(false);
-        setError('Tus datos no se reconocen en el sistema');
+        setLoginError(result.message);
       }
-    } catch (err) {
-      setError('Hubo un problema al iniciar sesión');
-      console.error('Error:', err);
-    }
+   
   };
 
   return (
@@ -58,24 +33,31 @@ const LoginPage = () => {
             Iniciar sesión
           </h2>
 
-          <Input
+          <Input {...register("email")}
             label="Correo electrónico"
             name="email"
             type="email"
-            value={email}
-            onChange={handleEmailChange}
+            errors={errors}
             placeholder="Ingresa tu correo"
           />
-          <Input
+
+          <Input {...register("password")}
             label="Contraseña"
             name="password"
             type="password"
-            value={password}
-            onChange={handlePasswordChange}
+            errors={errors}
             placeholder="Ingresa tu contraseña"
           />
-          {error && <p className="text-red-500">{error}</p>}  {/* Muestra el mensaje de error */}
-          <Button onClick={handleLogin}>Iniciar sesión</Button>
+
+          <div>
+						{loginError && (
+							<p className="text-red-500 text-sm mt-1">
+								{loginError}
+							</p>
+						)}
+					</div>
+
+          <Button onClick={handleSubmit(handleLogin)}>Iniciar sesión</Button>
         </div>
       </div>
       <div className="bg-secondarybg w-1/5"></div>
