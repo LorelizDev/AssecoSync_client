@@ -1,12 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import employeesData from '../../data/db.json';
+import React from 'react';
 
-const EmployeeList = () => {
-  const [employees, setEmployees] = useState([]);
-  useEffect(() => {
-    setEmployees(employeesData.employees);
-  }, []);
-
+const EmployeeList = ({ employees }) => {
   return (
     <div className="w-full overflow-x-auto bg-white rounded-[14px] border border[#b8b8b8]">
       <table className="w-full text-xs">
@@ -20,8 +14,9 @@ const EmployeeList = () => {
             <th className="p-3 text-left">Cargo</th>
           </tr>
         </thead>
+
         <tbody className="text-base">
-          {employees?.map((employee) => (
+          {employees.map((employee) => (
             <tr key={employee.id} className="border-b hover:bg-gray-100">
               <td className="p-3">
                 <img

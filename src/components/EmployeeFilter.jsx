@@ -5,9 +5,9 @@ import { BiFilterAlt } from 'react-icons/bi';
 const EmployeeFilter = ({ onSearch }) => {
   const filters = [
     { key: 'id', label: 'ID', type: 'text' },
-    { key: 'nombre', label: 'Nombre', type: 'text' },
-    { key: 'apellidos', label: 'Apellidos', type: 'text' },
-    { key: 'cargo', label: 'Cargo', type: 'text' },
+    { key: 'name', label: 'Nombre', type: 'text' },
+    { key: 'lastName', label: 'Apellidos', type: 'text' },
+    { key: 'position', label: 'Cargo', type: 'text' },
   ];
 
   const [selectedFilter, setSelectedFilter] = useState('id');

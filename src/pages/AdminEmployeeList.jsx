@@ -1,19 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import EmployeeList from '../components/EmployeeList'; // Import the EmployeeList component
 import EmployeeFilter from '../components/EmployeeFilter';
-import employeesData from '../../data/db.json';
 
 const AdminEmployeeList = () => {
-  const [employees, setEmployees] = useState(employeesData.employees);
+  const [employees, setEmployees] = useState([]);
+  const [filteredEmployees, setFilteredEmployees] = useState([]);
+
+  useEffect(() => {
+    import('../../data/db.json').then((data) => {
+      setEmployees(data.employeesData);
+      setFilteredEmployees(data.employeesData);
+    });
+  }, []);
 
   const handleSearch = (searchParams) => {
-    const filteredEmployees = employeesData.employees.filter((employee) => {
-      return Object.entries(searchParams).every(([key, value]) =>
-        employee[key].toLowerCase().includes(value.toLowerCase())
-      );
+    const key = Object.keys(searchParams)[0];
+    const value = searchParams[key];
+
+    const filtered = employees.filter((employee) => {
+      const targetValue = employee[key]?.toLowerCase() || '';
+      return targetValue.includes(value.toLowerCase());
     });
-    setEmployees(filteredEmployees);
+    setFilteredEmployees(filtered);
   };
 
   return (
@@ -38,7 +47,7 @@ const AdminEmployeeList = () => {
           <EmployeeFilter onSearch={handleSearch} />
         </div>
         <div className="w-full md:absolute md:-right-[22%] md:w-[120%]">
-          <EmployeeList employees={employees} />
+          <EmployeeList employees={filteredEmployees} />
         </div>
       </div>
 
