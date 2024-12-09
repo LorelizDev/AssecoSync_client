@@ -59,8 +59,8 @@ const AdminEmployeeList = () => {
       </div>
 
       {/* Main Area */}
-      <div className="flex-grow md:w-4/5 bg-primarybg relative">
-        <div className="container px-6 py-6">
+      <div className="relative flex-grow md:w-4/5 bg-primarybg">
+        <div className="container mx-auto px-6 py-6">
           <h1 className="text-1xl text-primary font-bold mb-4">
             Lista de empleados
           </h1>
@@ -69,11 +69,11 @@ const AdminEmployeeList = () => {
         <div className="relative px-4 md:pl-[1.2rem] pb-4 max-w-fit">
           <EmployeeFilter onSearch={handleSearch} />
         </div>
-        <div className="relative w-full md:absolute md:-right-[22%] md:w-[120%]">
+        <div className="overflow-x-auto md:-right-[22%] md:w-[120%]">
           <EmployeeList employees={currentEmployees} />
         </div>
         {/* Pagination Controls */}
-        <div className="absolute bottom-0 left-0 right-0 flex justify-between items-center px-6 py-4 bg-white border-t border-gray-300 mt-4">
+        <div className="mt-4 flex justify-between items-center px-6 py-4 bg-white border-t border-gray-300">
           {/* Showing x-y of z */}
           <div className="text-sm text-gray-700">
             Showing {startIndex + 1}-{Math.min(endIndex, totalEmployees)} of{' '}
@@ -81,7 +81,7 @@ const AdminEmployeeList = () => {
           </div>
 
           {/* Pagination Arrows */}
-          <div className="flex space-x-4">
+          <div className="flex space-x-4 mt-4 sm:mt-0">
             <button
               onClick={handlePreviousPage}
               disabled={currentPage === 1}
