@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  URL: 'http://localhost:8000',
+  URL: 'http://localhost:8000/api/auth',
   headers: {
     Authorization: `Bearer ${localStorage.getItem('authToken')}`,
   },
@@ -17,6 +17,47 @@ const handleError = (error) => {
     console.error('Error al configurar la solicitud:', error.message);
   }
   throw error;
+};
+
+export const registerEmployee = async (data) => {
+  try {
+    // Enviar solicitud de registro
+    const token = localStorage.getItem('authToken');
+    const response = await axios.post(`${URL}/register`, data
+      , {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      }
+
+    );
+
+    return { success: true, data: response.data };
+  } catch (error) {
+    let errorMessage;
+
+    if (error.response) {
+      if (error.response.status === 400) {
+        errorMessage =
+          "Los datos ingresados no son válidos. Por favor, revisa el formulario.";
+      } else if (error.response.status === 409) {
+        errorMessage =
+          "Este usuario ya está registrado. Intenta iniciar sesión.";
+      } else {
+        errorMessage =
+          "Ocurrió un problema al registrarse. Inténtalo nuevamente.";
+      }
+    } else if (error.request) {
+      // Errores de red
+      errorMessage =
+        "No se pudo conectar con el servidor. Verifica tu conexión a Internet.";
+    } else {
+      errorMessage = "Ocurrió un error inesperado. Inténtalo más tarde.";
+    }
+
+    console.error("Error al registrarse:", errorMessage);
+    return { success: false, message: errorMessage };
+  }
 };
 
 export const getEmployees = async () => {

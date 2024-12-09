@@ -1,32 +1,42 @@
 import { useState } from 'react';
 import { MdArrowBack, MdArrowForward } from 'react-icons/md';
+import { useAuthStore } from '../context/authStore';
+import { registerEmployee } from '../services/adminServices';
+import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Button from '../components/Button';
 import Input from '../components/Input';
 
 export const RegisterForm = () => {
+  const navigate = useNavigate();
   const [currentSection, setCurrentSection] = useState(0);
+  const [id, setId] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [jobTitle, setJobTitle] = useState('');
+  const [departmentId, setDepartmentId] = useState('');
+  const [weeklyHours, setWeeklyHours] = useState('');
   const [email, setEmail] = useState('');
-  const [startDate, setStartDate] = useState({ day: '', month: '', year: '' });
+  const [dateJoined, setDateJoined] = useState({ day: '', month: '', year: '' });
   const [errors, setErrors] = useState({});
 
   const validateSection = () => {
     const newErrors = {};
 
     if (currentSection === 0) {
-      const first_name = document.querySelector('input[name="first_name"]').value.trim();
-      const last_name = document.querySelector('input[name="last_name"]').value.trim();
+      const firstName = document.querySelector('input[name="firstName"]').value.trim();
+      const lastName = document.querySelector('input[name="lastName"]').value.trim();
       const id = document.querySelector('input[name="id"]').value.trim();
-      const job_title = document.querySelector('input[name="job_title"]').value.trim();
-      const department_id = document.querySelector('input[name="department_id"]').value.trim();
-      const weekly_hours = document.querySelector('input[name="weekly_hours"]').value.trim();
+      const jobTitle = document.querySelector('input[name="jobTitle"]').value.trim();
+      const departmentId = document.querySelector('input[name="departmentId"]').value.trim();
+      const weeklyHours = document.querySelector('input[name="weeklyHours"]').value.trim();
 
-      if (!first_name) newErrors.first_name = 'El nombre es obligatorio';
-      if (!last_name) newErrors.last_name = 'Los apellidos son obligatorios';
+      if (!firstName) newErrors.firstName = 'El nombre es obligatorio';
+      if (!lastName) newErrors.lastName = 'Los apellidos son obligatorios';
       if (!id) newErrors.id = 'El ID del empleado es obligatorio';
-      if (!job_title) newErrors.job_title = 'Indicar el puesto de trabajo es obligatorio';
-      if (!department_id) newErrors.department_id = 'Indicar el departamento es obligatorio';
-      if (!weekly_hours) newErrors.weekly_hours = 'Indicar la jornada laboral es obligatorio';
+      if (!jobTitle) newErrors.jobTitle = 'Indicar el puesto de trabajo es obligatorio';
+      if (!departmentId) newErrors.departmentId = 'Indicar el departamento es obligatorio';
+      if (!weeklyHours) newErrors.weeklyHours = 'Indicar la jornada laboral es obligatorio';
     }
 
     if (currentSection === 1) {
@@ -35,8 +45,8 @@ export const RegisterForm = () => {
     }
 
     if (currentSection === 2) {
-      if (!date_joined.day || !date_joined.month || !date_joined.year) {
-        newErrors.date_joined = 'La fecha de inicio es obligatoria';
+      if (!dateJoined.day || !dateJoined.month || !dateJoined.year) {
+        newErrors.dateJoined = 'La fecha de inicio es obligatoria';
       }
     }
 
@@ -53,6 +63,53 @@ export const RegisterForm = () => {
   const handlePreviousSection = () => {
     setCurrentSection(currentSection - 1);
   };
+  
+  const handleIdChange = (event) => {
+    setId(event.target.value);
+  };
+
+  const handleFirstNameChange = (event) => {
+    setFirstName(event.target.value);
+  };
+
+  const handleLastNameChange = (event) => {
+    setLastName(event.target.value);
+  };
+
+  const handleJobTitleChange = (event) => {
+    setJobTitle(event.target.value);
+  };
+
+  const handleDepartmentIdChange = (event) => {
+    setDepartmentId(event.target.value);
+  };
+
+  const handleWeeklyHoursChange = (event) => {
+    setWeeklyHours(event.target.value);
+  };
+
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
+
+  const handleDateJoinedChange = (event) => {
+    setDateJoined(event.target.value);
+  };
+
+  const handleRegister = async () => {
+    const registerData = { firstName, lastName, id, jobTitle, departmentId, weeklyHours, email, dateJoined };
+    console.log(registerData)
+        
+        // const result = await registerEmployee(registerData);
+      
+  
+        // if (result.success) {
+        //   navigate("/dashboard");
+        // } else {
+        //   setErrors({ loginError: result.message });
+        // }
+     
+    };
 
   return (
     <div className="flex">
@@ -90,28 +147,28 @@ export const RegisterForm = () => {
 
             <div className="flex flex-col justify-center mb-2">
             
-              <Input name="first_name" type="string" placeholder="Nombre" />
-              {errors.first_name && <p className="text-red-500">{errors.first_name}</p>}
+            <div className="flex flex-col justify-center mb-2">
+              <Input name="id" type="string" value= {id} onChange={handleIdChange} placeholder="ID del empleado" />
+                {errors.id && <p className="text-red-500">{errors.id}</p>}
+            </div>
+              <Input name="firstName" type="string" value={firstName} onChange={handleFirstNameChange} placeholder="Nombre" />
+              {errors.firstName && <p className="text-red-500">{errors.firstName}</p>}
             </div>
             <div className="flex flex-col justify-center mb-2">
-              <Input name="last_name" type="string" placeholder="Apellidos" />
-              {errors.last_name && <p className="text-red-500">{errors.last_name}</p>}
+              <Input name="lastName" type="string" value={lastName} onChange={handleLastNameChange} placeholder="Apellidos" />
+              {errors.lastName && <p className="text-red-500">{errors.lastName}</p>}
             </div>
             <div className="flex flex-col justify-center mb-2">
-              <Input name="id" type="string" placeholder="ID del empleado" />
-              {errors.id && <p className="text-red-500">{errors.id}</p>}
+              <Input name="jobTitle" type="string" value={jobTitle} onChange={handleJobTitleChange} placeholder="Puesto de trabajo" />
+              {errors.jobTitle && <p className="text-red-500">{errors.jobTitle}</p>}
             </div>
             <div className="flex flex-col justify-center mb-2">
-              <Input name="job_title" type="string" placeholder="Puesto de trabajo" />
-              {errors.job_title && <p className="text-red-500">{errors.job_title}</p>}
+              <Input name="departmentId" type="string" value={departmentId} onChange={handleDepartmentIdChange} placeholder="Departamento" />
+              {errors.departmentId && <p className="text-red-500">{errors.departmentId}</p>}
             </div>
             <div className="flex flex-col justify-center mb-2">
-              <Input name="department_id" type="string" placeholder="Departamento" />
-              {errors.department_id && <p className="text-red-500">{errors.department_id}</p>}
-            </div>
-            <div className="flex flex-col justify-center mb-2">
-              <Input name="weekly_hours" type="string" placeholder="Jornada laboral" />
-              {errors.weekly_hours && <p className="text-red-500">{errors.weekly_hours}</p>}
+              <Input name="weeklyHours" type="string" value={weeklyHours} onChange={handleWeeklyHoursChange} placeholder="Jornada laboral" />
+              {errors.weeklyHours && <p className="text-red-500">{errors.weeklyHours}</p>}
             </div>
             <div className="flex">
               <Button className="flex items-center justify-center" onClick={handleNextSection}>
@@ -130,7 +187,7 @@ export const RegisterForm = () => {
                 id="email"
                 placeholder="Dirección de correo electrónico corporativo"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleEmailChange}
               />
               {errors.email && <p className="text-red-500">{errors.email}</p>}
             </div>
@@ -152,12 +209,12 @@ export const RegisterForm = () => {
             
             <div className="mb-8">
                 <div className="flex space-x-4">
-                {errors.startDate && <p className="text-red-500">{errors.startDate}</p>}
+                {errors.dateJoined && <p className="text-red-500">{errors.startDate}</p>}
                   <select
                     className="border rounded py-2 px-3 w-1/3"
                     id="day"
-                    value={startDate.day}
-                    onChange={(e) => setStartDate({ ...startDate, day: e.target.value })}
+                    value={dateJoined.day}
+                    onChange= {handleDateJoinedChange}
                   >
                     <option value="">Día</option>
                     {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
@@ -168,8 +225,8 @@ export const RegisterForm = () => {
                   <select
                     className="border rounded py-2 px-3 w-1/3"
                     id="month"
-                    value={startDate.month}
-                    onChange={(e) => setStartDate({ ...startDate, month: e.target.value })}
+                    value={dateJoined.month}
+                    onChange= {handleDateJoinedChange}
                   >
                     <option value="">Mes</option>
                     {[
@@ -183,8 +240,8 @@ export const RegisterForm = () => {
                   <select
                     className="border rounded py-2 px-3 w-1/3"
                     id="year"
-                    value={startDate.year}
-                    onChange={(e) => setStartDate({ ...startDate, year: e.target.value })}
+                    value={dateJoined.year}
+                    onChange= {handleDateJoinedChange}
                   >
                     <option value="">Año</option>
                     {Array.from({ length: 10 }, (_, i) => 2023 + i).map((year) => (
@@ -199,7 +256,7 @@ export const RegisterForm = () => {
                 <MdArrowBack className="text-primary" />
                 <span className="mr-2 text-primary">Anterior</span>
               </Button>
-              <Button className="px-3 py-1 flex items-center justify-center" type="submit">
+              <Button className="px-3 py-1 flex items-center justify-center" onClick={handleRegister}>
                 <span className="mr-2">Enviar</span>
                 <MdArrowForward />
               </Button>
