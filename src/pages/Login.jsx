@@ -4,25 +4,40 @@ import Input from '../components/Input';
 import logo from '../assets/images/logo.png';
 import { useNavigate } from 'react-router-dom';
 import { loginEmployee } from '../services/authService';
-import { useForm } from 'react-hook-form';
-import useAuthStore from '../context/authStore';
+import { useAuthStore } from '../context/authStore';
 
 const LoginPage = () => {
 const { login } = useAuthStore();
-const { register, formState: { errors }, handleSubmit} = useForm();
+
 const navigate = useNavigate();
 const [loginError, setLoginError] = useState(null);
-  const handleLogin = async (loginData) => {
+const [email, setEmail] = useState('');
+const [password, setPassword] = useState('');
+
+const handleEmailChange = (event) => {
+  setEmail(event.target.value);
+};
+
+const handlePasswordChange = (event) => {
+  setPassword(event.target.value);
+};
+
+const handleLogin = async () => {
+  const loginData = {email, password};
+      
       const result = await loginEmployee(loginData);
-  
+      
+      const session_token = result.token;
+
       if (result.success) {
-        login(result.userData.token, result.userData.user.role);
-        navigate("/");
+        login(session_token);
+        navigate("/dashboard");
       } else {
         setLoginError(result.message);
       }
    
   };
+
 
   return (
     <div className="flex h-screen">
@@ -33,31 +48,23 @@ const [loginError, setLoginError] = useState(null);
             Iniciar sesión
           </h2>
 
-          <Input {...register("email")}
+          <Input
             label="Correo electrónico"
             name="email"
             type="email"
-            errors={errors}
+            value={email}
+            onChange={handleEmailChange}
             placeholder="Ingresa tu correo"
           />
-
-          <Input {...register("password")}
+          <Input
             label="Contraseña"
             name="password"
             type="password"
-            errors={errors}
+            value={password}
+            onChange={handlePasswordChange}
             placeholder="Ingresa tu contraseña"
           />
-
-          <div>
-						{loginError && (
-							<p className="text-red-500 text-sm mt-1">
-								{loginError}
-							</p>
-						)}
-					</div>
-
-          <Button onClick={handleSubmit(handleLogin)}>Iniciar sesión</Button>
+          <Button onClick={handleLogin}>Iniciar sesión</Button>
         </div>
       </div>
       <div className="bg-secondarybg w-1/5"></div>
