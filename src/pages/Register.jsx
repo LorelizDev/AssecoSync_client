@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { MdArrowBack, MdArrowForward } from 'react-icons/md';
-import { useAuthStore } from '../context/authStore';
 import { registerEmployee } from '../services/adminServices';
 import { useNavigate } from 'react-router-dom';
+import { getEmployeeByIdFromExternalDb } from '../services/getEmployeeService';
 import Sidebar from '../components/Sidebar';
 import Button from '../components/Button';
 import Input from '../components/Input';
@@ -17,7 +17,7 @@ export const RegisterForm = () => {
   const [departmentId, setDepartmentId] = useState('');
   const [weeklyHours, setWeeklyHours] = useState('');
   const [email, setEmail] = useState('');
-  const [dateJoined, setDateJoined] = useState({ day: '', month: '', year: '' });
+  const [date, setDate] = useState({ day: '', month: '', year: '' });
   const [errors, setErrors] = useState({});
 
   const validateSection = () => {
@@ -92,22 +92,29 @@ export const RegisterForm = () => {
     setEmail(event.target.value);
   };
 
-  const handleDateJoinedChange = (event) => {
-    setDateJoined(event.target.value);
+  const handleDateChange = (e) => {
+    const { id, value } = e.target;
+    setDate((prev) => ({
+      ...prev,
+      [id]: value,
+    }));
   };
 
+  const dateJoined = [date.year, date.month, date.day].join('-');
+
   const handleRegister = async () => {
+   
     const registerData = { firstName, lastName, id, jobTitle, departmentId, weeklyHours, email, dateJoined };
     console.log(registerData)
         
-        // const result = await registerEmployee(registerData);
+        const result = await registerEmployee(registerData);
       
   
-        // if (result.success) {
-        //   navigate("/dashboard");
-        // } else {
-        //   setErrors({ loginError: result.message });
-        // }
+        if (result.success) {
+          navigate("/dashboard");
+        } else {
+          setErrors({ loginError: result.message });
+        }
      
     };
 
@@ -209,12 +216,12 @@ export const RegisterForm = () => {
             
             <div className="mb-8">
                 <div className="flex space-x-4">
-                {errors.dateJoined && <p className="text-red-500">{errors.startDate}</p>}
+                {errors.date && <p className="text-red-500">{errors.date}</p>}
                   <select
                     className="border rounded py-2 px-3 w-1/3"
                     id="day"
-                    value={dateJoined.day}
-                    onChange= {handleDateJoinedChange}
+                    value={date.day}
+                    onChange= {handleDateChange}
                   >
                     <option value="">Día</option>
                     {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
@@ -225,8 +232,8 @@ export const RegisterForm = () => {
                   <select
                     className="border rounded py-2 px-3 w-1/3"
                     id="month"
-                    value={dateJoined.month}
-                    onChange= {handleDateJoinedChange}
+                    value={date.month}
+                    onChange= {handleDateChange}
                   >
                     <option value="">Mes</option>
                     {[
@@ -240,8 +247,8 @@ export const RegisterForm = () => {
                   <select
                     className="border rounded py-2 px-3 w-1/3"
                     id="year"
-                    value={dateJoined.year}
-                    onChange= {handleDateJoinedChange}
+                    value={date.year}
+                    onChange= {handleDateChange}
                   >
                     <option value="">Año</option>
                     {Array.from({ length: 10 }, (_, i) => 2023 + i).map((year) => (
