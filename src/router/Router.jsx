@@ -3,7 +3,6 @@ import Layout from '../layout/Layout';
 import LoginPage from '../pages/Login';
 import Dashboard from '../pages/Dashboard';
 import AdminEmployeeList from '../pages/AdminEmployeeList';
-import CalendarPage from '../pages/CalendarPage';
 
 export const router = createBrowserRouter([
   {
@@ -28,6 +27,10 @@ export const router = createBrowserRouter([
         // New rout AdminEmployeeList
         path: 'calendar',
         element: <CalendarPage />,
+      },
+      {
+        path: 'register',
+        element: <RegisterForm />,
       },
     ],
   },
