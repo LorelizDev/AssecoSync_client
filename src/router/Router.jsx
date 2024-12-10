@@ -3,7 +3,7 @@ import Layout from '../layout/Layout';
 import LoginPage from '../pages/Login';
 import Dashboard from '../pages/Dashboard';
 import AdminEmployeeList from '../pages/AdminEmployeeList';
-import { RegisterForm } from '../pages/Register';
+import { RegisterPage } from '../pages/RegisterPage';
 
 export const router = createBrowserRouter([{
     path : '/',
@@ -25,7 +25,7 @@ export const router = createBrowserRouter([{
       },
       {
         path: 'register',
-        element: <RegisterForm />,
+        element: <RegisterPage />,
       },
     ],
   },

@@ -2,7 +2,7 @@ import axios from 'axios';
 
     const URL = 'http://localhost:8000/api/external/employees'
     const headers=  {
-        Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+        "Authorization": `Bearer ${localStorage.getItem('token')}`
     }
 
   const handleError = (error) => {
@@ -20,7 +20,7 @@ import axios from 'axios';
     export const getEmployeeByIdFromExternalDb = async (id) => {
         console.log(headers)
         try {
-        const { data } = await axios.get(`${URL}/${id}`, headers
+        const data= await axios.get(`${URL}/${id}`, {headers}
         );
         console.log(data)
         return data;

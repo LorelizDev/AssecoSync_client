@@ -1,9 +1,21 @@
 import React from 'react';
 import SidebarItem from './SidebarItem';
+import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../context/authStore'
 import { HiOutlineCog6Tooth } from 'react-icons/hi2';
 import { TbSmartHome, TbUser, TbCalendar } from 'react-icons/tb';
 
 const Sidebar = () => {
+
+  const logout = useAuthStore((state) => state.logout); // Obtener la función logout
+  const navigate = useNavigate();
+
+  // Maneja el evento de cerrar sesión
+  const handleLogout = () => {
+    logout(); // Limpia el estado de autenticación
+    navigate('/'); // Redirige al usuario a la página de login
+  };
+
   // Lista de ítems de navegación
   const menuItems = [
     { icon: <TbSmartHome size={24} />, label: 'Inicio', route: '/dashboard' },
@@ -43,6 +55,15 @@ const Sidebar = () => {
           />
         ))}
       </nav>
+      <div className="mt-auto">
+        <button
+          onClick={handleLogout}
+          className="text-red-600 hover:text-red-800 text-sm flex flex-col items-center"
+        >
+          <span className="text-2xl">⎋</span> {/* Icono simple de logout */}
+          <span>Cerrar sesión</span>
+        </button>
+      </div>
     </div>
   );
 };
