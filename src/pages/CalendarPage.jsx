@@ -37,21 +37,24 @@ const CalendarPage = () => {
         <Sidebar />
       </div>
 
-      {/* Área principal */}
-      <div className="w-full md:w-4/5 flex flex-col bg-primarybg relative">
-        <div className="container mx-auto px-6 py-6">
-          <h1 className="text-1xl text-primary font-bold mb-4">
+      {/* Main Area */}
+      <div className="w-full md:w-4/5 bg-primarybg relative">
+        <div className="container mx-auto py-6">
+          {/* Modificado a text-2xl y añadido pl-[1.2rem] para alinear */}
+          <h1 className="text-2xl text-primary font-bold mb-4 pl-[1.2rem]">
             Calendario de Ausencias
           </h1>
-
-          {/* Usando el componente Button */}
-          <Button onClick={handleButtonClick}>Solicitar ausencias</Button>
         </div>
 
-        {/* Fondo dividido 80% primarybg y 20% secondarybg */}
-        <div className="relative flex w-full h-full p-4">
-          {/* Calendario en el fondo primarybg, ocupando todo el espacio pero con márgenes */}
-          <div className="flex-1 bg-primarybg p-4 rounded-lg shadow-md">
+        <div className="relative px-4 md:pl-[1.2rem] pb-4">
+          <Button onClick={handleButtonClick} className="mb-4">
+            Solicitar ausencias
+          </Button>
+        </div>
+
+        {/* Contenedor de FullCalendar */}
+        <div className="w-full md:absolute md:-right-[22%] md:w-[120%] ">
+          <div className="w-full overflow-x-auto bg-white rounded-[14px] border border-[#b8b8b8]">
             <FullCalendar
               plugins={[dayGridPlugin]}
               initialView="dayGridMonth"
@@ -66,15 +69,35 @@ const CalendarPage = () => {
                 right: 'dayGridMonth,dayGridWeek',
               }}
               eventsColor="#378006"
-              contentHeight="auto" // Esto asegura que el calendario ocupe toda la altura disponible
+              contentHeight="auto"
+              className="w-full text-xs"
+              // Añadimos estos estilos para separar los elementos
+              buttonText={{
+                today: 'Hoy',
+                month: 'Mes',
+                week: 'Semana',
+              }}
+              customButtons={{
+                prev: {
+                  text: '‹',
+                  click: function () {
+                    // Implementación por defecto de FullCalendar
+                  },
+                },
+                next: {
+                  text: '›',
+                  click: function () {
+                    // Implementación por defecto de FullCalendar
+                  },
+                },
+              }}
             />
           </div>
-
-          {/* Lado derecho con color secondarybg */}
-          <div className="w-1/5 bg-secondarybg"></div>
         </div>
       </div>
 
+      {/* Right Side */}
+      <div className="w-1/5 bg-secondarybg"></div>
       {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
