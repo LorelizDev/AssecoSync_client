@@ -3,6 +3,8 @@ import Layout from '../layout/Layout';
 import LoginPage from '../pages/Login';
 import Dashboard from '../pages/Dashboard';
 import AdminEmployeeList from '../pages/AdminEmployeeList';
+import { RegisterForm } from '../pages/Register';
+import CalendarPage from '../pages/CalendarPage';
 
 export const router = createBrowserRouter([
   {
