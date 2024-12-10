@@ -21,7 +21,7 @@ const BlockedInput = ({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="mt-1 w-[300px] h-[45px] px-3 py-2 text-gray-700 bg-blockedInput border border-black rounded-lg shadow-sm focus:outline-none cursor-not-allowed rounded-lg shadow-md"
+        className="mt-1 w-[300px] h-[45px] px-3 py-2 text-gray-700 bg-blockedInput border border-black rounded-lg shadow-sm focus:outline-none cursor-not-allowed"
         readOnly
       />
     </div>
