@@ -22,6 +22,12 @@ const EmployeeFilter = ({ onSearch }) => {
     setFilterValue(''); // Reset the text input
   };
 
+  const handleReset = () => {
+    setSelectedFilter('id'); // Reset dropdown to default
+    setFilterValue(''); // Clear search input
+    onReset(); // Notify parent to reset the search
+  };
+
   return (
     <div className="flex flex-col md:flex-row items-center bg-white border rounded-lg w-full max-w-4xl">
       {/* Filter Icon and Label */}
@@ -59,12 +65,19 @@ const EmployeeFilter = ({ onSearch }) => {
       </div>
 
       {/* Search Button */}
-      <div className="w-full md:w-auto p-2">
+      <div className="flex space-x-2 w-full md:w-auto p-2">
         <button
           onClick={handleSearch}
           className="w-full flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary rounded hover:bg-[#31B8EA] focus:outline-none"
         >
           Buscar
+        </button>
+        {/* Reset Button */}
+        <button
+          onClick={handleReset}
+          className="flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-gray-500 rounded hover:bg-gray-700 focus:outline-none"
+        >
+          Reset
         </button>
       </div>
     </div>
