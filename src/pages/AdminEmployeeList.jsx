@@ -60,8 +60,8 @@ const AdminEmployeeList = () => {
 
       {/* Main Area */}
       <div className="relative flex-grow md:w-4/5 bg-primarybg">
-        <div className="container mx-auto px-6 py-6">
-          <h1 className="text-1xl text-primary font-bold mb-4">
+        <div className="container px-4 py-6">
+          <h1 className="text-1xl text-primary font-bold mb-1">
             Lista de empleados
           </h1>
           {/* Wrapper to break out of container */}
@@ -69,11 +69,11 @@ const AdminEmployeeList = () => {
         <div className="relative px-4 md:pl-[1.2rem] pb-4 max-w-fit">
           <EmployeeFilter onSearch={handleSearch} />
         </div>
-        <div className="overflow-x-auto md:-right-[22%] md:w-[120%]">
+        <div className="px-4 overflow-x-auto md:-right-[22%] md:w-[120%]">
           <EmployeeList employees={currentEmployees} />
         </div>
         {/* Pagination Controls */}
-        <div className="mt-4 flex justify-between items-center px-6 py-4 bg-white border-t border-gray-300">
+        <div className="mt-4 flex justify-between items-center px-6 py-4">
           {/* Showing x-y of z */}
           <div className="text-sm text-gray-700">
             Showing {startIndex + 1}-{Math.min(endIndex, totalEmployees)} of{' '}
