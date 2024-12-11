@@ -6,53 +6,70 @@ import Input from '../components/Input';
 import Button from '../components/Button';
 import Sidebar from '../components/Sidebar';
 import { BiSolidBadgeCheck } from "react-icons/bi";
+import { useNavigate } from 'react-router-dom';
 
 export const RegisterPage = () => {
   const [employeeId, setEmployeeId] = useState('');
   const [employee, setEmployee] = useState(null);
   const [error, setError] = useState(null);
+  const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchEmployee = async () => {
       if (!employeeId) return;
 
       try {
-            const employeeData = await getEmployeeByIdFromExternalDb(employeeId);
-            if (!employeeData) {
-              setError('Empleado no encontrado');
-            } else {
-              setEmployee(employeeData);
-            }
-          } catch (error) {
-            console.error('Error al cargar los datos del empleado:', error);
-            setError('Por favor, inténtalo nuevamente.');
-          }
+        const employeeData = await getEmployeeByIdFromExternalDb(employeeId);
+        if (!employeeData) {
+          setError('Empleado no encontrado');
+        } else {
+          setEmployee(employeeData);
+          setError(null);
+        }
+      } catch (error) {
+        console.error('Error al cargar los datos del empleado:', error);
+        setError('Por favor, inténtalo nuevamente.');
+      }
     };
 
     fetchEmployee();
   }, [employeeId]);
 
   const handleRegister = async () => {
-        const registerData = { 
-          firstName, 
-          lastName, 
-          jobTitle, 
-          departmentId, 
-          weeklyHours, 
-          email, 
-          dateJoined 
-        };
-        
-        const result = await registerEmployee(registerData);
-        
-        if (result.success) {
-          navigate("/dashboard");
-        } else {
-          setErrors({ 
-            loginError: result.message || 'Error al registrar el empleado' 
-          });
-        }
+    if (!employee || !employee.data) {
+      setError("No hay datos del empleado para registrar.");
+      return;
+    }
+
+    const { id, firstName, lastName, jobTitle, department, weeklyHours, email, dateJoined } = employee.data;
+
+    const registerData = { 
+      id,
+      firstName, 
+      lastName, 
+      jobTitle, 
+      department, 
+      weeklyHours, 
+      email, 
+      dateJoined 
+    };
+
+    try {
+      const result = await registerEmployee(registerData);
+
+      if (result.success) {
+        navigate("/dashboard");
+      } else {
+        setErrors({ 
+          loginError: result.message || 'Error al registrar el empleado' 
+        });
       }
+    } catch (error) {
+      console.error('Error al registrar el empleado:', error);
+      setError('Hubo un error al intentar registrar el empleado. Intenta nuevamente.');
+    }
+  };
 
   return (
     <div className="flex bg-primarybg">
@@ -76,7 +93,7 @@ export const RegisterPage = () => {
         />
      
         </div>
-        {error && <p>{error}</p>}
+        {error && <p className="text-red-500">{error}</p>}
         {employee && (
                 <div className="flex flex-row flex-wrap bg-white p-6 space-x-44">
                 <div className="flex flex-col">
