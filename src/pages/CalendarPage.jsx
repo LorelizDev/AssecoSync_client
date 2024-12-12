@@ -51,7 +51,7 @@ const CalendarPage = () => {
         // Verifica que tipo de solicitud y color se asignan correctamente
         const leaveType =
           request.type === 'Vacaciones'
-            ? { type: 'Vacaciones', id: 'vacation' }
+            ? { type: 'Vacaciones', id: 1 }
             : filteredTypes.find((type) => type.id === request.type_id);
 
         const adjustedEndDate = new Date(request.end_date);
@@ -160,10 +160,12 @@ const CalendarPage = () => {
         return;
       }
 
-      // Enviar solicitud de vacaciones
+      // Enviar solicitud de vacaciones con los datos correctos
       const newVacation = await calendarServices.createLeaveRequest({
-        ...vacationData,
-        type_id: 'vacation',
+        employee_id: vacationData.employee_id,
+        start_date: vacationData.start_date,
+        end_date: vacationData.end_date,
+        details: vacationData.details,
       });
 
       const adjustedEndDate = new Date(vacationData.end_date);
@@ -189,6 +191,7 @@ const CalendarPage = () => {
       toast.success('Solicitud de vacaciones creada exitosamente');
     } catch (error) {
       toast.error('Error al crear la solicitud de vacaciones');
+      console.error(error);
     }
   };
 
