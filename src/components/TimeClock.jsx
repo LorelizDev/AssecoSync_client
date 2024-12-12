@@ -2,7 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import { FaPlay } from "react-icons/fa6";
 import { FaStop } from "react-icons/fa6";
 import { FaPause } from "react-icons/fa";
-import { LocationSelector } from '../components/LocationSelector';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
 // Componente de Cronómetro
 export const TimeClock = () => {
@@ -11,7 +12,8 @@ export const TimeClock = () => {
     seconds: 0,
     minutes: 0,
     hours: 0,
-    isRunning: false
+    isRunning: false,
+    workLocation: null
   });
 
   // Referencia para manejar el intervalo
@@ -26,39 +28,67 @@ export const TimeClock = () => {
 
   // Función para pasar los números a formato string
   const formatTime = (value) => 
-    value.toString().padStart(2, '0'); //padStart indica que el string sea de longitud 2 y el segundo parámetro '0' es el valor que se añade al string si es menor a dos dígitos
-//   formatTime(5)   // Resultado: "05"
-//   formatTime(12)  // Resultado: "12"
-//   formatTime(0)   // Resultado: "00"
+    value.toString().padStart(2, '0');
+
+  const MySwal = withReactContent(Swal);
+
+  const showWorkLocationAlert = () => {
+    MySwal.fire({
+      title: '¡Bienvenido!',
+      text: '¿Desde dónde vas a trabajar hoy?',
+      showCancelButton: true,
+      confirmButtonText: `<span style="display: flex; align-items: center; gap: 5px;">
+                            Oficina
+                          </span>`,
+      cancelButtonText: `<span style="display: flex; align-items: center; gap: 5px;">
+                           Casa
+                         </span>`,
+      confirmButtonColor: '#00A3E0',
+      cancelButtonColor: '#00A3E0',
+      customClass: {
+        confirmButton: 'swal-button-custom',
+        cancelButton: 'swal-button-custom',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Trabajo en oficina
+        startTimer('office');
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        // Teletrabajo
+        startTimer('remote');
+      }
+    });
+  };
 
   // Función para iniciar el cronómetro
-  const startTimer = () => {
-    if (!timer.isRunning) { // Impide que se ejecute la función si el cronómetro está en ejecución
-      intervalRef.current = setInterval(() => { //guarda la referencia del intervalo de setInterval que ejecuta el temporizador cada segundo y current permite accder a la referencia guardada
-        setTimer(prevTimer => { //prevTimer trae los datos del estado anterior del temporizador para actualizarlos
+  const startTimer = (workLocation) => {
+    if (!timer.isRunning) {
+      intervalRef.current = setInterval(() => {
+        setTimer(prevTimer => {
           let newSeconds = prevTimer.seconds + 1;
           let newMinutes = prevTimer.minutes;
           let newHours = prevTimer.hours;
 
-           // Incrementar contador de segundos totales
-           totalSecondsRef.current += 1;
+          // Incrementar contador de segundos totales
+          totalSecondsRef.current += 1;
 
-          if (newSeconds === 60) { //Cuando los segundos llegan a 60, se resetean a 0 y se suma 1 minuto
+          if (newSeconds === 60) {
             newSeconds = 0;
             newMinutes += 1;
           }
 
-          if (newMinutes === 60) { //Cuando los minutos llegan a 60, se resetean a 0 y se suma 1 hora
+          if (newMinutes === 60) {
             newMinutes = 0;
             newHours += 1;
           }
 
-          return { //Devuelve el estado actualizado del temporizador, es decir, pone en marcha el temporizador
+          return {
             ...prevTimer,
             seconds: newSeconds,
             minutes: newMinutes,
             hours: newHours,
-            isRunning: true
+            isRunning: true,
+            workLocation: workLocation // Guardar la ubicación de trabajo
           };
         });
       }, 1000);
@@ -67,38 +97,101 @@ export const TimeClock = () => {
 
   // Función para pausar el cronómetro
   const pauseTimer = () => {
-    if (intervalRef.current) { //Verifica si el cronómetro está en marcha
-      clearInterval(intervalRef.current); //Pausa el temporrizador
-      intervalRef.current = null; //Limpia la referencia del intervalo
-      setTimer(prevTimer => ({ //Actualiza el estado del temporizador y se pasa isRunning a false para indicar que el temporizador ha sido pausado
-        ...prevTimer,
-        isRunning: false
-      }));
+    MySwal.fire({
+      title: '¿Estás seguro de pausar el tiempo?',
+      text: 'Puedes continuar tu trabajo más tarde',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#00A3E0',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, pausar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+          setTimer(prevTimer => ({
+            ...prevTimer,
+            isRunning: false
+          }));
+
+          MySwal.fire(
+            'Pausado',
+            'Tu tiempo de trabajo ha sido pausado',
+            'success'
+          );
+        }
+      }
+    });
+  };
+
+  // Función para reanudar el cronómetro
+  const resumeTimer = () => {
+    if (timer.workLocation) {
+      // Si ya se ha seleccionado una ubicación anteriormente
+      MySwal.fire({
+        title: '¿Estás listo para continuar?',
+        text: `Continuarás trabajando desde ${timer.workLocation === 'office' ? 'la oficina' : 'casa'}`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#00A3E0',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, continuar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          startTimer(timer.workLocation);
+        }
+      });
+    } else {
+      // Si no se ha seleccionado ubicación, mostrar el alert original
+      showWorkLocationAlert();
     }
   };
 
   // Función para detener y resetear el cronómetro
   const stopTimer = () => {
-    if (intervalRef.current) { //Comprueba que el cronómetro está en marcha o pausado
-      clearInterval(intervalRef.current); //Detiene el temporizador
-      intervalRef.current = null; //Indica que no hay ningún intervalo en marcha
-    }
+    MySwal.fire({
+      title: '¿Estás seguro de detener el tiempo?',
+      text: 'No podrás recuperar el tiempo registrado',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#00A3E0',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, detener',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
 
-       // Resetear también los segundos totales
-       totalSecondsRef.current = 0;
-    
-    setTimer({ //Reestablece todas las propiedades de 0
-      seconds: 0,
-      minutes: 0,
-      hours: 0,
-      isRunning: false
+        // Resetear también los segundos totales
+        totalSecondsRef.current = 0;
+        
+        setTimer({
+          seconds: 0,
+          minutes: 0,
+          hours: 0,
+          isRunning: false,
+          workLocation: null // Resetear también la ubicación de trabajo
+        });
+
+        MySwal.fire(
+          'Detenido',
+          'Tu tiempo de trabajo ha sido detenido',
+          'success'
+        );
+      }
     });
   };
 
   // Limpiar intervalo al desmontar el componente
   useEffect(() => {
     return () => {
-      if (intervalRef.current) { //Si el intervalo sigue activo lo para con "clearInterval"
+      if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
     };
@@ -109,13 +202,12 @@ export const TimeClock = () => {
 
   return (
     <div className="flex flex-col items-center bg-primarybg font-mainFont">
-      <LocationSelector />
       <div className="flex items-center max-w-2xl p-4 bg-white rounded-lg shadow-md">
         <div className="flex items-center space-x-4">
           <div className="flex flex-col items-center">
             {!timer.isRunning ? (
               <button
-                onClick={startTimer}
+                onClick={resumeTimer}
                 className="text-primary border border-primary px-6 py-4 rounded hover:bg-hoverButton"
               >
                 <FaPlay />
@@ -176,5 +268,5 @@ export const TimeClock = () => {
         </div>
       </div>
     </div>
-  )};
-  
+  );
+};
