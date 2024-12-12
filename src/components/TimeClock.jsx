@@ -22,7 +22,8 @@ export const TimeClock = () => {
 
   const calculateProgressPercentage = () => {
     const TOTAL_SECONDS_IN_8_HOURS = 8 * 60 * 60; // 8 horas en segundos
-    const currentProgress = (totalSecondsRef.current / TOTAL_SECONDS_IN_8_HOURS) * 100;
+    const currentProgress =
+      (totalSecondsRef.current / TOTAL_SECONDS_IN_8_HOURS) * 100;
     return Math.min(currentProgress, 100);
   };
 
@@ -246,7 +247,7 @@ export const TimeClock = () => {
                 opacity: 0.7,
               }}
             />
-  
+
             <div className="absolute inset-0 flex items-center justify-center z-10">
               <div className="text-center">
                 <div className="text-4xl font-bold text-font">
@@ -256,7 +257,7 @@ export const TimeClock = () => {
               </div>
             </div>
           </div>
-  
+
           <div className="flex items-center">
             <button
               onClick={stopTimer}

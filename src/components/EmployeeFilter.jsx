@@ -5,9 +5,9 @@ import { BiFilterAlt } from 'react-icons/bi';
 const EmployeeFilter = ({ onSearch }) => {
   const filters = [
     { key: 'id', label: 'ID', type: 'text' },
-    { key: 'nombre', label: 'Nombre', type: 'text' },
-    { key: 'apellidos', label: 'Apellidos', type: 'text' },
-    { key: 'cargo', label: 'Cargo', type: 'text' },
+    { key: 'name', label: 'Nombre', type: 'text' },
+    { key: 'lastName', label: 'Apellidos', type: 'text' },
+    { key: 'position', label: 'Cargo', type: 'text' },
   ];
 
   const [selectedFilter, setSelectedFilter] = useState('id');
@@ -15,6 +15,17 @@ const EmployeeFilter = ({ onSearch }) => {
 
   const handleSearch = () => {
     onSearch({ [selectedFilter]: filterValue });
+  };
+
+  const handleFilterChange = (e) => {
+    setSelectedFilter(e.target.value);
+    setFilterValue(''); // Reset the text input
+  };
+
+  const handleReset = () => {
+    setSelectedFilter('id'); // Reset dropdown to default
+    setFilterValue(''); // Clear search input
+    onReset(); // Notify parent to reset the search
   };
 
   return (
@@ -31,8 +42,8 @@ const EmployeeFilter = ({ onSearch }) => {
         {/* Dropdown for Filter Selection */}
         <select
           value={selectedFilter}
-          onChange={(e) => setSelectedFilter(e.target.value)}
-          className="border rounded p-1 text-sm"
+          onChange={handleFilterChange}
+          className="border rounded p-1 text-sm focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
         >
           {filters.map((filter) => (
             <option key={filter.key} value={filter.key}>
@@ -49,17 +60,24 @@ const EmployeeFilter = ({ onSearch }) => {
           placeholder={`Buscar por ${selectedFilter}`}
           value={filterValue}
           onChange={(e) => setFilterValue(e.target.value)}
-          className="w-full pl-2 h-10 border border-gray-300 rounded"
+          className="w-full pl-2 h-10 border border-gray-300 rounded focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
         />
       </div>
 
       {/* Search Button */}
-      <div className="w-full md:w-auto p-2">
+      <div className="flex space-x-2 w-full md:w-auto p-2">
         <button
           onClick={handleSearch}
           className="w-full flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary rounded hover:bg-[#31B8EA] focus:outline-none"
         >
           Buscar
+        </button>
+        {/* Reset Button */}
+        <button
+          onClick={handleReset}
+          className="flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-gray-500 rounded hover:bg-gray-700 focus:outline-none"
+        >
+          Reset
         </button>
       </div>
     </div>
