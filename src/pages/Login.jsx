@@ -2,24 +2,42 @@ import React, { useState } from 'react';
 import Button from '../components/Button';
 import Input from '../components/Input';
 import logo from '../assets/images/logo.png';
+import { useNavigate } from 'react-router-dom';
+import { loginEmployee } from '../services/authService';
+import { useAuthStore } from '../context/authStore';
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const { login } = useAuthStore();
 
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
+const navigate = useNavigate();
+const [loginError, setLoginError] = useState(null);
+const [email, setEmail] = useState('');
+const [password, setPassword] = useState('');
+
+const handleEmailChange = (event) => {
+  setEmail(event.target.value);
+};
+
+const handlePasswordChange = (event) => {
+  setPassword(event.target.value);
+};
+
+const handleLogin = async () => {
+  const loginData = {email, password};
+      
+      const result = await loginEmployee(loginData);
+      
+      const session_token = result.token;
+
+      if (result.success) {
+        login(session_token);
+        navigate("/dashboard");
+      } else {
+        setLoginError(result.message);
+      }
+   
   };
 
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
-  };
-
-  const handleLogin = () => {
-    // Aquí iría la lógica de inicio de sesión
-    console.log('Correo:', email);
-    console.log('Contraseña:', password);
-  };
 
   return (
     <div className="flex h-screen">

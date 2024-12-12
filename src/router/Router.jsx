@@ -3,10 +3,13 @@ import Layout from '../layout/Layout';
 import LoginPage from '../pages/Login';
 import Dashboard from '../pages/Dashboard';
 import AdminEmployeeList from '../pages/AdminEmployeeList';
+import { RegisterPage } from '../pages/RegisterPage';
+import CalendarPage from '../pages/CalendarPage';
 
-export const router = createBrowserRouter([{
-    path : '/',
-    element: <Layout/>,
+export const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Layout />,
     children: [
       {
         index: true,
@@ -21,6 +24,15 @@ export const router = createBrowserRouter([{
         // New rout AdminEmployeeList
         path: 'AdminEmployeeList',
         element: <AdminEmployeeList />,
+      },
+      {
+        // New rout AdminEmployeeList
+        path: 'calendar',
+        element: <CalendarPage />,
+      },
+      {
+        path: 'register',
+        element: <RegisterPage />,
       },
     ],
   },
@@ -57,11 +69,11 @@ export const router = createBrowserRouter([{
 //             path : 'auth',
 //             element: <AuthRoutes/>,
 //             children: [
-                // {
-                //     index: true,
-                //     path: 'home',
-                //     element: <Home/>
-                // },
+// {
+//     index: true,
+//     path: 'home',
+//     element: <Home/>
+// },
 //                 {
 //                     path : 'employee',
 //                     element: <EmployeeRoutes/>,

@@ -12,6 +12,7 @@ module.exports = {
         primarybg: '#F6FAFD',
         secondarybg: '#EEF6FB',
         grayicon: '#868686',
+        blockedInput: '#E5E5E5',
         darkicon: '#1D1D1D',
       },
       fontFamily: {
