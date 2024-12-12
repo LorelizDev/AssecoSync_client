@@ -39,7 +39,6 @@ const Dashboard = () => {
 
       {/* Lado derecho (20% del ancho) */}
       <div className="w-1/5 bg-secondarybg "></div>
-      
     </div>
   );
 };

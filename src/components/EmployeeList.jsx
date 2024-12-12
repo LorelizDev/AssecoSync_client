@@ -14,9 +14,10 @@ const EmployeeList = ({ employees }) => {
             <th className="p-3 text-left">Cargo</th>
           </tr>
         </thead>
+
         <tbody className="text-base">
-          {employees.map((employee, index) => (
-            <tr key={index} className="border-b">
+          {employees.map((employee) => (
+            <tr key={employee.id} className="border-b hover:bg-gray-100">
               <td className="p-3">
                 <img
                   src={employee.profilePicture}
