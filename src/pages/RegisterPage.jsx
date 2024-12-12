@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { getEmployeeByIdFromExternalDb } from '../services/getEmployeeService';
@@ -7,37 +7,44 @@ import BlockedInput from '../components/BlockedInput';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import Sidebar from '../components/Sidebar';
-import { BiSolidBadgeCheck } from "react-icons/bi";
+import { BiSolidBadgeCheck, BiSearchAlt } from "react-icons/bi";
 
 export const RegisterPage = () => {
   const [employeeId, setEmployeeId] = useState('');
   const [employee, setEmployee] = useState(null);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchEmployee = async () => {
-      if (!employeeId) return;
+  const fetchEmployee = async () => {
+    if (!employeeId) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Atención',
+        text: 'Por favor, introduce un ID de empleado',
+      });
+      return;
+    }
 
-      try {
-        const employeeData = await getEmployeeByIdFromExternalDb(employeeId);
-        
-        if (employeeData) {
-          setEmployee(employeeData);
-          setError(null);
-        } else {
-          setError('Empleado no encontrado');
-          setEmployee(null);
-        }
-      } catch (error) {
-        console.error('Error al cargar datos del empleado:', error);
-        setError('Error al buscar el empleado');
-        setEmployee(null);
+    setIsLoading(true);
+    setError(null);
+    setEmployee(null);
+
+    try {
+      const employeeData = await getEmployeeByIdFromExternalDb(employeeId);
+      
+      if (employeeData) {
+        setEmployee(employeeData);
+      } else {
+        setError('Empleado no encontrado');
       }
-    };
-
-    fetchEmployee();
-  }, [employeeId]);
+    } catch (error) {
+      console.error('Error al cargar datos del empleado:', error);
+      setError('Error al buscar el empleado');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleRegister = async () => {
     if (!employee || !employee.data) {
@@ -112,14 +119,24 @@ export const RegisterPage = () => {
           <h3 className="text-lg font-medium mb-4">Registrar a un nuevo empleado</h3>
         </div>
         <div className="flex flex-col items-center justify-center bg-white p-8 rounded-lg shadow-md">
-          <Input
-            label="Introduce el ID del empleado"
-            name="id"
-            type="string"
-            placeholder="EMP000"
-            value={employeeId}
-            onChange={(e) => setEmployeeId(e.target.value)}
-          />
+          <div className="flex flex-row w-full items-end space-x-4">
+            <Input
+              label="Introduce el ID del empleado"
+              name="id"
+              type="string"
+              placeholder="EMP000"
+              value={employeeId}
+              onChange={(e) => setEmployeeId(e.target.value)}
+              // className=" flex-grow"
+            />
+            <button 
+              onClick={fetchEmployee} 
+              className="text-primary border border-round border-black p-3 px-6 mb-3 rounded hover:bg-hoverButton flex justify-center items-center"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Buscando...' : <BiSearchAlt className="size-6 ml-2" />}
+            </button>
+          </div>
           
           {error && <p className="text-red-500 mt-2">{error}</p>}
           
