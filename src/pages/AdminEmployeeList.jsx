@@ -61,7 +61,7 @@ const AdminEmployeeList = () => {
       {/* Main Area */}
       <div className="relative flex-grow md:w-4/5 bg-primarybg">
         <div className="container px-4 py-6">
-          <h1 className="text-1xl text-primary font-bold mb-4">
+          <h1 className="text-1xl text-primary font-bold mb-1">
             Lista de empleados
           </h1>
           {/* Wrapper to break out of container */}
