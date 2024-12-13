@@ -2,12 +2,18 @@ import { useState, useRef, useEffect } from 'react';
 import { FaPlay } from "react-icons/fa6";
 import { FaStop } from "react-icons/fa6";
 import { FaPause } from "react-icons/fa";
+import { useTimeStore } from '../context/timeStore';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
-// Componente de Cronómetro
+const addAction = (action, time) => {
+  console.log(`Acción registrada: ${action} a las ${time}`);
+};
+
 export const TimeClock = () => {
-  // Estado inicial del cronómetro
+  const setStartTime = useTimeStore((state) => state.setStartTime);
+  const setPauseTime = useTimeStore((state) => state.setPauseTime);
+  const setStopTime = useTimeStore((state) => state.setStopTime);
   const [timer, setTimer] = useState({
     seconds: 0,
     minutes: 0,
@@ -16,7 +22,6 @@ export const TimeClock = () => {
     workLocation: null
   });
 
-  // Referencia para manejar el intervalo
   const intervalRef = useRef(null);
   const totalSecondsRef = useRef(0);
 
@@ -63,40 +68,49 @@ export const TimeClock = () => {
   // Función para iniciar el cronómetro
   const startTimer = (workLocation) => {
     if (!timer.isRunning) {
+      const now = new Date();
+      setStartTime(now.toLocaleTimeString());
+      addAction('Trabajo', now.toLocaleTimeString()); // Registrar acción
+      console.log(`Timer started at ${now.toLocaleTimeString()}`);
+  
       intervalRef.current = setInterval(() => {
-        setTimer(prevTimer => {
+        setTimer((prevTimer) => {
           let newSeconds = prevTimer.seconds + 1;
           let newMinutes = prevTimer.minutes;
           let newHours = prevTimer.hours;
-
-          // Incrementar contador de segundos totales
+  
           totalSecondsRef.current += 1;
-
+  
           if (newSeconds === 60) {
             newSeconds = 0;
             newMinutes += 1;
           }
-
+  
           if (newMinutes === 60) {
             newMinutes = 0;
             newHours += 1;
           }
-
+  
           return {
             ...prevTimer,
             seconds: newSeconds,
             minutes: newMinutes,
             hours: newHours,
             isRunning: true,
-            workLocation: workLocation // Guardar la ubicación de trabajo
+            workLocation: workLocation,
           };
         });
       }, 1000);
     }
   };
+  
 
   // Función para pausar el cronómetro
   const pauseTimer = () => {
+    const now = new Date();  // Obtener la hora actual
+    addAction('Pausa', now.toLocaleTimeString()); // Registrar acción de pausa
+    console.log('Acción de pausa registrada: Pausa a las', now.toLocaleTimeString());
+    setPauseTime(now.toLocaleTimeString());  // Establecer la hora de inicio
     MySwal.fire({
       title: '¿Estás seguro de pausar el tiempo?',
       text: 'Puedes continuar tu trabajo más tarde',
@@ -127,7 +141,7 @@ export const TimeClock = () => {
   };
 
   // Función para reanudar el cronómetro
-  const resumeTimer = () => {
+const resumeTimer = () => {
     if (timer.workLocation) {
       // Si ya se ha seleccionado una ubicación anteriormente
       MySwal.fire({
@@ -152,6 +166,10 @@ export const TimeClock = () => {
 
   // Función para detener y resetear el cronómetro
   const stopTimer = () => {
+    const now = new Date();  // Obtener la hora actual
+    setStopTime(now.toLocaleTimeString());  // Establecer la hora de inicio
+    addAction('Detenido', now.toLocaleTimeString()); // Registrar acción de detener
+    console.log('Acción de stop registrada: Stop a las', now.toLocaleTimeString());
     MySwal.fire({
       title: '¿Estás seguro de detener el tiempo?',
       text: 'No podrás recuperar el tiempo registrado',
@@ -170,6 +188,7 @@ export const TimeClock = () => {
 
         // Resetear también los segundos totales
         totalSecondsRef.current = 0;
+        setStartTime(null);  // Resetear la hora de inicio
         
         setTimer({
           seconds: 0,

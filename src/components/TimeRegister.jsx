@@ -1,26 +1,27 @@
-export const TimeRegister = () => {
+import { useTimeStore } from '../context/timeStore';
 
-return(
-    <div className= "flex flex-col items-center font-mainFont bg-secondarybg p-4 pl-12 pr-12 ">
-            <h3 className="text-xl font-bold mb-4 font-mainFont">REGISTRO DE TIEMPOS</h3>
-            <table className="w-full border-collapse">
-            <tbody>
-                <tr className='font-mainFont border-b border-gray-300'>
-                    <td className="px-4 py-2">Trabajo</td>
-                    <td className="px-4 py-2">9 h - 11'30 h</td>
-                    <td className="px-4 py-2">2'5 h</td>
-                </tr>
-                <tr className='text-primary font-mainFont border-b border-gray-300'>
-                    <td className="px-4 py-2">Pausa</td>
-                    <td className="px-4 py-2">11'30 h - 12 h</td>
-                    <td className="px-4 py-2">30 min</td>
-                </tr>
-                <tr className='font-mainFont border-b border-gray-300'>
-                    <td className="px-4 py-2">Trabajo</td>
-                    <td className="px-4 py-2">12 h - 13'30 h</td>
-                    <td className="px-4 py-2">1'5 h</td>
-                </tr>
-            </tbody>
-            </table>
+export const TimeRegister = () => {
+  const actions = useTimeStore((state) => state.actions);
+
+  return (
+    <div className="flex flex-col items-center bg-secondarybg p-4">
+      <h3 className="text-xl font-bold mb-4">Registro de Tiempos</h3>
+      <table className="w-full border-collapse">
+        <thead>
+          <tr className="border-b border-gray-300">
+            <th className="px-4 py-2">Acción</th>
+            <th className="px-4 py-2">Hora</th>
+          </tr>
+        </thead>
+        <tbody>
+          {actions.map((action, index) => (
+            <tr key={index} className="border-b border-gray-300">
+              <td className="px-4 py-2">{action.type}</td>
+              <td className="px-4 py-2">{action.time}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
-)};
+  );
+};

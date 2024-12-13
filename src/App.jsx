@@ -1,8 +1,14 @@
 import { useAuthStore } from "./context/authStore";
+import { useTimeStore } from "./context/timeStore";
 import  { useState } from "react";
 
 export const App = () => {
   const { token } = useAuthStore((state) => state.token);
+  const { startTime, pauseTime, stopTime } = useTimeStore((state) => ({
+    startTime: state.startTime,
+    pauseTime: state.pauseTime,
+    stopTime: state.stopTime,
+  }));
 
   return <TokenValidator token={token} />;
 };
