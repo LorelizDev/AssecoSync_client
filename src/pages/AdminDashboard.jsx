@@ -34,7 +34,15 @@ const AdminDashboard = () => {
           </div>
           <ButtonIcons onClick={navigateToEmployees} className="h-24">
             <img src={EmployeeIcon} alt="Employee Icon" className="w-16" />
-            Empleados
+            Peticiones
+          </ButtonIcons>
+          <ButtonIcons onClick={navigateToRegister} className="h-24">
+            <img src={RegisterIcon} alt="Register Icon" className="w-16" />
+            Lista de empleados
+          </ButtonIcons>
+          <ButtonIcons onClick={navigateToEmployees} className="h-24">
+            <img src={EmployeeIcon} alt="Employee Icon" className="w-16" />
+            Estadísticas
           </ButtonIcons>
           <ButtonIcons onClick={navigateToRegister} className="h-24">
             <img src={RegisterIcon} alt="Register Icon" className="w-16" />

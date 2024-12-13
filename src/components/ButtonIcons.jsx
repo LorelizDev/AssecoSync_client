@@ -21,13 +21,12 @@ const ButtonIcons = ({
       disabled={disabled}
       className={`${baseStyles} ${className}`}
     >
-      {typeof icon === 'string' ? (
+      {typeof Icon === 'string' ? (
         <img src={Icon} alt="" className="w-8 h-8 mr-4" />
       ) : (
         Icon && <Icon className="w-8 h-8 mr-4" />
       )}
       <span className="text-left font-medium">{children}</span>
-      {children}
     </button>
   );
 };
