@@ -82,8 +82,7 @@ const AdminEmployeeList = () => {
             Showing {startIndex + 1}-{Math.min(endIndex, totalEmployees)} of{' '}
             {totalEmployees}
           </div>
-
-          {/* Pagination Arrows */}
+          `0 ¡'¡ {/* Pagination Arrows */}
           <div className="flex space-x-4 mt-4 sm:mt-0">
             <button
               onClick={handlePreviousPage}
