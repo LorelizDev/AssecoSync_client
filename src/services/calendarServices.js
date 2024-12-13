@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Base URL for API requests
-const BASE_URL = 'http://localhost:3001';
+const BASE_URL = 'http://localhost:8000/api';
 
 /**
  * Service layer for handling leave request operations
@@ -13,7 +13,7 @@ export const calendarServices = {
    */
   getAllLeaveRequests: async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/LeaveRequest`);
+      const response = await axios.get(`${BASE_URL}/leave-requests`);
       return response.data;
     } catch (error) {
       console.error('Error fetching leave requests:', error);
@@ -28,10 +28,22 @@ export const calendarServices = {
    */
   createLeaveRequest: async (leaveRequestData) => {
     try {
-      const response = await axios.post(`${BASE_URL}/LeaveRequest`, {
+      // Buscar el ID real de tipo "Vacaciones"
+      const typeResponse = await axios.get(`${BASE_URL}/type-requests`);
+      const vacationType = typeResponse.data.find(
+        (type) => type.type === 'Vacaciones'
+      );
+
+      const requestData = {
         ...leaveRequestData,
+        type_id: vacationType ? vacationType.id : null, // Usar el ID numérico de vacaciones
         status_id: 1, // Default to pending status
-      });
+      };
+
+      const response = await axios.post(
+        `${BASE_URL}/leave-requests`,
+        requestData
+      );
       return response.data;
     } catch (error) {
       console.error('Error creating leave request:', error);
@@ -45,7 +57,7 @@ export const calendarServices = {
    */
   getLeaveRequestTypes: async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/TypeRequest`);
+      const response = await axios.get(`${BASE_URL}/type-requests`);
       return response.data;
     } catch (error) {
       console.error('Error fetching leave request types:', error);
