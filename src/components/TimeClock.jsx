@@ -70,7 +70,7 @@ export const TimeClock = () => {
     if (!timer.isRunning) {
       const now = new Date();
       setStartTime(now.toLocaleTimeString());
-      addAction('Trabajo', now.toLocaleTimeString()); // Registrar acción
+      // addAction('Trabajo', now.toLocaleTimeString()); // Registrar acción
       console.log(`Timer started at ${now.toLocaleTimeString()}`);
   
       intervalRef.current = setInterval(() => {
@@ -108,7 +108,7 @@ export const TimeClock = () => {
   // Función para pausar el cronómetro
   const pauseTimer = () => {
     const now = new Date();  // Obtener la hora actual
-    addAction('Pausa', now.toLocaleTimeString()); // Registrar acción de pausa
+    // addAction('Pausa', now.toLocaleTimeString()); // Registrar acción de pausa
     console.log('Acción de pausa registrada: Pausa a las', now.toLocaleTimeString());
     setPauseTime(now.toLocaleTimeString());  // Establecer la hora de inicio
     MySwal.fire({
@@ -168,7 +168,7 @@ const resumeTimer = () => {
   const stopTimer = () => {
     const now = new Date();  // Obtener la hora actual
     setStopTime(now.toLocaleTimeString());  // Establecer la hora de inicio
-    addAction('Detenido', now.toLocaleTimeString()); // Registrar acción de detener
+    // addAction('Detenido', now.toLocaleTimeString()); // Registrar acción de detener
     console.log('Acción de stop registrada: Stop a las', now.toLocaleTimeString());
     MySwal.fire({
       title: '¿Estás seguro de detener el tiempo?',

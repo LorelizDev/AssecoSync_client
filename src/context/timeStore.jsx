@@ -1,15 +1,27 @@
 import { create } from 'zustand';
 
-export const useTimeStore = create((set) => ({
+export const useTimeStore = create((set, get) => ({
   startTime: null,
   pauseTime: null,
   stopTime: null,
-  actions: [], // Arreglo para almacenar las acciones
+  actions: [],
+  journeyEndMessage: null,
 
-  setStartTime: (time) => set((state) => ({
-    startTime: time,
-    actions: [...state.actions, { type: 'Trabajo', time }]
-  })),
+  setStartTime: (time) => {
+    console.log('Llamando a setStartTime con:', time);
+    console.log('Estado actual de actions:', get().actions);
+    
+    set((state) => {
+      const newActions = [...state.actions.filter(action => action.type !== ''), { type: 'Trabajo', time }];
+      
+      console.log('Nuevas acciones:', newActions);
+      
+      return {
+        startTime: time,
+        actions: newActions
+      };
+    });
+  },
 
   setPauseTime: (time) => set((state) => ({
     pauseTime: time,
@@ -18,9 +30,11 @@ export const useTimeStore = create((set) => ({
 
   setStopTime: (time) => set((state) => ({
     stopTime: time,
-    actions: [...state.actions, { type: 'Detenido', time }]
+    actions: [], // Limpiar completamente las acciones
+    journeyEndMessage: `Has finalizado tu jornada a las ${time}`
   })),
 
-  // Método para limpiar las acciones si es necesario
+  clearJourneyEndMessage: () => set({ journeyEndMessage: null }),
+
   clearActions: () => set({ actions: [] })
 }));
