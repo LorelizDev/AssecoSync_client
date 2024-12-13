@@ -10,7 +10,7 @@ const AdminEmployeeList = () => {
   const employeesPerPage = 10; // Number of employees per page
 
   useEffect(() => {
-    import('../../data/dblist.json').then((data) => {
+    import('../db/dblist.json').then((data) => {
       setEmployees(data.employeesData || []);
       setFilteredEmployees(data.employeesData || []);
     });
@@ -31,7 +31,10 @@ const AdminEmployeeList = () => {
   // Calculate the employees to display on the current page
   const startIndex = (currentPage - 1) * employeesPerPage;
   const endIndex = startIndex + employeesPerPage;
-  const currentEmployees = (filteredEmployees || []).slice(startIndex, endIndex);
+  const currentEmployees = (filteredEmployees || []).slice(
+    startIndex,
+    endIndex
+  );
 
   // Pagination handlers
   const totalEmployees = filteredEmployees.length;
