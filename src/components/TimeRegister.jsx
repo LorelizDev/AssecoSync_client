@@ -6,12 +6,11 @@ export const TimeRegister = () => {
   const journeyEndMessage = useTimeStore((state) => state.journeyEndMessage);
   const clearJourneyEndMessage = useTimeStore((state) => state.clearJourneyEndMessage);
 
-  // Opcional: limpiar el mensaje después de unos segundos
   useEffect(() => {
     if (journeyEndMessage) {
       const timer = setTimeout(() => {
         clearJourneyEndMessage();
-      }, 10000); // Desaparece después de 5 segundos
+      }, 10000);
 
       return () => clearTimeout(timer);
     }

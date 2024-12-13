@@ -6,13 +6,19 @@ export const useTimeStore = create((set, get) => ({
   stopTime: null,
   actions: [],
   journeyEndMessage: null,
+  token: null,
+  
+  setToken: (token) => set({ token }), // Guarda el token
+  clearToken: () => set({ token: null }), // Limpia el token
 
   setStartTime: (time) => {
     console.log('Llamando a setStartTime con:', time);
     console.log('Estado actual de actions:', get().actions);
     
     set((state) => {
-      const newActions = [...state.actions.filter(action => action.type !== ''), { type: 'Trabajo', time }];
+      const newActions = [...state.actions.filter(action => action.type !== '')
+        , { type: 'Trabajo', time }
+      ];
       
       console.log('Nuevas acciones:', newActions);
       

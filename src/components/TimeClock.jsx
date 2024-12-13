@@ -129,12 +129,6 @@ export const TimeClock = () => {
             ...prevTimer,
             isRunning: false
           }));
-
-          MySwal.fire(
-            'Pausado',
-            'Tu tiempo de trabajo ha sido pausado',
-            'success'
-          );
         }
       }
     });
@@ -198,11 +192,11 @@ const resumeTimer = () => {
           workLocation: null // Resetear también la ubicación de trabajo
         });
 
-        MySwal.fire(
-          'Detenido',
-          'Tu tiempo de trabajo ha sido detenido',
-          'success'
-        );
+        // Aquí limpia las acciones
+        useTimeStore.setState((state) => ({
+          ...state,
+          actions: [], // Resetea la lista de acciones
+        }));
       }
     });
   };
