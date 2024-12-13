@@ -10,7 +10,7 @@ const AdminEmployeeList = () => {
   const employeesPerPage = 10; // Number of employees per page
 
   useEffect(() => {
-    import('../../data/dblist.json').then((data) => {
+    import('../db/dblist.json').then((data) => {
       setEmployees(data.employeesData || []);
       setFilteredEmployees(data.employeesData || []);
     });
