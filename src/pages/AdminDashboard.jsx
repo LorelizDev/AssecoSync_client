@@ -8,10 +8,10 @@ const AdminDashboard = () => {
   const navigate = useNavigate(); // Inicializar navegación
 
   // Define button click handlers
-  const navigateToEmployees = () => navigate('/users');
-  const navigateToRegister = () => navigate('/settings');
-  const navigateToClockInReports = () => navigate('/reports');
-  const navigateToRequests = () => navigate('/support');
+  const navigateToEmployees = () => navigate('/AdminEmployeeList');
+  const navigateToRegister = () => navigate('/register');
+  //   const navigateToClockInReports = () => navigate('/reports');
+  //   const navigateToRequests = () => navigate('/support');
 
   return (
     <div className="flex h-screen">
@@ -23,10 +23,11 @@ const AdminDashboard = () => {
       {/* Main Area */}
       <div className="relative flex-grow md:w-4/5 bg-primarybg">
         <div className="w-1/2 flex flex-col justify-center items-center space-y-4">
-          <Button />
+          <h1 className="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
         </div>
         <div>
-          <Button onClick={handleButtonClick}>Solicitar ausencias</Button>
+          <Button onClick={navigateToEmployees}>Empleados</Button>
+          <Button onClick={navigateToRegister}>Registro</Button>
         </div>
       </div>
 

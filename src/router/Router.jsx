@@ -5,6 +5,7 @@ import Dashboard from '../pages/Dashboard';
 import AdminEmployeeList from '../pages/AdminEmployeeList';
 import { RegisterPage } from '../pages/RegisterPage';
 import CalendarPage from '../pages/CalendarPage';
+import AdminDashboard from '../pages/AdminDashboard';
 
 export const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ export const router = createBrowserRouter([
       {
         path: 'register',
         element: <RegisterPage />,
+      },
+      {
+        path: 'AdminDashboard',
+        element: <AdminDashboard />,
       },
     ],
   },
