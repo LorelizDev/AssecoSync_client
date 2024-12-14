@@ -1,0 +1,244 @@
+{
+  "employeesData": [
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/alan.jpg",
+      "id": "0001",
+      "name": "Alan",
+      "lastName": "Montalvo Amador",
+      "email": "alan.montalvo.amador@demo-datos.es",
+      "position": "Office Manager"
+    },
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/alejandro.jpg",
+      "id": "0002",
+      "name": "Alejandro",
+      "lastName": "Iglesias Linares",
+      "email": "alejandro.iglesias.linares@demo-datos.es",
+      "position": "Sales Manager"
+    },
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/ana.jpg",
+      "id": "0003",
+      "name": "Ana",
+      "lastName": "García",
+      "email": "anagarcia@demo-datos.es",
+      "position": "UI Designer"
+    },
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/carla.jpg",
+      "id": "0004",
+      "name": "Carla",
+      "lastName": "Vásquez Aguirre",
+      "email": "carla.vasquez.aguirre@demo-datos.es",
+      "position": "PR Manager"
+    },
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/carlos.jpg",
+      "id": "0005",
+      "name": "Carlos",
+      "lastName": "Solís Reynoso",
+      "email": "carlos.solis.reynoso@demo-datos.es",
+      "position": "Head of IT"
+    },
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/catalina.jpg",
+      "id": "0006",
+      "name": "Catalina",
+      "lastName": "Martín Blanco",
+      "email": "catalina.martin.blanco@demo-datos.es",
+      "position": "Senior Backend Developer"
+    },
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/cristian.jpg",
+      "id": "0007",
+      "name": "Cristian",
+      "lastName": "Mena Sarmiento",
+      "email": "cristian.mena.sarmiento@demo-datos.es",
+      "position": "Budget Analyst"
+    },
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/daniela.jpg",
+      "id": "0008",
+      "name": "Daniela",
+      "lastName": "Suárez Gil",
+      "email": "daniela.suarez.gil@demo-datos.es",
+      "position": "Head of HR"
+    },
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/diego.jpg",
+      "id": "0009",
+      "name": "Diego",
+      "lastName": "Colón Sánchez",
+      "email": "diego.colon.sanchez@demo-datos.es",
+      "position": "Asesor Financiero"
+    },
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/carmen.jpg",
+      "id": "0010",
+      "name": "Carmen",
+      "lastName": "Ruiz Martínez",
+      "email": "carmen.ruiz.martinez@demo-datos.es",
+      "position": "Analista de Marketing"
+    },
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/javier.jpg",
+      "id": "0011",
+      "name": "Javier",
+      "lastName": "Fernández López",
+      "email": "javier.fernandez.lopez@demo-datos.es",
+      "position": "Ingeniero de Software"
+    },
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/lucia.jpg",
+      "id": "0012",
+      "name": "Lucía",
+      "lastName": "García Pérez",
+      "email": "lucia.garcia.perez@demo-datos.es",
+      "position": "Diseñadora Gráfica"
+    },
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/antonio.jpg",
+      "id": "0013",
+      "name": "Antonio",
+      "lastName": "Moreno Sánchez",
+      "email": "antonio.moreno.sanchez@demo-datos.es",
+      "position": "Gerente de Ventas"
+    },
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/elena.jpg",
+      "id": "0014",
+      "name": "Elena",
+      "lastName": "Torres Navarro",
+      "email": "elena.torres.navarro@demo-datos.es",
+      "position": "Recursos Humanos"
+    },
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/pablo.jpg",
+      "id": "0015",
+      "name": "Pablo",
+      "lastName": "Jiménez Ortiz",
+      "email": "pablo.jimenez.ortiz@demo-datos.es",
+      "position": "Desarrollador Web"
+    },
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/laura.jpg",
+      "id": "0016",
+      "name": "Laura",
+      "lastName": "Gómez Rodríguez",
+      "email": "laura.gomez.rodriguez@demo-datos.es",
+      "position": "Contadora"
+    },
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/carlos.jpg",
+      "id": "0017",
+      "name": "Carlos",
+      "lastName": "Vega Muñoz",
+      "email": "carlos.vega.munoz@demo-datos.es",
+      "position": "Analista de Datos"
+    },
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/isabel.jpg",
+      "id": "0018",
+      "name": "Isabel",
+      "lastName": "Romero Castro",
+      "email": "isabel.romero.castro@demo-datos.es",
+      "position": "Ejecutiva de Cuentas"
+    },
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/miguel.jpg",
+      "id": "0019",
+      "name": "Miguel",
+      "lastName": "Sanz Herrera",
+      "email": "miguel.sanz.herrera@demo-datos.es",
+      "position": "Arquitecto de Software"
+    },
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/anadiaz.jpg",
+      "id": "0020",
+      "name": "Ana",
+      "lastName": "Díaz Morales",
+      "email": "ana.diaz.morales@demo-datos.es",
+      "position": "Especialista en SEO"
+    },
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/david.jpg",
+      "id": "0021",
+      "name": "David",
+      "lastName": "Ortega Ramos",
+      "email": "david.ortega.ramos@demo-datos.es",
+      "position": "Gerente de Proyectos"
+    },
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/marta.jpg",
+      "id": "0022",
+      "name": "Marta",
+      "lastName": "Serrano Blanco",
+      "email": "marta.serrano.blanco@demo-datos.es",
+      "position": "Diseñadora UX/UI"
+    },
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/jorge.jpg",
+      "id": "0023",
+      "name": "Jorge",
+      "lastName": "Molina Vargas",
+      "email": "jorge.molina.vargas@demo-datos.es",
+      "position": "Analista de Sistemas"
+    },
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/beatriz.jpg",
+      "id": "0024",
+      "name": "Beatriz",
+      "lastName": "Castillo Rojas",
+      "email": "beatriz.castillo.rojas@demo-datos.es",
+      "position": "Coordinadora de Eventos"
+    },
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/alberto.jpg",
+      "id": "0025",
+      "name": "Alberto",
+      "lastName": "Núñez Gallego",
+      "email": "alberto.nunez.gallego@demo-datos.es",
+      "position": "Ingeniero de Redes"
+    },
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/cristina.jpg",
+      "id": "0026",
+      "name": "Cristina",
+      "lastName": "Pascual Medina",
+      "email": "cristina.pascual.medina@demo-datos.es",
+      "position": "Asistente Ejecutiva"
+    },
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/raul.jpg",
+      "id": "0027",
+      "name": "Raúl",
+      "lastName": "Iglesias Crespo",
+      "email": "raul.iglesias.crespo@demo-datos.es",
+      "position": "Analista Financiero"
+    },
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/silvia.jpg",
+      "id": "0028",
+      "name": "Silvia",
+      "lastName": "Aguilar Mendoza",
+      "email": "silvia.aguilar.mendoza@demo-datos.es",
+      "position": "Especialista en Marketing Digital"
+    },
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/fernando.jpg",
+      "id": "0029",
+      "name": "Fernando",
+      "lastName": "Lara Hidalgo",
+      "email": "fernando.lara.hidalgo@demo-datos.es",
+      "position": "Consultor de Negocios"
+    },
+    {
+      "profilePicture": "../src/assets/images/profile-pictures/monica.jpg",
+      "id": "0030",
+      "name": "Mónica",
+      "lastName": "Prieto Delgado",
+      "email": "monica.prieto.delgado@demo-datos.es",
+      "position": "Gerente de Calidad"
+    }
+  ]
+}

@@ -7,6 +7,7 @@ import Button from '../components/Button';
 import { calendarServices } from '../services/calendarServices';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useAuthStore } from '../context/authStore'; // Asegurar importación correcta
 
 // Mapeo de colores para los diferentes tipos de ausencia
 const LEAVE_TYPE_COLORS = {
@@ -17,10 +18,13 @@ const LEAVE_TYPE_COLORS = {
 };
 
 const CalendarPage = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false); // Control del modal de solicitud de ausencia
-  const [isVacationModalOpen, setIsVacationModalOpen] = useState(false); // Control del modal de solicitud de vacaciones
-  const [leaveRequestTypes, setLeaveRequestTypes] = useState([]); // Tipos de ausencia disponibles
-  const [events, setEvents] = useState([]); // Eventos del calendario
+  // Obtener el token del store de autenticación
+  const token = useAuthStore((state) => state.token);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isVacationModalOpen, setIsVacationModalOpen] = useState(false);
+  const [leaveRequestTypes, setLeaveRequestTypes] = useState([]);
+  const [events, setEvents] = useState([]);
   const [formData, setFormData] = useState({
     employee_id: '',
     start_date: '',
@@ -37,43 +41,59 @@ const CalendarPage = () => {
 
   // Función para obtener datos iniciales con useCallback para optimizar rendimiento
   const fetchInitialData = useCallback(async () => {
+    // Verificar que el token exista antes de hacer la solicitud
+    if (!token) {
+      toast.error('No se encontró token de autenticación');
+      return;
+    }
+
     try {
-      // Obtener tipos de solicitudes de ausencia
-      const types = await calendarServices.getLeaveRequestTypes();
-      const filteredTypes = types.filter((type) => type.type !== 'Vacaciones');
-      setLeaveRequestTypes(filteredTypes);
+      const types = await calendarServices.getLeaveRequestTypes(token);
 
-      // Obtener todas las solicitudes de ausencia existentes
-      const requests = await calendarServices.getAllLeaveRequests();
+      const requests = await calendarServices.getAllLeaveRequests(token);
 
-      // Mapear las solicitudes a eventos
-      const calendarEvents = requests.map((request) => {
-        // Verifica que tipo de solicitud y color se asignan correctamente
-        const leaveType =
-          request.type === 'Vacaciones'
-            ? { type: 'Vacaciones', id: 'vacation' }
-            : filteredTypes.find((type) => type.id === request.type_id);
+      const calendarEvents = requests
+        .map((request) => {
+          const startDate = new Date(request.startDate);
+          const endDate = new Date(request.endDate);
 
-        const adjustedEndDate = new Date(request.end_date);
-        adjustedEndDate.setDate(adjustedEndDate.getDate() + 1);
+          if (isNaN(startDate) || isNaN(endDate)) {
+            console.error('Fecha inválida:', request);
+            return null;
+          }
 
-        return {
-          title: leaveType ? leaveType.type : 'Ausencia',
-          start: request.start_date,
-          end: adjustedEndDate.toISOString().split('T')[0],
-          color: LEAVE_TYPE_COLORS[leaveType?.type] || '#6c757d', // Asegúrate de que el color es correcto
-        };
-      });
+          const leaveType = types.find((type) => type.id === request.typeId);
 
+          console.log('Tipo de solicitud encontrado:', leaveType);
+
+          const adjustedEndDate = new Date(endDate);
+          adjustedEndDate.setDate(adjustedEndDate.getDate() + 1);
+
+          return {
+            title: leaveType ? leaveType.type : 'Ausencia',
+            start: startDate.toISOString().split('T')[0],
+            end: adjustedEndDate.toISOString().split('T')[0],
+            color: LEAVE_TYPE_COLORS[leaveType?.type] || '#6c757d',
+          };
+        })
+        .filter((event) => event !== null);
+
+      console.log('Eventos del calendario:', calendarEvents);
       setEvents(calendarEvents);
     } catch (error) {
-      toast.error('Error al cargar datos');
+      console.error('Error al cargar datos:', error);
+      toast.error(
+        'No se pudieron cargar los datos. Por favor, inicie sesión nuevamente.'
+      );
     }
-  }, []);
+  }, [token]);
 
   useEffect(() => {
-    fetchInitialData();
-  }, [fetchInitialData]);
+    // Solo intentar cargar datos si hay un token
+    if (token) {
+      fetchInitialData();
+    }
+  }, [fetchInitialData, token]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -104,24 +124,24 @@ const CalendarPage = () => {
         return;
       }
 
-      // Crear la solicitud de ausencia en el backend
-      const newRequest = await calendarServices.createLeaveRequest(formData);
+      // Crear la solicitud de ausencia en el backend pasando el token
+      const newRequest = await calendarServices.createLeaveRequest(
+        formData,
+        token
+      );
 
       // Obtener el tipo de ausencia
       const leaveType = leaveRequestTypes.find(
         (type) => type.id === parseInt(formData.type_id)
       );
 
-      // Asegúrate de que el tipo esté correctamente asignado
       const eventColor = leaveType
         ? LEAVE_TYPE_COLORS[leaveType.type] || '#6c757d'
         : '#6c757d';
 
-      // Ajustar fecha de finalización sumando un día
       const adjustedEndDate = new Date(formData.end_date);
       adjustedEndDate.setDate(adjustedEndDate.getDate() + 1);
 
-      // Crear nuevo evento para el calendario
       const newEvent = {
         title: leaveType ? leaveType.type : 'Ausencia',
         start: formData.start_date,
@@ -129,10 +149,8 @@ const CalendarPage = () => {
         color: eventColor,
       };
 
-      // Actualizar el estado de eventos inmediatamente
       setEvents((prevEvents) => [...prevEvents, newEvent]);
 
-      // Limpiar el formulario y cerrar el modal
       setFormData({
         employee_id: '',
         start_date: '',
@@ -144,6 +162,7 @@ const CalendarPage = () => {
 
       toast.success('Solicitud de ausencia creada exitosamente');
     } catch (error) {
+      console.error('Error al crear solicitud:', error);
       toast.error('Error al crear la solicitud de ausencia');
     }
   };
@@ -160,11 +179,16 @@ const CalendarPage = () => {
         return;
       }
 
-      // Enviar solicitud de vacaciones
-      const newVacation = await calendarServices.createLeaveRequest({
-        ...vacationData,
-        type_id: 'vacation',
-      });
+      // Enviar solicitud de vacaciones pasando el token
+      const newVacation = await calendarServices.createLeaveRequest(
+        {
+          employee_id: vacationData.employee_id,
+          start_date: vacationData.start_date,
+          end_date: vacationData.end_date,
+          details: vacationData.details,
+        },
+        token
+      );
 
       const adjustedEndDate = new Date(vacationData.end_date);
       adjustedEndDate.setDate(adjustedEndDate.getDate() + 1);
@@ -188,6 +212,7 @@ const CalendarPage = () => {
 
       toast.success('Solicitud de vacaciones creada exitosamente');
     } catch (error) {
+      console.error('Error al crear solicitud de vacaciones:', error);
       toast.error('Error al crear la solicitud de vacaciones');
     }
   };
