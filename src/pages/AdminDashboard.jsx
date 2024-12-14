@@ -14,40 +14,42 @@ const AdminDashboard = () => {
   const navigateToRegister = () => navigate('/register');
 
   return (
-    <div>
-      <div
-        className="flex flex-col md:flex-row 
+    <div
+      className="flex flex-col md:flex-row
   h-screen"
-      >
-        {/* Sidebar */}
-        <div className="z-10 hidden md:block md:relative md:w-20 bg-primarybg">
-          <Sidebar />
-        </div>
+    >
+      {/* Sidebar */}
+      <div className="z-10 hidden md:block md:relative md:w-20 bg-primarybg">
+        <Sidebar />
+      </div>
 
-        {/* Main Area */}
-        <div className="relative flex-grow md:w-4/5 bg-primarybg">
-          <div className="container px-4 py-6">
-            <h1 className="text-1xl text-primary font-bold mb-1">
-              Admin Dashboard
-            </h1>
-            {/* Wrapper to break out of container */}
+      {/* Main Area */}
+      <div className="relative flex-grow md:w-4/5 bg-primarybg">
+        <div className="container px-4 py-6">
+          <h1 className="text-1xl text-primary font-bold mb-1">
+            Admin Dashboard
+          </h1>
+          {/* Wrapper to break out of container */}
+        </div>
+        <div className="w-full md:absolute md:-right-[22%] md:w-[120%]">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-4 max-w-fit">
+            <ButtonIcons onClick={navigateToEmployees} className="h-24">
+              <img src={EmployeeIcon} alt="Employee Icon" className="w-16" />
+              Peticiones
+            </ButtonIcons>
+            <ButtonIcons onClick={navigateToRegister} className="h-24">
+              <img src={RegisterIcon} alt="Register Icon" className="w-16" />
+              Lista de empleados
+            </ButtonIcons>
+            <ButtonIcons onClick={navigateToEmployees} className="h-24">
+              <img src={EmployeeIcon} alt="Employee Icon" className="w-16" />
+              Estadísticas
+            </ButtonIcons>
+            <ButtonIcons onClick={navigateToRegister} className="h-24">
+              <img src={RegisterIcon} alt="Register Icon" className="w-16" />
+              Registro
+            </ButtonIcons>
           </div>
-          <ButtonIcons onClick={navigateToEmployees} className="h-24">
-            <img src={EmployeeIcon} alt="Employee Icon" className="w-16" />
-            Peticiones
-          </ButtonIcons>
-          <ButtonIcons onClick={navigateToRegister} className="h-24">
-            <img src={RegisterIcon} alt="Register Icon" className="w-16" />
-            Lista de empleados
-          </ButtonIcons>
-          <ButtonIcons onClick={navigateToEmployees} className="h-24">
-            <img src={EmployeeIcon} alt="Employee Icon" className="w-16" />
-            Estadísticas
-          </ButtonIcons>
-          <ButtonIcons onClick={navigateToRegister} className="h-24">
-            <img src={RegisterIcon} alt="Register Icon" className="w-16" />
-            Registro
-          </ButtonIcons>
         </div>
       </div>
 
