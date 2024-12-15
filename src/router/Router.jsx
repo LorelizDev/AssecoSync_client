@@ -6,6 +6,7 @@ import AdminEmployeeList from '../pages/AdminEmployeeList';
 import { RegisterPage } from '../pages/RegisterPage';
 import CalendarPage from '../pages/CalendarPage';
 import AdminDashboard from '../pages/AdminDashboard';
+import EmployeeRequest from '../pages/EmployeeRequest';
 
 export const router = createBrowserRouter([
   {
@@ -38,6 +39,10 @@ export const router = createBrowserRouter([
       {
         path: 'AdminDashboard',
         element: <AdminDashboard />,
+      },
+      {
+        path: 'EmployeeRequests',
+        element: <EmployeeRequest />,
       },
     ],
   },
