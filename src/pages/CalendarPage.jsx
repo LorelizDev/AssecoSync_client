@@ -2,12 +2,12 @@ import React, { useState, useEffect, useCallback } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import Sidebar from '../components/Sidebar';
-import Input from '../components/Input';
 import Button from '../components/Button';
 import { calendarServices } from '../services/calendarServices';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuthStore } from '../context/authStore';
+import ModalForm from '../components/ModalForm';
 
 const LEAVE_TYPE_COLORS = {
   'Cita médica': '#17a2b8',
@@ -18,17 +18,22 @@ const LEAVE_TYPE_COLORS = {
 
 const CalendarPage = () => {
   const token = useAuthStore((state) => state.token);
-
-  // Estados del componente
   const [isVacationModalOpen, setIsVacationModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [events, setEvents] = useState([]);
+  const [formData, setFormData] = useState({
+    start_date: '',
+    end_date: '',
+    type_id: '',
+    details: '',
+  });
   const [vacationData, setVacationData] = useState({
     start_date: '',
     end_date: '',
     details: '',
   });
+  const [leaveRequestTypes, setLeaveRequestTypes] = useState([]);
 
-  // Obtener las solicitudes de ausencia y renderizarlas en el calendario
   const fetchInitialData = useCallback(async () => {
     if (!token) {
       toast.error('No se encontró token de autenticación');
@@ -36,6 +41,7 @@ const CalendarPage = () => {
     }
 
     try {
+      const types = await calendarServices.getLeaveRequestTypes(token);
       const requests = await calendarServices.getAllLeaveRequests(token);
 
       const calendarEvents = requests
@@ -48,19 +54,22 @@ const CalendarPage = () => {
             return null;
           }
 
+          const leaveType = types.find((type) => type.id === request.typeId);
+
           const adjustedEndDate = new Date(endDate);
           adjustedEndDate.setDate(adjustedEndDate.getDate() + 1);
 
           return {
-            title: request.type === 'Vacaciones' ? 'Vacaciones' : 'Ausencia',
+            title: leaveType ? leaveType.type : 'Ausencia',
             start: startDate.toISOString().split('T')[0],
             end: adjustedEndDate.toISOString().split('T')[0],
-            color: LEAVE_TYPE_COLORS['Vacaciones'],
+            color: LEAVE_TYPE_COLORS[leaveType?.type] || '#6c757d',
           };
         })
         .filter((event) => event !== null);
 
       setEvents(calendarEvents);
+      setLeaveRequestTypes(types);
     } catch (error) {
       console.error('Error al cargar datos:', error);
       toast.error(
@@ -75,13 +84,71 @@ const CalendarPage = () => {
     }
   }, [fetchInitialData, token]);
 
-  // Manejo del formulario de vacaciones
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
   const handleVacationChange = (e) => {
     const { name, value } = e.target;
     setVacationData((prev) => ({
       ...prev,
       [name]: value,
     }));
+  };
+
+  const handleSubmitLeaveRequest = async (e) => {
+    e.preventDefault();
+
+    try {
+      if (!formData.start_date || !formData.end_date || !formData.type_id) {
+        toast.error('Por favor complete todos los campos requeridos');
+        return;
+      }
+
+      const newRequest = await calendarServices.createLeaveRequest(
+        {
+          startDate: formData.start_date,
+          endDate: formData.end_date,
+          details: formData.details,
+          typeId: formData.type_id,
+          statusId: 1, // Estado pendiente
+        },
+        token
+      );
+
+      const adjustedEndDate = new Date(formData.end_date);
+      adjustedEndDate.setDate(adjustedEndDate.getDate() + 1);
+
+      const leaveType = leaveRequestTypes.find(
+        (type) => type.id === parseInt(formData.type_id)
+      );
+
+      const newEvent = {
+        title: leaveType ? leaveType.type : 'Ausencia',
+        start: formData.start_date,
+        end: adjustedEndDate.toISOString().split('T')[0],
+        color: LEAVE_TYPE_COLORS[leaveType?.type] || '#6c757d',
+      };
+
+      setEvents((prevEvents) => [...prevEvents, newEvent]);
+
+      setFormData({
+        start_date: '',
+        end_date: '',
+        type_id: '',
+        details: '',
+      });
+      setIsModalOpen(false);
+
+      toast.success('Solicitud de ausencia creada exitosamente');
+    } catch (error) {
+      console.error('Error al crear solicitud de ausencia:', error);
+      toast.error('Error al crear la solicitud de ausencia');
+    }
   };
 
   const handleSubmitVacationRequest = async (e) => {
@@ -93,22 +160,12 @@ const CalendarPage = () => {
         return;
       }
 
-      // Log para verificar los datos enviados
-      console.log('Datos enviados al backend:', {
-        startDate: vacationData.start_date, // Cambio a `startDate`
-        endDate: vacationData.end_date, // Cambio a `endDate`
-        details: vacationData.details, // Opcional, pero importante para el log
-        typeId: 1, // Fijo para vacaciones
-        statusId: 1, // Estado inicial pendiente
-      });
-
-      // Enviar solicitud de vacaciones
       const newVacation = await calendarServices.createLeaveRequest(
         {
           startDate: vacationData.start_date,
           endDate: vacationData.end_date,
-          details: vacationData.details, // Incluye "details" si es necesario
-          typeId: 1, // Vacaciones
+          details: vacationData.details,
+          typeId: 1, // Fijo para vacaciones
           statusId: 1, // Pendiente
         },
         token
@@ -126,7 +183,6 @@ const CalendarPage = () => {
 
       setEvents((prevEvents) => [...prevEvents, newEvent]);
 
-      // Resetear el formulario
       setVacationData({
         start_date: '',
         end_date: '',
@@ -137,11 +193,6 @@ const CalendarPage = () => {
       toast.success('Solicitud de vacaciones creada exitosamente');
     } catch (error) {
       console.error('Error al crear solicitud de vacaciones:', error);
-
-      if (error.response) {
-        console.error('Respuesta del backend:', error.response.data);
-      }
-
       toast.error('Error al crear la solicitud de vacaciones');
     }
   };
@@ -160,6 +211,9 @@ const CalendarPage = () => {
         </div>
 
         <div className="relative px-4 md:pl-[1.2rem] pb-4">
+          <Button onClick={() => setIsModalOpen(true)} className="mb-4">
+            Solicitar ausencia
+          </Button>
           <Button onClick={() => setIsVacationModalOpen(true)} className="mb-4">
             Solicitar vacaciones
           </Button>
@@ -189,53 +243,29 @@ const CalendarPage = () => {
         </div>
       </div>
 
-      {isVacationModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 md:w-1/3">
-            <h2 className="text-xl font-bold mb-4">Solicitar vacaciones</h2>
-            <form onSubmit={handleSubmitVacationRequest}>
-              <Input
-                label="Fecha de inicio"
-                type="date"
-                name="start_date"
-                value={vacationData.start_date}
-                onChange={handleVacationChange}
-                required
-              />
-              <Input
-                label="Fecha de fin"
-                type="date"
-                name="end_date"
-                value={vacationData.end_date}
-                onChange={handleVacationChange}
-                required
-              />
-              <textarea
-                name="details"
-                value={vacationData.details}
-                onChange={handleVacationChange}
-                placeholder="Detalles de las vacaciones"
-                className="mt-2 w-full px-3 py-2 border rounded-md"
-              />
-              <div className="mt-4 flex justify-between">
-                <button
-                  type="button"
-                  className="px-4 py-2 bg-gray-300 rounded-md"
-                  onClick={() => setIsVacationModalOpen(false)}
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-green-500 text-white rounded-md"
-                >
-                  Enviar
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      {/* Modal de Solicitar Ausencia */}
+      <ModalForm
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleSubmitLeaveRequest}
+        title="Solicitar ausencia"
+        formData={formData}
+        handleInputChange={handleInputChange}
+        leaveRequestTypes={leaveRequestTypes}
+      />
+
+      {/* Modal de Solicitar Vacaciones */}
+      <ModalForm
+        isOpen={isVacationModalOpen}
+        onClose={() => setIsVacationModalOpen(false)}
+        onSubmit={handleSubmitVacationRequest}
+        title="Solicitar vacaciones"
+        formData={vacationData}
+        handleInputChange={handleVacationChange}
+        leaveRequestTypes={leaveRequestTypes}
+        excludeVacation={true} // Excluir "Vacaciones" de la lista
+      />
+
       <ToastContainer />
     </div>
   );
