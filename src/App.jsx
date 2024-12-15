@@ -4,7 +4,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const App = () => {
-  const { token } = useAuthStore((state) => state);
+  const { token } = useAuthStore((state) => state.token);
 
   return (
     <>
