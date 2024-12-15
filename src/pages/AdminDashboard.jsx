@@ -2,19 +2,26 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import Button from '../components/Button';
+import ButtonIcons from '../components/ButtonIcons';
+import EmployeeListIcon from '../assets/images/icons/employee-list.svg';
+import RegisterIcon from '../assets/images/icons/register.svg';
+import StatisticsIcon from '../assets/images/icons/button clock-in.svg';
+import RequestIcon from '../assets/images/icons/peticiones.svg';
 
 const AdminDashboard = () => {
   const navigate = useNavigate(); // Inicializar navegación
 
   // Define button click handlers
-  const navigateToEmployees = () => navigate('/users');
-  const navigateToRegister = () => navigate('/settings');
-  const navigateToClockInReports = () => navigate('/reports');
-  const navigateToRequests = () => navigate('/support');
+  const navigateToEmployees = () => navigate('/AdminEmployeeList');
+  const navigateToRegister = () => navigate('/register');
+  const navigateToStatistics = () => navigate('/register');
+  const navigateToRequests = () => navigate('/register');
 
   return (
-    <div className="flex h-screen">
+    <div
+      className="flex flex-col md:flex-row
+  h-screen"
+    >
       {/* Sidebar */}
       <div className="z-10 hidden md:block md:relative md:w-20 bg-primarybg">
         <Sidebar />
@@ -22,11 +29,49 @@ const AdminDashboard = () => {
 
       {/* Main Area */}
       <div className="relative flex-grow md:w-4/5 bg-primarybg">
-        <div className="w-1/2 flex flex-col justify-center items-center space-y-4">
-          <Button />
+        <div className="container px-6 py-6">
+          <h1 className="text-2xl text-primary font-bold mb-1">
+            Admin Dashboard
+          </h1>
+          {/* Wrapper to break out of container */}
         </div>
-        <div>
-          <Button onClick={handleButtonClick}>Solicitar ausencias</Button>
+        <div className="w-full md:absolute md:-right-[22%] md:w-[120%]">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-fit">
+            {/* Buttons */}
+            <ButtonIcons onClick={navigateToRegister} className="px-4 h-[6rem]">
+              <img src={RegisterIcon} alt="Register Icon" className="w-16" />
+              <p className="text-base">Registro</p>
+            </ButtonIcons>
+
+            <ButtonIcons
+              onClick={navigateToEmployees}
+              className="px-4 h-[6rem]"
+            >
+              <img
+                src={EmployeeListIcon}
+                alt="Employee List Icon"
+                className="w-16"
+              />
+              <p className="text-base">Lista de empleados</p>
+            </ButtonIcons>
+
+            <ButtonIcons
+              onClick={navigateToStatistics}
+              className="px-4 h-[6rem]"
+            >
+              <img
+                src={StatisticsIcon}
+                alt="Statistics Icon"
+                className="w-16"
+              />
+              <p className="text-base">Estadísticas</p>
+            </ButtonIcons>
+
+            <ButtonIcons onClick={navigateToRequests} className="px-4 h-[6rem]">
+              <img src={RequestIcon} alt="Request Icon" className="w-16" />
+              <p className="text-base">Solicitudes Permisos</p>
+            </ButtonIcons>
+          </div>
         </div>
       </div>
 
