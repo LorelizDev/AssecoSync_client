@@ -1,23 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import { leaveRequestService } from '../services/employeeService';
+import { leaveRequestService } from '../services/employeeService'; // Asegúrate de importar el servicio de obtener los datos
+import defaultAvatar from '../assets/images/profile-pictures/alan.jpg'; // Importar la imagen por defecto
 
-const EmployeeRequestList = ({ token }) => {
-  const [leaveRequests, setLeaveRequests] = useState([]);
+const EmployeeRequestList = ({ employees }) => {
+  const [employeeRequests, setEmployeeRequests] = useState([]);
 
-  // Cargar las solicitudes de ausencia con los empleados relacionados
   useEffect(() => {
-    const fetchLeaveRequests = async () => {
+    const fetchEmployeeRequests = async () => {
       try {
-        const requestsData =
+        const token = localStorage.getItem('token');
+        const requests =
           await leaveRequestService.getAllLeaveRequestsWithEmployees(token);
-        setLeaveRequests(requestsData);
+        setEmployeeRequests(requests);
       } catch (error) {
-        console.error('Error fetching leave requests:', error);
+        console.error('Error al obtener las solicitudes:', error);
       }
     };
+    fetchEmployeeRequests();
+  }, []); // Dependencia vacía, solo se ejecuta una vez al cargar el componente
 
-    fetchLeaveRequests();
-  }, [token]);
+  // Función para mapear el statusId a un texto legible
+  const getStatusText = (statusId) => {
+    switch (statusId) {
+      case 1:
+        return 'Pendiente'; // Status "Pending"
+      case 2:
+        return 'Aprobado'; // Status "Approved"
+      case 3:
+        return 'Denegado'; // Status "Rejected"
+      default:
+        return 'Desconocido'; // Si no hay un status correspondiente, devolvemos "Desconocido"
+    }
+  };
 
   return (
     <div className="container p-1">
@@ -26,69 +40,83 @@ const EmployeeRequestList = ({ token }) => {
           <thead className="bg-[#fcfcfc]">
             <tr>
               <th className="px-4 py-2 text-left font-semibold text-gray-700">
-                Profile
+                Perfil
               </th>
               <th className="px-4 py-2 text-left font-semibold text-gray-700">
                 ID
               </th>
               <th className="px-4 py-2 text-left font-semibold text-gray-700">
-                Empleado
+                Nombre
               </th>
               <th className="px-4 py-2 text-left font-semibold text-gray-700">
-                Petición
+                Apellidos
               </th>
               <th className="px-4 py-2 text-left font-semibold text-gray-700">
                 Estatus
               </th>
+              <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                Acciones
+              </th>{' '}
+              {/* Nueva columna para los botones */}
             </tr>
           </thead>
           <tbody>
-            {leaveRequests.length > 0 ? (
-              leaveRequests.map((request) => (
-                <tr key={request.id} className="border-b">
+            {employeeRequests.length > 0 ? (
+              employeeRequests.map((employeeRequest) => (
+                <tr key={employeeRequest.id} className="border-b">
                   <td className="px-4 py-2">
-                    {request.employee && request.employee.profilePicture ? (
-                      <img
-                        src={request.employee.profilePicture}
-                        alt={`${request.employee.firstName} ${request.employee.lastName}`}
-                        className="w-12 h-12 rounded-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center">
-                        <span className="text-white">No Image</span>
-                      </div>
-                    )}
+                    <img
+                      src={
+                        employeeRequest.employee?.avatar
+                          ? employeeRequest.employee.avatar // Si existe el avatar, lo mostramos
+                          : defaultAvatar // Si no, mostramos la imagen por defecto
+                      }
+                      alt={`${employeeRequest.employee?.firstName} ${employeeRequest.employee?.lastName}`}
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
                   </td>
-                  <td className="p-3">
-                    {request.employee ? request.employee.id : 'N/A'}
-                  </td>
+                  <td className="p-3">{employeeRequest.employee?.id}</td>
                   <td className="px-4 py-2">
-                    {request.employee
-                      ? `${request.employee.firstName} ${request.employee.lastName}`
-                      : 'N/A'}
-                  </td>
-                  <td className="px-4 py-2">{request.type}</td>
+                    {employeeRequest.employee?.firstName || 'N/A'}
+                  </td>{' '}
+                  {/* Corregido */}
+                  <td className="px-4 py-2">
+                    {employeeRequest.employee?.lastName || 'N/A'}
+                  </td>{' '}
+                  {/* Corregido */}
                   <td className="px-4 py-2">
                     <span
                       className={`px-2 py-1 rounded-full text-white ${
-                        request.status === 'approved'
-                          ? 'bg-green-500'
-                          : request.status === 'pending'
-                            ? 'bg-yellow-500'
-                            : request.status === 'rejected'
+                        employeeRequest.statusId === 1
+                          ? 'bg-yellow-500'
+                          : employeeRequest.statusId === 2
+                            ? 'bg-green-500'
+                            : employeeRequest.statusId === 3
                               ? 'bg-red-500'
                               : 'bg-gray-400'
                       }`}
                     >
-                      {request.status}
+                      {getStatusText(employeeRequest.statusId)}{' '}
+                      {/* Mapea el statusId */}
                     </span>
+                  </td>
+                  <td className="px-4 py-2">
+                    {/* Aquí vamos a poner los botones de Aceptar y Denegar con círculos */}
+                    <button className="px-4 py-2 bg-green-500 text-white rounded-full">
+                      <span className="text-lg">✔</span>{' '}
+                      {/* Botón de Aceptar */}
+                    </button>
+                    <button className="px-4 py-2 bg-red-500 text-white rounded-full ml-2">
+                      <span className="text-lg">✖</span>{' '}
+                      {/* Botón de Denegar */}
+                    </button>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="5" className="text-center px-4 py-4">
-                  No employee requests found.
+                <td colSpan="6" className="text-center px-4 py-4">
+                  No se encontraron solicitudes de permiso.
                 </td>
               </tr>
             )}
