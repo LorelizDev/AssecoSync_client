@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
-import EmployeeList from '../components/EmployeeList'; // Import the EmployeeList component
+import EmployeeList from '../components/EmployeeList';
 import EmployeeFilter from '../components/EmployeeFilter';
+import { getAllEmployees } from '../services/employeeService';
 
 const AdminEmployeeList = () => {
   const [employees, setEmployees] = useState([]);
@@ -10,10 +11,16 @@ const AdminEmployeeList = () => {
   const employeesPerPage = 10; // Number of employees per page
 
   useEffect(() => {
-    import('../db/dblist.json').then((data) => {
-      setEmployees(data.employeesData || []);
-      setFilteredEmployees(data.employeesData || []);
-    });
+    const fetchEmployees = async () => {
+      try {
+        const employeesData = await getAllEmployees();
+        setEmployees(employeesData || []);
+        setFilteredEmployees(employeesData || []);
+      } catch (error) {
+        console.error('Error fetching employees:', error);
+      }
+    };
+    fetchEmployees();
   }, []);
 
   const handleSearch = (searchParams) => {
