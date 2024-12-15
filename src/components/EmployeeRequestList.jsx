@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react';
+import { leaveRequestService } from '../services/employeeService';
 
-const EmployeeRequestList = () => {
-  const [employees, setEmployees] = useState([]);
+const EmployeeRequestList = ({ token }) => {
+  const [leaveRequests, setLeaveRequests] = useState([]);
 
-  // Fetch data
+  // Cargar las solicitudes de ausencia con los empleados relacionados
   useEffect(() => {
-    // Import the JSON database
-    import('../db/dblist.json')
-      .then((data) => {
-        // Filter employees who have a request
-        const filteredEmployees = data.employeesData.filter(
-          (emp) => emp.request
-        );
-        setEmployees(filteredEmployees);
-      })
-      .catch((error) => console.error('Error loading employee data:', error));
-  }, []);
+    const fetchLeaveRequests = async () => {
+      try {
+        const requestsData =
+          await leaveRequestService.getAllLeaveRequestsWithEmployees(token);
+        setLeaveRequests(requestsData);
+      } catch (error) {
+        console.error('Error fetching leave requests:', error);
+      }
+    };
+
+    fetchLeaveRequests();
+  }, [token]);
 
   return (
     <div className="container p-1">
@@ -30,10 +32,7 @@ const EmployeeRequestList = () => {
                 ID
               </th>
               <th className="px-4 py-2 text-left font-semibold text-gray-700">
-                Nombre
-              </th>
-              <th className="px-4 py-2 text-left font-semibold text-gray-700">
-                Apellidos
+                Empleado
               </th>
               <th className="px-4 py-2 text-left font-semibold text-gray-700">
                 Petición
@@ -44,33 +43,44 @@ const EmployeeRequestList = () => {
             </tr>
           </thead>
           <tbody>
-            {employees.length > 0 ? (
-              employees.map((employee) => (
-                <tr key={employee.id} className="border-b">
+            {leaveRequests.length > 0 ? (
+              leaveRequests.map((request) => (
+                <tr key={request.id} className="border-b">
                   <td className="px-4 py-2">
-                    <img
-                      src={employee.profilePicture}
-                      alt={`${employee.firstName} ${employee.lastName}`}
-                      className="w-12 h-12 rounded-full object-cover"
-                    />
+                    {request.employee && request.employee.profilePicture ? (
+                      <img
+                        src={request.employee.profilePicture}
+                        alt={`${request.employee.firstName} ${request.employee.lastName}`}
+                        className="w-12 h-12 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center">
+                        <span className="text-white">No Image</span>
+                      </div>
+                    )}
                   </td>
-                  <td className="p-3">{employee.id}</td>
-                  <td className="px-4 py-2">{employee.name}</td>
-                  <td className="px-4 py-2">{employee.lastName}</td>
-                  <td className="px-4 py-2">{employee.request}</td>
+                  <td className="p-3">
+                    {request.employee ? request.employee.id : 'N/A'}
+                  </td>
+                  <td className="px-4 py-2">
+                    {request.employee
+                      ? `${request.employee.firstName} ${request.employee.lastName}`
+                      : 'N/A'}
+                  </td>
+                  <td className="px-4 py-2">{request.type}</td>
                   <td className="px-4 py-2">
                     <span
                       className={`px-2 py-1 rounded-full text-white ${
-                        employee.status === 'Aprobado'
+                        request.status === 'approved'
                           ? 'bg-green-500'
-                          : employee.status === 'Pendiente'
+                          : request.status === 'pending'
                             ? 'bg-yellow-500'
-                            : employee.status === 'Denegado'
+                            : request.status === 'rejected'
                               ? 'bg-red-500'
                               : 'bg-gray-400'
                       }`}
                     >
-                      {employee.status}
+                      {request.status}
                     </span>
                   </td>
                 </tr>
