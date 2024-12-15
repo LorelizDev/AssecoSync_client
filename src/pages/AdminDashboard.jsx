@@ -15,7 +15,7 @@ const AdminDashboard = () => {
   const navigateToEmployees = () => navigate('/AdminEmployeeList');
   const navigateToRegister = () => navigate('/register');
   const navigateToStatistics = () => navigate('/register');
-  const navigateToRequests = () => navigate('/register');
+  const navigateToRequests = () => navigate('/EmployeeRequests');
 
   return (
     <div
