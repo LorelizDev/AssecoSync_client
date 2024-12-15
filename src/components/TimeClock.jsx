@@ -100,6 +100,13 @@ export const TimeClock = () => {
     try {
       if (!timer.isRunning && !intervalRef.current) {
         const now = new Date();
+        if (!timeLog) {
+          const newTimeLog = await startTimeLog(workLocation);
+          setStartTime(now.toLocaleTimeString());
+          setTimeLog(newTimeLog);
+        } else {
+          setResumeTime(now.toLocaleTimeString());
+        }
 
         intervalRef.current = setInterval(() => {
           setTimer((prevTimer) => {
@@ -129,14 +136,6 @@ export const TimeClock = () => {
             };
           });
         }, 1000);
-
-        if (!timeLog) {
-          setStartTime(now.toLocaleTimeString());
-          const newTimeLog = await startTimeLog(workLocation);
-          setTimeLog(newTimeLog);
-        } else {
-          setResumeTime(now.toLocaleTimeString());
-        }
       }
     } catch (error) {
       console.error('Error starting timer:', error);
@@ -161,16 +160,24 @@ export const TimeClock = () => {
       cancelButtonText: 'Cancelar',
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const now = new Date();
-        setPauseTime(now.toLocaleTimeString());
         if (intervalRef.current) {
-          clearInterval(intervalRef.current);
-          intervalRef.current = null;
-          setTimer((prevTimer) => ({
-            ...prevTimer,
-            isRunning: false,
-          }));
-          await updateTimeLogByAction(timeLog.id, 'pause');
+          try {
+            await updateTimeLogByAction(timeLog.id, 'pause');
+            const now = new Date();
+            setPauseTime(now.toLocaleTimeString());
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+            setTimer((prevTimer) => ({
+              ...prevTimer,
+              isRunning: false,
+            }));
+          } catch (error) {
+            MySwal.fire({
+              title: 'Error al pausar el tiempo',
+              text: 'No se pudo pausar el registro de tiempo. Por favor, inténtalo de nuevo.',
+              icon: 'error',
+            });
+          }
         }
       }
     });
@@ -191,8 +198,16 @@ export const TimeClock = () => {
         cancelButtonText: 'Cancelar',
       }).then(async (result) => {
         if (result.isConfirmed) {
-          startTimer(timer.workLocation);
-          await updateTimeLogByAction(timeLog.id, 'resume');
+          try {
+            await updateTimeLogByAction(timeLog.id, 'resume');
+            startTimer(timer.workLocation);
+          } catch (error) {
+            MySwal.fire({
+              title: 'Error al reanudar el tiempo',
+              text: 'No se pudo reanudar el registro de tiempo. Por favor, inténtalo de nuevo.',
+              icon: 'error',
+            });
+          }
         }
       });
     } else {
@@ -214,32 +229,40 @@ export const TimeClock = () => {
       cancelButtonText: 'Cancelar',
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await updateTimeLogByAction(timeLog.id, 'end');
-        setTimeLog(null);
-        const now = new Date();
-        setStopTime(now.toLocaleTimeString());
-        if (intervalRef.current) {
-          clearInterval(intervalRef.current);
-          intervalRef.current = null;
+        try {
+          await updateTimeLogByAction(timeLog.id, 'end');
+          setTimeLog(null);
+          const now = new Date();
+          setStopTime(now.toLocaleTimeString());
+          if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+          }
+
+          totalSecondsRef.current = 0;
+          setStartTime(null);
+          setPauseTime(null);
+          setResumeTime(null);
+
+          setTimer({
+            seconds: 0,
+            minutes: 0,
+            hours: 0,
+            isRunning: false,
+            workLocation: null,
+          });
+
+          useTimeStore.setState((state) => ({
+            ...state,
+            actions: [],
+          }));
+        } catch (error) {
+          MySwal.fire({
+            title: 'Error al detener el tiempo',
+            text: 'No se pudo detener el registro de tiempo. Por favor, inténtalo de nuevo.',
+            icon: 'error',
+          });
         }
-
-        totalSecondsRef.current = 0;
-        setStartTime(null);
-        setPauseTime(null);
-        setResumeTime(null);
-
-        setTimer({
-          seconds: 0,
-          minutes: 0,
-          hours: 0,
-          isRunning: false,
-          workLocation: null,
-        });
-
-        useTimeStore.setState((state) => ({
-          ...state,
-          actions: [],
-        }));
       }
     });
   };
