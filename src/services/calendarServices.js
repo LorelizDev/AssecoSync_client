@@ -107,4 +107,52 @@ export const calendarServices = {
       throw error;
     }
   },
+  // Obtener todas las solicitudes de ausencia con los empleados relacionados
+  getAllLeaveRequestsWithEmployees: async (token) => {
+    try {
+      const axiosInstance = createAxiosInstance(token);
+
+      // Obtener las solicitudes de ausencia
+      const leaveRequestsResponse = await axiosInstance.get('/leave-requests');
+
+      // Obtener todos los empleados
+      const employeesResponse = await axiosInstance.get('/employees');
+
+      // Relacionar los empleados con las solicitudes de ausencia
+      const leaveRequests = leaveRequestsResponse.data.map((request) => {
+        const employee = employeesResponse.data.find(
+          (emp) => emp.id === request.employeeId // Relacionamos por id del empleado
+        );
+        return {
+          ...request,
+          employee, // Asociamos los datos del empleado con la solicitud
+        };
+      });
+
+      return leaveRequests;
+    } catch (error) {
+      console.error(
+        'Error al obtener las solicitudes de ausencia con empleados:',
+        error
+      );
+      throw error;
+    }
+  },
+
+  // Actualizar el estado de la solicitud de ausencia (Aprobar/Rechazar)
+  updateLeaveRequestStatus: async (requestId, statusId, token) => {
+    try {
+      const axiosInstance = createAxiosInstance(token);
+      const response = await axiosInstance.patch(
+        `/leave-requests/${requestId}`,
+        {
+          statusId,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error al actualizar la solicitud de ausencia:', error);
+      throw error;
+    }
+  },
 };
