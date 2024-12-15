@@ -99,8 +99,6 @@ export const TimeClock = () => {
   const startTimer = async (workLocation) => {
     try {
       if (!timer.isRunning && !intervalRef.current) {
-        // // addAction('Trabajo', now.toLocaleTimeString()); // Registrar acción
-        // console.log(`Timer started at ${now.toLocaleTimeString()}`);
         const now = new Date();
 
         intervalRef.current = setInterval(() => {
@@ -163,13 +161,8 @@ export const TimeClock = () => {
       cancelButtonText: 'Cancelar',
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const now = new Date(); // Obtener la hora actual
-        // addAction('Pausa', now.toLocaleTimeString()); // Registrar acción de pausa
-        console.log(
-          'Acción de pausa registrada: Pausa a las',
-          now.toLocaleTimeString()
-        );
-        setPauseTime(now.toLocaleTimeString()); // Establecer la hora de inicio
+        const now = new Date();
+        setPauseTime(now.toLocaleTimeString());
         if (intervalRef.current) {
           clearInterval(intervalRef.current);
           intervalRef.current = null;
@@ -223,19 +216,13 @@ export const TimeClock = () => {
       if (result.isConfirmed) {
         await updateTimeLogByAction(timeLog.id, 'end');
         setTimeLog(null);
-        const now = new Date(); // Obtener la hora actual
-        setStopTime(now.toLocaleTimeString()); // Establecer la hora de inicio
-        // addAction('Detenido', now.toLocaleTimeString()); // Registrar acción de detener
-        console.log(
-          'Acción de stop registrada: Stop a las',
-          now.toLocaleTimeString()
-        );
+        const now = new Date();
+        setStopTime(now.toLocaleTimeString());
         if (intervalRef.current) {
           clearInterval(intervalRef.current);
           intervalRef.current = null;
         }
 
-        // Resetear también los segundos totales
         totalSecondsRef.current = 0;
         setStartTime(null);
         setPauseTime(null);
@@ -249,10 +236,9 @@ export const TimeClock = () => {
           workLocation: null,
         });
 
-        // Aquí limpia las acciones
         useTimeStore.setState((state) => ({
           ...state,
-          actions: [], // Resetea la lista de acciones
+          actions: [],
         }));
       }
     });
@@ -263,7 +249,6 @@ export const TimeClock = () => {
     const fetchActiveTimeLog = async () => {
       try {
         const activeTimeLog = await getActiveTimeLog();
-        console.log('Tiempo activo encontrado:', activeTimeLog);
         if (activeTimeLog) {
           setTimeLog(activeTimeLog);
           setStartTime(activeTimeLog.startTime);
