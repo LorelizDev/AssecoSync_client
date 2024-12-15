@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
-import InboxRequest from '../components/EmployeeRequestList';
+import EmployeeRequestList from '../components/EmployeeRequestList';
 import EmployeeFilter from '../components/EmployeeFilter';
 
 const EmployeeRequest = () => {
@@ -77,7 +77,7 @@ const EmployeeRequest = () => {
           <EmployeeFilter onSearch={handleSearch} />
         </div>
         <div className="px-4 overflow-x-auto md:-right-[22%] md:w-[120%]">
-          <InboxRequest employees={currentEmployees} />
+          <EmployeeRequestList employees={currentEmployees} />
         </div>
         {/* Pagination Controls */}
         <div className="mt-4 flex justify-between items-center px-6 py-4">

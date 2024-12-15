@@ -117,8 +117,8 @@
       "lastName": "García Pérez",
       "email": "lucia.garcia.perez@demo-datos.es",
       "position": "Diseñadora Gráfica",
-      "request": "Permiso asuntos personales",
-      "status": "Aprobado"
+      "request": "",
+      "status": ""
     },
     {
       "profilePicture": "../src/assets/images/profile-pictures/antonio.jpg",
@@ -147,8 +147,8 @@
       "lastName": "Jiménez Ortiz",
       "email": "pablo.jimenez.ortiz@demo-datos.es",
       "position": "Desarrollador Web",
-      "request": "Permiso asuntos personales",
-      "status": "Pendiente"
+      "request": "",
+      "status": ""
     },
     {
       "profilePicture": "../src/assets/images/profile-pictures/laura.jpg",
@@ -197,8 +197,8 @@
       "lastName": "Díaz Morales",
       "email": "ana.diaz.morales@demo-datos.es",
       "position": "Especialista en SEO",
-      "request": "Vacaciones",
-      "status": "Aprobado"
+      "request": "",
+      "status": ""
     },
     {
       "profilePicture": "../src/assets/images/profile-pictures/david.jpg",
@@ -237,8 +237,8 @@
       "lastName": "Castillo Rojas",
       "email": "beatriz.castillo.rojas@demo-datos.es",
       "position": "Coordinadora de Eventos",
-      "request": "Permiso asuntos personales",
-      "status": "Aprobado"
+      "request": "",
+      "status": ""
     },
     {
       "profilePicture": "../src/assets/images/profile-pictures/alberto.jpg",
@@ -577,8 +577,8 @@
       "lastName": "Lara Hidalgo",
       "email": "fernando.lara.hidalgo@demo-datos.es",
       "position": "Consultor de Negocios",
-      "request": "",
-      "status": ""
+      "request": "Permiso asuntos personales",
+      "status": "Denegado"
     },
     {
       "profilePicture": "../src/assets/images/profile-pictures/monica.jpg",
