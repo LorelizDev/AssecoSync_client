@@ -1,25 +1,32 @@
 import { useState, useRef, useEffect } from 'react';
-import { FaPlay } from "react-icons/fa6";
-import { FaStop } from "react-icons/fa6";
-import { FaPause } from "react-icons/fa";
+import { FaPlay } from 'react-icons/fa6';
+import { FaStop } from 'react-icons/fa6';
+import { FaPause } from 'react-icons/fa';
+import { PiHouseLineBold } from 'react-icons/pi';
+import { PiBuildingOfficeBold } from 'react-icons/pi';
 import { useTimeStore } from '../context/timeStore';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-
-const addAction = (action, time) => {
-  console.log(`Acción registrada: ${action} a las ${time}`);
-};
+import {
+  startTimeLog,
+  updateTimeLogByAction,
+  getActiveTimeLog,
+} from '../services/timeLogServices';
 
 export const TimeClock = () => {
   const setStartTime = useTimeStore((state) => state.setStartTime);
   const setPauseTime = useTimeStore((state) => state.setPauseTime);
   const setStopTime = useTimeStore((state) => state.setStopTime);
+  const setResumeTime = useTimeStore((state) => state.setResumeTime);
+  const actions = useTimeStore((state) => state.actions);
+  const pauseAction = actions.find((action) => action.type === 'Pausa');
+  const [timeLog, setTimeLog] = useState(null);
   const [timer, setTimer] = useState({
     seconds: 0,
     minutes: 0,
     hours: 0,
     isRunning: false,
-    workLocation: null
+    workLocation: null,
   });
 
   const intervalRef = useRef(null);
@@ -33,85 +40,118 @@ export const TimeClock = () => {
   };
 
   // Función para pasar los números a formato string
-  const formatTime = (value) => 
-    value.toString().padStart(2, '0');
+  const formatTime = (value) => value.toString().padStart(2, '0');
+
+  const calculateElapsedSeconds = (startTime) => {
+    const startDate = new Date(startTime);
+    const now = new Date();
+    const elapsedMs = now - startDate; // Diferencia en milisegundos
+    return Math.floor(elapsedMs / 1000); // Convertir a segundos
+  };
 
   const MySwal = withReactContent(Swal);
 
   const showWorkLocationAlert = () => {
-    MySwal.fire({
-      title: '¡Bienvenido!',
-      text: '¿Desde dónde vas a trabajar hoy?',
-      showCancelButton: true,
-      confirmButtonText: `<span style="display: flex; align-items: center; gap: 5px;">
-                            Oficina
-                          </span>`,
-      cancelButtonText: `<span style="display: flex; align-items: center; gap: 5px;">
-                           Casa
-                         </span>`,
-      confirmButtonColor: '#00A3E0',
-      cancelButtonColor: '#00A3E0',
-      customClass: {
-        confirmButton: 'swal-button-custom',
-        cancelButton: 'swal-button-custom',
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // Trabajo en oficina
-        startTimer('office');
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        // Teletrabajo
-        startTimer('remote');
-      }
-    });
+    if (!timer.workLocation) {
+      MySwal.fire({
+        title: '¡Bienvenido!',
+        text: '¿Desde dónde vas a trabajar hoy?',
+        showCancelButton: true,
+        showDenyButton: true,
+        confirmButtonText: 'Casa',
+        denyButtonText: 'Oficina',
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: '#00A3E0',
+        denyButtonColor: '#00A3E0',
+        cancelButtonColor: '#d33',
+        customClass: {
+          confirmButton: 'swal-button-custom',
+          cancelButton: 'swal-button-custom',
+          denyButton: 'swal-button-custom',
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          startTimer('remote');
+        } else if (result.dismiss === Swal.DismissReason.deny) {
+          startTimer('office');
+        }
+      });
+    } else {
+      // Si ya se ha seleccionado una ubicación anteriormente
+      const location = timer.workLocation === 'office' ? 'OFICINA' : 'CASA';
+      MySwal.fire({
+        title: '¡Bienvenido!',
+        html: `¿Estás seguro de comenzar tu jornada desde <b style="color: #00A3E0;">${location}</b>?`,
+        showCancelButton: true,
+        confirmButtonColor: '#00A3E0',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, comenzar',
+        cancelButtonText: 'Cancelar',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          startTimer(timer.workLocation);
+        }
+      });
+    }
   };
 
   // Función para iniciar el cronómetro
-  const startTimer = (workLocation) => {
-    if (!timer.isRunning) {
-      const now = new Date();
-      setStartTime(now.toLocaleTimeString());
-      // addAction('Trabajo', now.toLocaleTimeString()); // Registrar acción
-      console.log(`Timer started at ${now.toLocaleTimeString()}`);
-  
-      intervalRef.current = setInterval(() => {
-        setTimer((prevTimer) => {
-          let newSeconds = prevTimer.seconds + 1;
-          let newMinutes = prevTimer.minutes;
-          let newHours = prevTimer.hours;
-  
-          totalSecondsRef.current += 1;
-  
-          if (newSeconds === 60) {
-            newSeconds = 0;
-            newMinutes += 1;
-          }
-  
-          if (newMinutes === 60) {
-            newMinutes = 0;
-            newHours += 1;
-          }
-  
-          return {
-            ...prevTimer,
-            seconds: newSeconds,
-            minutes: newMinutes,
-            hours: newHours,
-            isRunning: true,
-            workLocation: workLocation,
-          };
-        });
-      }, 1000);
+  const startTimer = async (workLocation) => {
+    try {
+      if (!timer.isRunning && !intervalRef.current) {
+        // // addAction('Trabajo', now.toLocaleTimeString()); // Registrar acción
+        // console.log(`Timer started at ${now.toLocaleTimeString()}`);
+        const now = new Date();
+
+        intervalRef.current = setInterval(() => {
+          setTimer((prevTimer) => {
+            let newSeconds = prevTimer.seconds + 1;
+            let newMinutes = prevTimer.minutes;
+            let newHours = prevTimer.hours;
+
+            totalSecondsRef.current += 1;
+
+            if (newSeconds === 60) {
+              newSeconds = 0;
+              newMinutes += 1;
+            }
+
+            if (newMinutes === 60) {
+              newMinutes = 0;
+              newHours += 1;
+            }
+
+            return {
+              ...prevTimer,
+              seconds: newSeconds,
+              minutes: newMinutes,
+              hours: newHours,
+              isRunning: true,
+              workLocation: workLocation,
+            };
+          });
+        }, 1000);
+
+        if (!timeLog) {
+          setStartTime(now.toLocaleTimeString());
+          const newTimeLog = await startTimeLog(workLocation);
+          setTimeLog(newTimeLog);
+        } else {
+          setResumeTime(now.toLocaleTimeString());
+        }
+      }
+    } catch (error) {
+      console.error('Error starting timer:', error);
+      MySwal.fire({
+        title: 'Error al iniciar el tiempo',
+        text: 'No se pudo iniciar el registro de tiempo. Por favor, inténtalo de nuevo.',
+        icon: 'error',
+      });
     }
   };
-  
 
   // Función para pausar el cronómetro
   const pauseTimer = () => {
-    const now = new Date();  // Obtener la hora actual
-    // addAction('Pausa', now.toLocaleTimeString()); // Registrar acción de pausa
-    console.log('Acción de pausa registrada: Pausa a las', now.toLocaleTimeString());
-    setPauseTime(now.toLocaleTimeString());  // Establecer la hora de inicio
     MySwal.fire({
       title: '¿Estás seguro de pausar el tiempo?',
       text: 'Puedes continuar tu trabajo más tarde',
@@ -120,24 +160,32 @@ export const TimeClock = () => {
       confirmButtonColor: '#00A3E0',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Sí, pausar',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
+      cancelButtonText: 'Cancelar',
+    }).then(async (result) => {
       if (result.isConfirmed) {
+        const now = new Date(); // Obtener la hora actual
+        // addAction('Pausa', now.toLocaleTimeString()); // Registrar acción de pausa
+        console.log(
+          'Acción de pausa registrada: Pausa a las',
+          now.toLocaleTimeString()
+        );
+        setPauseTime(now.toLocaleTimeString()); // Establecer la hora de inicio
         if (intervalRef.current) {
           clearInterval(intervalRef.current);
           intervalRef.current = null;
-          setTimer(prevTimer => ({
+          setTimer((prevTimer) => ({
             ...prevTimer,
-            isRunning: false
+            isRunning: false,
           }));
+          await updateTimeLogByAction(timeLog.id, 'pause');
         }
       }
     });
   };
 
   // Función para reanudar el cronómetro
-const resumeTimer = () => {
-    if (timer.workLocation) {
+  const resumeTimer = () => {
+    if (timeLog && timer.workLocation) {
       // Si ya se ha seleccionado una ubicación anteriormente
       MySwal.fire({
         title: '¿Estás listo para continuar?',
@@ -147,10 +195,11 @@ const resumeTimer = () => {
         confirmButtonColor: '#00A3E0',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Sí, continuar',
-        cancelButtonText: 'Cancelar'
-      }).then((result) => {
+        cancelButtonText: 'Cancelar',
+      }).then(async (result) => {
         if (result.isConfirmed) {
           startTimer(timer.workLocation);
+          await updateTimeLogByAction(timeLog.id, 'resume');
         }
       });
     } else {
@@ -161,10 +210,6 @@ const resumeTimer = () => {
 
   // Función para detener y resetear el cronómetro
   const stopTimer = () => {
-    const now = new Date();  // Obtener la hora actual
-    setStopTime(now.toLocaleTimeString());  // Establecer la hora de inicio
-    // addAction('Detenido', now.toLocaleTimeString()); // Registrar acción de detener
-    console.log('Acción de stop registrada: Stop a las', now.toLocaleTimeString());
     MySwal.fire({
       title: '¿Estás seguro de detener el tiempo?',
       text: 'No podrás recuperar el tiempo registrado',
@@ -173,9 +218,18 @@ const resumeTimer = () => {
       confirmButtonColor: '#00A3E0',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Sí, detener',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
+      cancelButtonText: 'Cancelar',
+    }).then(async (result) => {
       if (result.isConfirmed) {
+        await updateTimeLogByAction(timeLog.id, 'end');
+        setTimeLog(null);
+        const now = new Date(); // Obtener la hora actual
+        setStopTime(now.toLocaleTimeString()); // Establecer la hora de inicio
+        // addAction('Detenido', now.toLocaleTimeString()); // Registrar acción de detener
+        console.log(
+          'Acción de stop registrada: Stop a las',
+          now.toLocaleTimeString()
+        );
         if (intervalRef.current) {
           clearInterval(intervalRef.current);
           intervalRef.current = null;
@@ -183,14 +237,16 @@ const resumeTimer = () => {
 
         // Resetear también los segundos totales
         totalSecondsRef.current = 0;
-        setStartTime(null);  // Resetear la hora de inicio
-        
+        setStartTime(null);
+        setPauseTime(null);
+        setResumeTime(null);
+
         setTimer({
           seconds: 0,
           minutes: 0,
           hours: 0,
           isRunning: false,
-          workLocation: null // Resetear también la ubicación de trabajo
+          workLocation: null,
         });
 
         // Aquí limpia las acciones
@@ -204,7 +260,78 @@ const resumeTimer = () => {
 
   // Limpiar intervalo al desmontar el componente
   useEffect(() => {
+    const fetchActiveTimeLog = async () => {
+      try {
+        const activeTimeLog = await getActiveTimeLog();
+        console.log('Tiempo activo encontrado:', activeTimeLog);
+        if (activeTimeLog) {
+          setTimeLog(activeTimeLog);
+          setStartTime(activeTimeLog.startTime);
+
+          if (activeTimeLog.startPause) {
+            setPauseTime(activeTimeLog.startPause);
+          }
+          if (activeTimeLog.endPause) {
+            setResumeTime(activeTimeLog.endPause);
+          }
+
+          const formattedStartTime = `${activeTimeLog.date}T${activeTimeLog.startTime}`;
+          const elapsedSeconds = calculateElapsedSeconds(formattedStartTime);
+
+          totalSecondsRef.current = elapsedSeconds;
+          const hours = Math.floor(elapsedSeconds / 3600);
+          const minutes = Math.floor((elapsedSeconds % 3600) / 60);
+          const seconds = elapsedSeconds % 60;
+
+          setTimer((prevTimer) => ({
+            ...prevTimer,
+            hours,
+            minutes,
+            seconds,
+            isRunning: activeTimeLog.status === 'working',
+            workLocation: activeTimeLog.location,
+          }));
+
+          // Iniciar el cronómetro si la jornada está en curso
+          if (activeTimeLog.status === 'working') {
+            intervalRef.current = setInterval(() => {
+              totalSecondsRef.current += 1;
+              setTimer((prevTimer) => {
+                let newSeconds = prevTimer.seconds + 1;
+                let newMinutes = prevTimer.minutes;
+                let newHours = prevTimer.hours;
+
+                if (newSeconds === 60) {
+                  newSeconds = 0;
+                  newMinutes += 1;
+                }
+                if (newMinutes === 60) {
+                  newMinutes = 0;
+                  newHours += 1;
+                }
+
+                return {
+                  ...prevTimer,
+                  seconds: newSeconds,
+                  minutes: newMinutes,
+                  hours: newHours,
+                };
+              });
+            }, 1000);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching active time log:', error);
+        MySwal.fire({
+          title: 'Error al obtener el registro de tiempo',
+          text: 'No se pudo obtener el registro de tiempo. Por favor, inténtalo de nuevo.',
+          icon: 'error',
+        });
+      }
+    };
+
     return () => {
+      fetchActiveTimeLog();
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
@@ -216,6 +343,34 @@ const resumeTimer = () => {
 
   return (
     <div className="flex flex-col items-center bg-primarybg font-mainFont">
+      <div className="flex items-center gap-4">
+        <div
+          className={`flex items-center transition-opacity ${
+            timer.workLocation === 'remote' ? 'opacity-100' : 'opacity-50'
+          }`}
+          onClick={() =>
+            setTimer(() => ({
+              ...timer,
+              workLocation: 'remote',
+            }))
+          }
+        >
+          <PiHouseLineBold className="text-2xl cursor-pointer" />
+        </div>
+        <div
+          className={`flex items-center transition-opacity ${
+            timer.workLocation === 'office' ? 'opacity-100' : 'opacity-50'
+          }`}
+          onClick={() =>
+            setTimer(() => ({
+              ...timer,
+              workLocation: 'office',
+            }))
+          }
+        >
+          <PiBuildingOfficeBold className="text-2xl cursor-pointer" />
+        </div>
+      </div>
       <div className="flex items-center max-w-2xl p-4 bg-white rounded-lg shadow-md">
         <div className="flex items-center space-x-4">
           <div className="flex flex-col items-center">
@@ -229,7 +384,8 @@ const resumeTimer = () => {
             ) : (
               <button
                 onClick={pauseTimer}
-                className="text-primary border border-primary px-6 py-4 rounded hover:bg-hoverButton"
+                className={`text-primary border border-primary px-6 py-4 rounded ${pauseAction ? 'opacity-50' : 'hover:bg-hoverButton'}`}
+                disabled={pauseAction}
               >
                 <FaPause />
               </button>
@@ -274,7 +430,8 @@ const resumeTimer = () => {
           <div className="flex items-center">
             <button
               onClick={stopTimer}
-              className="text-primary border border-primary px-6 py-4 rounded hover:bg-hoverButton"
+              disabled={!timeLog}
+              className={`text-primary border border-primary px-6 py-4 rounded ${!timeLog ? 'opacity-50' : 'hover:bg-hoverButton'}`}
             >
               <FaStop />
             </button>
