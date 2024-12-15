@@ -60,22 +60,50 @@ export const calendarServices = {
     try {
       const axiosInstance = createAxiosInstance(token);
 
-      // Obtener ID del tipo de vacaciones
+      // Log de los datos iniciales recibidos
+      console.log(
+        'Datos iniciales recibidos en el servicio:',
+        leaveRequestData
+      );
+
+      // Obtener el ID del tipo de vacaciones
       const typeResponse = await axiosInstance.get('/type-requests');
+      console.log('Respuesta de /type-requests:', typeResponse.data);
+
       const vacationType = typeResponse.data.find(
         (type) => type.type === 'Vacaciones'
       );
 
+      if (!vacationType) {
+        throw new Error('No se encontró el tipo de solicitud "Vacaciones".');
+      }
+
       const requestData = {
         ...leaveRequestData,
-        type_id: vacationType ? vacationType.id : null,
+        type_id: vacationType.id, // ID del tipo "Vacaciones"
         status_id: 1, // Estado por defecto "pendiente"
       };
 
+      // Log para verificar los datos finales enviados al backend
+      console.log('Datos enviados al backend:', requestData);
+
       const response = await axiosInstance.post('/leave-requests', requestData);
+
+      // Log para confirmar la respuesta del backend
+      console.log(
+        'Respuesta del backend al crear la solicitud:',
+        response.data
+      );
+
       return response.data;
     } catch (error) {
       console.error('Error al crear solicitud de ausencia:', error);
+
+      if (error.response) {
+        // Log adicional para depurar la respuesta del backend
+        console.error('Respuesta del backend con error:', error.response.data);
+      }
+
       throw error;
     }
   },
