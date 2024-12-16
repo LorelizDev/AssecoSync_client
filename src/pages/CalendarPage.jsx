@@ -203,15 +203,15 @@ const CalendarPage = () => {
         <Sidebar />
       </div>
 
-      <div className="w-full md:w-4/5 bg-primarybg relative">
-        <div className="container mx-auto py-6">
-          <h1 className="text-2xl text-primary font-bold mb-4 pl-[1.2rem]">
+      <div className="relative flex-grow md:w-4/5 bg-primarybg">
+        <div className="container px-6 py-6">
+          <h1 className="text-2xl text-primary font-bold  mb-1">
             Calendario de Ausencias
           </h1>
         </div>
 
-        <div className="relative px-4 md:pl-[1.2rem] pb-4">
-          <Button onClick={() => setIsModalOpen(true)} className="mb-4">
+        <div className="relative px-4 md:pl-[1.2rem] pb-4 max-w-fit">
+          <Button onClick={() => setIsModalOpen(true)} className="mb-4 mr-4">
             Solicitar ausencia
           </Button>
           <Button onClick={() => setIsVacationModalOpen(true)} className="mb-4">
@@ -219,8 +219,11 @@ const CalendarPage = () => {
           </Button>
         </div>
 
-        <div className="w-full md:absolute md:-right-[22%] md:w-[120%]">
-          <div className="w-full overflow-x-auto bg-white rounded-[14px] border border-[#b8b8b8]">
+        <div className="px-4 overflow-x-auto md:-right-[22%] md:w-[120%]">
+          <div
+            className="bg-white rounded-[14px] border border-[#b8b8b8] shadow-lg 
+                  w-full max-w-3xl md:h-[600px] h-[600px] overflow-hidden"
+          >
             <FullCalendar
               plugins={[dayGridPlugin]}
               initialView="dayGridMonth"
@@ -267,6 +270,9 @@ const CalendarPage = () => {
       />
 
       <ToastContainer />
+
+      {/* Right Side */}
+      <div className="w-1/5 bg-secondarybg"></div>
     </div>
   );
 };
