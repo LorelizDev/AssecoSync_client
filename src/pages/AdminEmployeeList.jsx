@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
-import EmployeeList from '../components/EmployeeList'; // Import the EmployeeList component
+import EmployeeList from '../components/EmployeeList';
 import EmployeeFilter from '../components/EmployeeFilter';
+import { getAllEmployees } from '../services/employeeService';
 
 const AdminEmployeeList = () => {
   const [employees, setEmployees] = useState([]);
@@ -10,10 +11,16 @@ const AdminEmployeeList = () => {
   const employeesPerPage = 10; // Number of employees per page
 
   useEffect(() => {
-    import('../db/dblist.json').then((data) => {
-      setEmployees(data.employeesData || []);
-      setFilteredEmployees(data.employeesData || []);
-    });
+    const fetchEmployees = async () => {
+      try {
+        const employeesData = await getAllEmployees();
+        setEmployees(employeesData || []);
+        setFilteredEmployees(employeesData || []);
+      } catch (error) {
+        console.error('Error fetching employees:', error);
+      }
+    };
+    fetchEmployees();
   }, []);
 
   const handleSearch = (searchParams) => {
@@ -28,6 +35,10 @@ const AdminEmployeeList = () => {
     setCurrentPage(1); // Reset to the first page after filtering
   };
 
+  const handleReset = () => {
+    setFilteredEmployees(employees);
+  };
+  
   // Calculate the employees to display on the current page
   const startIndex = (currentPage - 1) * employeesPerPage;
   const endIndex = startIndex + employeesPerPage;
@@ -70,7 +81,7 @@ const AdminEmployeeList = () => {
           {/* Wrapper to break out of container */}
         </div>
         <div className="relative px-4 md:pl-[1.2rem] pb-4 max-w-fit">
-          <EmployeeFilter onSearch={handleSearch} />
+          <EmployeeFilter onSearch={handleSearch} onReset={handleReset} />
         </div>
         <div className="px-4 overflow-x-auto md:-right-[22%] md:w-[120%]">
           <EmployeeList employees={currentEmployees} />
