@@ -113,7 +113,7 @@ export const RegisterPage = () => {
       <div className="relative w-20 bg-primarybg">
         <Sidebar />
       </div>
-      <div className="flex flex-col w-4/5 justify-center bg-primarybg p-8">
+      <div className="flex flex-col w-4/5 bg-primarybg p-8">
         <div className="flex flex-row space-x-4">
           <BiSolidBadgeCheck className="size-7 text-primary" />
           <h3 className="text-lg font-medium mb-4">Registrar a un nuevo empleado</h3>

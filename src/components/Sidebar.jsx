@@ -1,12 +1,11 @@
 import React from 'react';
 import SidebarItem from './SidebarItem';
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../context/authStore'
+import { useAuthStore } from '../context/authStore';
 import { HiOutlineCog6Tooth } from 'react-icons/hi2';
 import { TbSmartHome, TbUser, TbCalendar } from 'react-icons/tb';
 
 const Sidebar = () => {
-
   const logout = useAuthStore((state) => state.logout); // Obtener la función logout
   const navigate = useNavigate();
 
@@ -34,11 +33,6 @@ const Sidebar = () => {
 
   return (
     <div className="relative h-screen w-20 bg-primarybg shadow-md flex flex-col items-center py-4 space-y-6">
-      {/* Imagen del perfil */}
-      <div className="rounded-full overflow-hidden w-12 h-12">
-        <img src="https://via.placeholder.com/150" alt="Profile" />
-      </div>
-
       {/* Línea divisoria a la derecha */}
       <div className="absolute right-0 top-0 h-full w-px bg-[#EAEEF4]"></div>
 

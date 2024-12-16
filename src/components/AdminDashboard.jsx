@@ -12,10 +12,10 @@ const AdminDashboard = () => {
   const navigate = useNavigate(); // Inicializar navegación
 
   // Define button click handlers
-  const navigateToEmployees = () => navigate('/AdminEmployeeList');
-  const navigateToRegister = () => navigate('/register');
-  const navigateToStatistics = () => navigate('/statistics-time-log');
-  const navigateToRequests = () => navigate('/EmployeeRequests');
+  const navigateToEmployees = () => navigate('/admin/employees-list');
+  const navigateToRegister = () => navigate('/admin/register-employee');
+  const navigateToStatistics = () => navigate('/admin/statistics-time-log');
+  const navigateToRequests = () => navigate('/admin/employee-requests');
 
   return (
     <div

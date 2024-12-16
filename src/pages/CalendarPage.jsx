@@ -17,17 +17,19 @@ const LEAVE_TYPE_COLORS = {
 };
 
 const CalendarPage = () => {
-  const token = localStorage.getItem('token');
+  const { token, role } = useAuthStore();
   const [isVacationModalOpen, setIsVacationModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [events, setEvents] = useState([]);
   const [formData, setFormData] = useState({
+    employeeId: '',
     startDate: '',
     endDate: '',
     typeId: '',
     details: '',
   });
   const [vacationData, setVacationData] = useState({
+    employeeId: '',
     startDate: '',
     endDate: '',
     details: '',
@@ -111,6 +113,7 @@ const CalendarPage = () => {
 
       const newRequest = await calendarServices.createLeaveRequest(
         {
+          employeeId: formData.employeeId,
           startDate: formData.startDate,
           endDate: formData.endDate,
           details: formData.details,
@@ -137,6 +140,7 @@ const CalendarPage = () => {
       setEvents((prevEvents) => [...prevEvents, newEvent]);
 
       setFormData({
+        employeeId: '',
         startDate: '',
         endDate: '',
         typeId: '',
@@ -162,6 +166,7 @@ const CalendarPage = () => {
 
       const newVacation = await calendarServices.createLeaveRequest(
         {
+          employeeId: vacationData.employeeId,
           startDate: vacationData.startDate,
           endDate: vacationData.endDate,
           details: vacationData.details,
@@ -184,6 +189,7 @@ const CalendarPage = () => {
       setEvents((prevEvents) => [...prevEvents, newEvent]);
 
       setVacationData({
+        employeeId: '',
         startDate: '',
         endDate: '',
         details: '',
@@ -196,6 +202,12 @@ const CalendarPage = () => {
       toast.error('Error al crear la solicitud de vacaciones');
     }
   };
+
+  const abscenseText =
+    role === 'admin' ? 'Crear registro de ausencia' : 'Solicitar ausencia';
+
+  const vacationText =
+    role == 'admin' ? 'Crear registro de vacaciones' : 'Solicitar vacaciones';
 
   return (
     <div className="flex flex-col md:flex-row h-screen">
@@ -212,10 +224,10 @@ const CalendarPage = () => {
 
         <div className="relative px-4 md:pl-[1.2rem] pb-4 max-w-fit">
           <Button onClick={() => setIsModalOpen(true)} className="mb-4 mr-4">
-            Solicitar ausencia
+            {abscenseText}
           </Button>
           <Button onClick={() => setIsVacationModalOpen(true)} className="mb-4">
-            Solicitar vacaciones
+            {vacationText}
           </Button>
         </div>
 
@@ -251,7 +263,7 @@ const CalendarPage = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleSubmitLeaveRequest}
-        title="Solicitar ausencia"
+        title={abscenseText}
         formData={formData}
         handleInputChange={handleInputChange}
         leaveRequestTypes={leaveRequestTypes}
@@ -262,7 +274,7 @@ const CalendarPage = () => {
         isOpen={isVacationModalOpen}
         onClose={() => setIsVacationModalOpen(false)}
         onSubmit={handleSubmitVacationRequest}
-        title="Solicitar vacaciones"
+        title={vacationText}
         formData={vacationData}
         handleInputChange={handleVacationChange}
         leaveRequestTypes={leaveRequestTypes}
