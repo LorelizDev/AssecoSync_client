@@ -17,7 +17,7 @@ const LEAVE_TYPE_COLORS = {
 };
 
 const CalendarPage = () => {
-  const token = useAuthStore((state) => state.token);
+  const token = localStorage.getItem('token');
   const [isVacationModalOpen, setIsVacationModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [events, setEvents] = useState([]);

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { calendarServices } from '../services/calendarServices';
 import EmployeeFilter from './EmployeeFilter';
-import defaultAvatar from '../assets/images/profile-pictures/alan.jpg';
+import { RxAvatar } from 'react-icons/rx';
 
 const EmployeeRequestList = () => {
   const [employeeRequests, setEmployeeRequests] = useState([]);
@@ -133,11 +133,15 @@ const EmployeeRequestList = () => {
               filteredRequests.map((employeeRequest) => (
                 <tr key={employeeRequest.id} className="border-b">
                   <td className="px-4 py-2">
-                    <img
-                      src={employeeRequest.employee?.avatar || defaultAvatar}
-                      alt={`${employeeRequest.employee?.firstName} ${employeeRequest.employee?.lastName}`}
-                      className="w-12 h-12 rounded-full object-cover"
-                    />
+                    {!employeeRequest.avatar ? (
+                      <RxAvatar className="w-12 h-12 text-grayicon" />
+                    ) : (
+                      <img
+                        src={employeeRequest.avatar}
+                        alt={`${employeeRequest.firstName} ${employeeRequest.lastName}`}
+                        className="w-12 h-12 rounded-full"
+                      />
+                    )}
                   </td>
                   <td className="p-3">{employeeRequest.employee?.id}</td>
                   <td className="px-4 py-2">
