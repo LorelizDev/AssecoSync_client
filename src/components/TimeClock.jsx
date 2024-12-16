@@ -42,10 +42,11 @@ export const TimeClock = () => {
   // Función para pasar los números a formato string
   const formatTime = (value) => value.toString().padStart(2, '0');
 
-  const calculateElapsedSeconds = (startTime) => {
+  const calculateElapsedSeconds = (startTime, startPause, endPause) => {
     const startDate = new Date(startTime);
     const now = new Date();
-    const elapsedMs = now - startDate; // Diferencia en milisegundos
+    const breakTime = startPause ? ((endPause ? new Date(endPause) : now) - new Date(startPause)) : null;
+    const elapsedMs = now - startDate - (breakTime || 0); // Diferencia en milisegundos
     return Math.floor(elapsedMs / 1000); // Convertir a segundos
   };
 
@@ -272,19 +273,23 @@ export const TimeClock = () => {
     const fetchActiveTimeLog = async () => {
       try {
         const activeTimeLog = await getActiveTimeLog();
+        let formattedStartTime, formattedStartPause, formattedEndPause;
+
         if (activeTimeLog) {
           setTimeLog(activeTimeLog);
           setStartTime(activeTimeLog.startTime);
+          formattedStartTime = `${activeTimeLog.date}T${activeTimeLog.startTime}`;
 
           if (activeTimeLog.startPause) {
             setPauseTime(activeTimeLog.startPause);
+            formattedStartPause = `${activeTimeLog.date}T${activeTimeLog.startPause}`;
           }
           if (activeTimeLog.endPause) {
             setResumeTime(activeTimeLog.endPause);
+            formattedEndPause = `${activeTimeLog.date}T${activeTimeLog.endPause}`;
           }
 
-          const formattedStartTime = `${activeTimeLog.date}T${activeTimeLog.startTime}`;
-          const elapsedSeconds = calculateElapsedSeconds(formattedStartTime);
+          const elapsedSeconds = calculateElapsedSeconds(formattedStartTime, formattedStartPause, formattedEndPause);
 
           totalSecondsRef.current = elapsedSeconds;
           const hours = Math.floor(elapsedSeconds / 3600);
