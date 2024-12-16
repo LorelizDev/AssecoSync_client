@@ -80,8 +80,8 @@ export const calendarServices = {
 
       const requestData = {
         ...leaveRequestData,
-        type_id: vacationType.id, // ID del tipo "Vacaciones"
-        status_id: 1, // Estado por defecto "pendiente"
+        typeId: vacationType.id, // ID del tipo "Vacaciones"
+        statusId: 1, // Estado por defecto "pendiente"
       };
 
       // Log para verificar los datos finales enviados al backend

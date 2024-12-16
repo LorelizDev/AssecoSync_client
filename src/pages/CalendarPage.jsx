@@ -22,14 +22,14 @@ const CalendarPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [events, setEvents] = useState([]);
   const [formData, setFormData] = useState({
-    start_date: '',
-    end_date: '',
-    type_id: '',
+    startDate: '',
+    endDate: '',
+    typeId: '',
     details: '',
   });
   const [vacationData, setVacationData] = useState({
-    start_date: '',
-    end_date: '',
+    startDate: '',
+    endDate: '',
     details: '',
   });
   const [leaveRequestTypes, setLeaveRequestTypes] = useState([]);
@@ -104,32 +104,32 @@ const CalendarPage = () => {
     e.preventDefault();
 
     try {
-      if (!formData.start_date || !formData.end_date || !formData.type_id) {
+      if (!formData.startDate || !formData.endDate || !formData.typeId) {
         toast.error('Por favor complete todos los campos requeridos');
         return;
       }
 
       const newRequest = await calendarServices.createLeaveRequest(
         {
-          startDate: formData.start_date,
-          endDate: formData.end_date,
+          startDate: formData.startDate,
+          endDate: formData.endDate,
           details: formData.details,
-          typeId: formData.type_id,
+          typeId: formData.typeId,
           statusId: 1, // Estado pendiente
         },
         token
       );
 
-      const adjustedEndDate = new Date(formData.end_date);
+      const adjustedEndDate = new Date(formData.endDate);
       adjustedEndDate.setDate(adjustedEndDate.getDate() + 1);
 
       const leaveType = leaveRequestTypes.find(
-        (type) => type.id === parseInt(formData.type_id)
+        (type) => type.id === parseInt(formData.typeId)
       );
 
       const newEvent = {
         title: leaveType ? leaveType.type : 'Ausencia',
-        start: formData.start_date,
+        start: formData.startDate,
         end: adjustedEndDate.toISOString().split('T')[0],
         color: LEAVE_TYPE_COLORS[leaveType?.type] || '#6c757d',
       };
@@ -137,9 +137,9 @@ const CalendarPage = () => {
       setEvents((prevEvents) => [...prevEvents, newEvent]);
 
       setFormData({
-        start_date: '',
-        end_date: '',
-        type_id: '',
+        startDate: '',
+        endDate: '',
+        typeId: '',
         details: '',
       });
       setIsModalOpen(false);
@@ -155,15 +155,15 @@ const CalendarPage = () => {
     e.preventDefault();
 
     try {
-      if (!vacationData.start_date || !vacationData.end_date) {
+      if (!vacationData.startDate || !vacationData.endDate) {
         toast.error('Por favor complete las fechas de inicio y fin');
         return;
       }
 
       const newVacation = await calendarServices.createLeaveRequest(
         {
-          startDate: vacationData.start_date,
-          endDate: vacationData.end_date,
+          startDate: vacationData.startDate,
+          endDate: vacationData.endDate,
           details: vacationData.details,
           typeId: 1, // Fijo para vacaciones
           statusId: 1, // Pendiente
@@ -171,12 +171,12 @@ const CalendarPage = () => {
         token
       );
 
-      const adjustedEndDate = new Date(vacationData.end_date);
+      const adjustedEndDate = new Date(vacationData.endDate);
       adjustedEndDate.setDate(adjustedEndDate.getDate() + 1);
 
       const newEvent = {
         title: 'Vacaciones',
-        start: vacationData.start_date,
+        start: vacationData.startDate,
         end: adjustedEndDate.toISOString().split('T')[0],
         color: LEAVE_TYPE_COLORS['Vacaciones'],
       };
@@ -184,8 +184,8 @@ const CalendarPage = () => {
       setEvents((prevEvents) => [...prevEvents, newEvent]);
 
       setVacationData({
-        start_date: '',
-        end_date: '',
+        startDate: '',
+        endDate: '',
         details: '',
       });
       setIsVacationModalOpen(false);

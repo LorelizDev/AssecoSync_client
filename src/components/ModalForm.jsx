@@ -22,16 +22,16 @@ const ModalForm = ({
           <Input
             label="Fecha de inicio"
             type="date"
-            name="start_date"
-            value={formData.start_date}
+            name="startDate"
+            value={formData.startDate}
             onChange={handleInputChange}
             required
           />
           <Input
             label="Fecha de fin"
             type="date"
-            name="end_date"
-            value={formData.end_date}
+            name="endDate"
+            value={formData.endDate}
             onChange={handleInputChange}
             required
           />
@@ -43,8 +43,8 @@ const ModalForm = ({
                 Tipo de ausencia
               </label>
               <select
-                name="type_id"
-                value={formData.type_id}
+                name="typeId"
+                value={formData.typeId}
                 onChange={handleInputChange}
                 className="mt-1 block w-full h-[45px] px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-blue-400 focus:border-blue-400 transition"
                 required

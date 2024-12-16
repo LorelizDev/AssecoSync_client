@@ -3,60 +3,60 @@
     {
       "id": "1",
       "employee_id": "E001",
-      "start_date": "2024-01-10",
-      "end_date": "2024-01-15",
-      "type_id": 1,
-      "status_id": 1
+      "startDate": "2024-01-10",
+      "endDate": "2024-01-15",
+      "typeId": 1,
+      "statusId": 1
     },
     {
       "id": "2",
       "employee_id": "E002",
-      "start_date": "2024-01-20",
-      "end_date": "2024-01-20",
-      "type_id": 2,
-      "status_id": 2
+      "startDate": "2024-01-20",
+      "endDate": "2024-01-20",
+      "typeId": 2,
+      "statusId": 2
     },
     {
       "id": "3",
       "employee_id": "E003",
-      "start_date": "2024-01-22",
-      "end_date": "2024-01-23",
-      "type_id": 3,
-      "status_id": 1
+      "startDate": "2024-01-22",
+      "endDate": "2024-01-23",
+      "typeId": 3,
+      "statusId": 1
     },
     {
       "id": "4",
       "employee_id": "E004",
-      "start_date": "2024-02-01",
-      "end_date": "2024-02-05",
-      "type_id": 4,
-      "status_id": 3
+      "startDate": "2024-02-01",
+      "endDate": "2024-02-05",
+      "typeId": 4,
+      "statusId": 3
     },
     {
       "id": "5",
       "employee_id": "E005",
-      "start_date": "2024-02-10",
-      "end_date": "2024-02-11",
-      "type_id": 1,
-      "status_id": 1
+      "startDate": "2024-02-10",
+      "endDate": "2024-02-11",
+      "typeId": 1,
+      "statusId": 1
     },
     {
       "id": "7581",
       "employee_id": "E001",
-      "start_date": "2024-12-12",
-      "end_date": "2024-12-18",
+      "startDate": "2024-12-12",
+      "endDate": "2024-12-18",
       "details": "",
-      "type_id": "vacation",
-      "status_id": 1
+      "typeId": "vacation",
+      "statusId": 1
     },
     {
       "id": "ab7b",
       "employee_id": "E003",
-      "start_date": "2024-12-02",
-      "end_date": "2024-12-07",
-      "type_id": "3",
+      "startDate": "2024-12-02",
+      "endDate": "2024-12-07",
+      "typeId": "3",
       "details": "",
-      "status_id": 1
+      "statusId": 1
     }
   ],
   "TypeRequest": [
@@ -168,7 +168,7 @@
       "end_time": "17:00",
       "pause_start": "12:00",
       "pause_end": "13:00",
-      "status_id": 1,
+      "statusId": 1,
       "location": "office"
     },
     {
@@ -179,7 +179,7 @@
       "end_time": "16:30",
       "pause_start": "12:00",
       "pause_end": "12:45",
-      "status_id": 2,
+      "statusId": 2,
       "location": "remote"
     },
     {
@@ -190,7 +190,7 @@
       "end_time": "17:00",
       "pause_start": "12:00",
       "pause_end": "13:00",
-      "status_id": 3,
+      "statusId": 3,
       "location": "office"
     }
   ]

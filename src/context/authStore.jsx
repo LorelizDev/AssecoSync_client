@@ -12,7 +12,7 @@ export const useAuthStore = create((set) => ({
 
   // Función para realizar el login
   login: (token) => {
-    set({ token, isAuthenticated: true }); // Guarda el token y establece el estado como autenticado
+    set({ token: token, isAuthenticated: true }); // Guarda el token y establece el estado como autenticado
     localStorage.setItem('token', token); // Opcional: persiste el token en localStorage
   },
 
