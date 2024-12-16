@@ -29,7 +29,7 @@ const EmployeeFilter = ({ onSearch }) => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row items-center bg-white border rounded-lg w-full max-w-4xl">
+    <div className="flex flex-col md:flex-row items-center bg-white border rounded-lg w-full max-w-4xl mb-6">
       {/* Filter Icon and Label */}
       <div className="flex items-center w-full md:w-auto p-2">
         <div className="flex items-center justify-center w-8 h-8 rounded-full mr-2">

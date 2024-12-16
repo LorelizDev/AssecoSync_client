@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+const BASE_URL = 'http://localhost:8000/api';
 const URL = 'http://localhost:8000/api/employees';
 
 export const getAllEmployees = async () => {
@@ -63,4 +64,43 @@ export const deleteEmployee = async (id) => {
     console.error('Error al borrar el empleado:', error);
     throw error;
   }
+};
+
+export const leaveRequestService = {
+  getAllLeaveRequestsWithEmployees: async (token) => {
+    try {
+      // Obtener las solicitudes de ausencia
+      const leaveRequestsResponse = await axios.get(
+        `${BASE_URL}/leave-requests`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // Obtener todos los empleados
+      const employeesResponse = await axios.get(`${BASE_URL}/employees`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // Relacionar los empleados con las solicitudes de ausencia
+      const leaveRequests = leaveRequestsResponse.data.map((request) => {
+        const employee = employeesResponse.data.find(
+          (emp) => emp.id === request.employeeId // Relacionamos por id del empleado
+        );
+        return {
+          ...request,
+          employee, // Asociamos los datos del empleado con la solicitud
+        };
+      });
+
+      return leaveRequests;
+    } catch (error) {
+      console.error('Error fetching leave requests with employees:', error);
+      throw error;
+    }
+  },
 };
