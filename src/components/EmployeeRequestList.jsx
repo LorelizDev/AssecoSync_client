@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { calendarServices } from '../services/calendarServices';
-// Asegúrate de tener el servicio de actualización
-import defaultAvatar from '../assets/images/profile-pictures/alan.jpg'; // Imagen por defecto
+import EmployeeFilter from './EmployeeFilter';
+import defaultAvatar from '../assets/images/profile-pictures/alan.jpg';
 
-const EmployeeRequestList = ({ employees }) => {
+const EmployeeRequestList = () => {
   const [employeeRequests, setEmployeeRequests] = useState([]);
+  const [filteredRequests, setFilteredRequests] = useState([]);
+  const [filterValue, setFilterValue] = useState('');
 
-  // Cargar solicitudes de ausencia con los empleados asociados
   useEffect(() => {
     const fetchEmployeeRequests = async () => {
       try {
@@ -14,39 +15,54 @@ const EmployeeRequestList = ({ employees }) => {
         const requests =
           await calendarServices.getAllLeaveRequestsWithEmployees(token);
         setEmployeeRequests(requests);
+        setFilteredRequests(requests);
       } catch (error) {
         console.error('Error al obtener las solicitudes:', error);
       }
     };
     fetchEmployeeRequests();
-  }, []); // Dependencia vacía, solo se ejecuta una vez al cargar el componente
+  }, []);
 
-  // Función para mapear el statusId a un texto legible
   const getStatusText = (statusId) => {
     switch (statusId) {
       case 1:
-        return 'Pendiente'; // Status "Pending"
+        return 'Pendiente';
       case 2:
-        return 'Aprobado'; // Status "Approved"
+        return 'Aprobado';
       case 3:
-        return 'Denegado'; // Status "Rejected"
+        return 'Denegado';
       default:
-        return 'Desconocido'; // Si no hay un status correspondiente, devolvemos "Desconocido"
+        return 'Desconocido';
     }
   };
 
-  // Función para manejar el cambio de status a Aprobado
+  const handleSearch = (filter) => {
+    const key = Object.keys(filter)[0];
+    const value = filter[key].toLowerCase();
+
+    const filtered = employeeRequests.filter((request) => {
+      const employee = request.employee;
+      if (employee) {
+        if (key === 'name') {
+          return (
+            employee.firstName.toLowerCase().includes(value) ||
+            employee.lastName.toLowerCase().includes(value)
+          );
+        }
+        return employee[key]?.toLowerCase().includes(value);
+      }
+      return false;
+    });
+
+    setFilteredRequests(filtered);
+  };
+
   const handleAccept = async (requestId) => {
     try {
       const token = localStorage.getItem('token');
-      const updatedRequest = await calendarServices.updateLeaveRequestStatus(
-        requestId,
-        2, // Estado "Aprobado"
-        token
-      );
+      await calendarServices.updateLeaveRequestStatus(requestId, 2, token);
 
-      // Actualizamos el estado local con la nueva solicitud actualizada
-      setEmployeeRequests((prevRequests) =>
+      setFilteredRequests((prevRequests) =>
         prevRequests.map((request) =>
           request.id === requestId
             ? { ...request, statusId: 2, status: 'Aprobado' }
@@ -58,18 +74,12 @@ const EmployeeRequestList = ({ employees }) => {
     }
   };
 
-  // Función para manejar el cambio de status a Rechazado
   const handleReject = async (requestId) => {
     try {
       const token = localStorage.getItem('token');
-      const updatedRequest = await calendarServices.updateLeaveRequestStatus(
-        requestId,
-        3, // Estado "Rechazado"
-        token
-      );
+      await calendarServices.updateLeaveRequestStatus(requestId, 3, token);
 
-      // Actualizamos el estado local con la nueva solicitud actualizada
-      setEmployeeRequests((prevRequests) =>
+      setFilteredRequests((prevRequests) =>
         prevRequests.map((request) =>
           request.id === requestId
             ? { ...request, statusId: 3, status: 'Denegado' }
@@ -81,8 +91,19 @@ const EmployeeRequestList = ({ employees }) => {
     }
   };
 
+  const handleReset = () => {
+    setFilteredRequests(employeeRequests);
+    setFilterValue('');
+  };
+
   return (
     <div className="container p-1">
+      <EmployeeFilter
+        onSearch={handleSearch}
+        onReset={handleReset}
+        filterValue={filterValue}
+        setFilterValue={setFilterValue}
+      />
       <div className="rounded-[14px] overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-300 rounded-lg">
           <thead className="bg-[#fcfcfc]">
@@ -108,16 +129,12 @@ const EmployeeRequestList = ({ employees }) => {
             </tr>
           </thead>
           <tbody>
-            {employeeRequests.length > 0 ? (
-              employeeRequests.map((employeeRequest) => (
+            {filteredRequests.length > 0 ? (
+              filteredRequests.map((employeeRequest) => (
                 <tr key={employeeRequest.id} className="border-b">
                   <td className="px-4 py-2">
                     <img
-                      src={
-                        employeeRequest.employee?.avatar
-                          ? employeeRequest.employee.avatar
-                          : defaultAvatar // Imagen por defecto si no tiene avatar
-                      }
+                      src={employeeRequest.employee?.avatar || defaultAvatar}
                       alt={`${employeeRequest.employee?.firstName} ${employeeRequest.employee?.lastName}`}
                       className="w-12 h-12 rounded-full object-cover"
                     />
@@ -141,23 +158,24 @@ const EmployeeRequestList = ({ employees }) => {
                               : 'bg-gray-400'
                       }`}
                     >
-                      {getStatusText(employeeRequest.statusId)}{' '}
+                      {getStatusText(employeeRequest.statusId)}
                     </span>
                   </td>
                   <td className="px-4 py-2">
-                    {/* Botones de Aceptar y Denegar */}
-                    <button
-                      onClick={() => handleAccept(employeeRequest.id)}
-                      className="px-4 py-2 bg-green-500 text-white rounded-full"
-                    >
-                      <span className="text-lg">✔</span> {/* Aceptar */}
-                    </button>
-                    <button
-                      onClick={() => handleReject(employeeRequest.id)}
-                      className="px-4 py-2 bg-red-500 text-white rounded-full ml-2"
-                    >
-                      <span className="text-lg">✖</span> {/* Rechazar */}
-                    </button>
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={() => handleAccept(employeeRequest.id)}
+                        className="flex items-center justify-center w-10 h-10 bg-green-500 text-white rounded-full hover:bg-green-600 focus:outline-none"
+                      >
+                        <span className="text-xl">✔</span>
+                      </button>
+                      <button
+                        onClick={() => handleReject(employeeRequest.id)}
+                        className="flex items-center justify-center w-10 h-10 bg-red-500 text-white rounded-full hover:bg-red-600 focus:outline-none"
+                      >
+                        <span className="text-xl">✖</span>
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))
