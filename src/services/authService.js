@@ -22,6 +22,25 @@ export const loginEmployee = async (data) => {
   }
 };
 
+export const registerEmployee = async (data) => {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await axios.post(`${URL}/register`, data, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+      },
+    });
+    return {
+      success: true,
+      message: 'Empleado registrado exitosamente',
+      data: response.data
+    };
+  } catch (error) {
+    console.error("Error al registrar el nuevo empleado:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
 
 
 

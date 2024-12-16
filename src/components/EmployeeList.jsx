@@ -1,4 +1,5 @@
 import React from 'react';
+import { RxAvatar } from 'react-icons/rx';
 
 const EmployeeList = ({ employees }) => {
   return (
@@ -19,17 +20,21 @@ const EmployeeList = ({ employees }) => {
           {employees.map((employee) => (
             <tr key={employee.id} className="border-b hover:bg-gray-100">
               <td className="p-3">
-                <img
-                  src={employee.profilePicture}
-                  alt={`${employee.name} ${employee.lastName}`}
-                  className="w-10 h-10 rounded-full"
-                />
+                {!employee.avatar ? (
+                  <RxAvatar className="w-10 h-10 text-grayicon" />
+                ) : (
+                  <img
+                    src={employee.avatar}
+                    alt={`${employee.firstName} ${employee.lastName}`}
+                    className="w-10 h-10 rounded-full"
+                  />
+                )}
               </td>
               <td className="p-3">{employee.id}</td>
-              <td className="p-3">{employee.name}</td>
+              <td className="p-3">{employee.firstName}</td>
               <td className="p-3">{employee.lastName}</td>
               <td className="p-3">{employee.email}</td>
-              <td className="p-3">{employee.position}</td>
+              <td className="p-3">{employee.jobTitle}</td>
               <td className="p-3">
                 <button className="bg-primary text-white px-3 py-1 rounded">
                   Editar
