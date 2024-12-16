@@ -2,16 +2,18 @@ import { useState } from 'react';
 import React from 'react';
 import { BiFilterAlt } from 'react-icons/bi';
 
-const EmployeeFilter = ({ onSearch }) => {
+const EmployeeFilter = ({ onSearch, onReset }) => {
   const filters = [
     { key: 'id', label: 'ID', type: 'text' },
     { key: 'name', label: 'Nombre', type: 'text' },
     { key: 'lastName', label: 'Apellidos', type: 'text' },
-    { key: 'position', label: 'Cargo', type: 'text' },
+    { key: 'jobTitle', label: 'Cargo', type: 'text' },
   ];
 
   const [selectedFilter, setSelectedFilter] = useState('id');
   const [filterValue, setFilterValue] = useState('');
+
+  const currentFilterLabel = filters.find((filter) => filter.key === selectedFilter)?.label || 'Filtro';
 
   const handleSearch = () => {
     onSearch({ [selectedFilter]: filterValue });
@@ -57,7 +59,7 @@ const EmployeeFilter = ({ onSearch }) => {
       <div className="flex-grow w-full md:w-auto p-2">
         <input
           type="text"
-          placeholder={`Buscar por ${selectedFilter}`}
+          placeholder={`Buscar por ${currentFilterLabel}`}
           value={filterValue}
           onChange={(e) => setFilterValue(e.target.value)}
           className="w-full pl-2 h-10 border border-gray-300 rounded focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"

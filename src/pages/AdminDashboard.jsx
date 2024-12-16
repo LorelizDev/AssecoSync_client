@@ -14,7 +14,7 @@ const AdminDashboard = () => {
   // Define button click handlers
   const navigateToEmployees = () => navigate('/AdminEmployeeList');
   const navigateToRegister = () => navigate('/register');
-  const navigateToStatistics = () => navigate('/register');
+  const navigateToStatistics = () => navigate('/statistics-time-log');
   const navigateToRequests = () => navigate('/EmployeeRequests');
 
   return (
