@@ -9,11 +9,7 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "dev": "vite",
-    "build": "vite build",
-    "serve": "vite preview",
-    "prepare": "husky",
-    "start": "json-server --watch src/db/db.json --port 3001",
-    "json-server": "json-server --watch data/db.json --port 3001"
+    "prepare": "husky"
   },
   "comentarios": {
     "lint": "Este script ejecuta ESLint en todo el proyecto para verificar si hay errores.",
