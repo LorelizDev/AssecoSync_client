@@ -30,7 +30,7 @@ Hemos separado el proyecto en dos repositorios:
 
 ---
 
-## Descripción General ✨
+## Descripción General  ✨
 
 **AssecoSync** es una aplicación web responsive que simplifica la gestión del tiempo laboral para empleados y administradores de **Asseco**. Permite registrar jornadas laborales, gestionar ausencias y vacaciones, y consultar reportes detallados, todo desde una interfaz moderna y amigable.
 
@@ -45,20 +45,20 @@ Crear una plataforma integral que optimice procesos administrativos, garantizand
 
 ---
 
-## Visión 🌟
+## Visión  🌟
 
 Proporcionar una herramienta tecnológica eficiente que mejore la experiencia del personal de **Asseco**, ofreciendo una gestión laboral clara, fácil y transparente.
 
 ---
 
-## Público Objetivo 👥
+## Público Objetivo  👥
 
 - **Empleados:** Gestionar su jornada laboral y vacaciones.
 - **Administradores:** Supervisar y analizar el tiempo laboral y aprobar/rechazar las solicitudes.
 
 ---
 
-## Tecnologías Usadas 💻
+## Tecnologías Usadas  💻
 
 ### Frontend:
 
@@ -84,7 +84,7 @@ Proporcionar una herramienta tecnológica eficiente que mejore la experiencia de
 
 ---
 
-## Características Principales ✨
+## Características Principales  ✨
 
 - **Registro horario:** Entrada y salida con modalidades presencial o teletrabajo.
 - **Calendario:** Visualización de jornadas, vacaciones y festivos.
@@ -93,7 +93,7 @@ Proporcionar una herramienta tecnológica eficiente que mejore la experiencia de
 
 ---
 
-## Instalación 🛠️
+## Instalación  🛠️
 
 Sigue estos pasos para instalar y configurar el proyecto:
 
@@ -117,7 +117,7 @@ Sigue estos pasos para instalar y configurar el proyecto:
 
 ---
 
-## Capturas de Pantalla 📸
+## Capturas de Pantalla  📸
 
 ### Admin Solicitudes
 
@@ -149,7 +149,7 @@ Sigue estos pasos para instalar y configurar el proyecto:
 
 ---
 
-## Documentación 📚
+## Documentación  📚
 
 - [Documentación de Visión del Proyecto](src/docs/DOCUMENTO%20DE%20VISIÓN%20DEL%20PROYECTO.pdf)
 - [Convención para la creación de ramas](src/docs/CONVENCION%20PARA%20LA%20CREACION%20DE%20RAMAS.pdf)
@@ -157,7 +157,7 @@ Sigue estos pasos para instalar y configurar el proyecto:
 
 ---
 
-## Futuras Mejoras 🚀
+## Futuras Mejoras  🚀
 
 - **Reportes avanzados:** Visualización gráfica de estadísticas laborales.
 - **Integración con herramientas externas:** Sincronización con calendarios corporativos.
@@ -168,5 +168,13 @@ Sigue estos pasos para instalar y configurar el proyecto:
 - **Adjuntar Documentos:** Adjuntar documentos de justificantes para las ausencias
 
 ---
+
+## 🧑‍🤝‍🧑 Team
+
+- [Lorena Acosta](https://github.com/LorelizDev)
+- [Anca Bacria](https://github.com/a-bac-0)
+- [Jonnatha Figueira](https://github.com/jfigueira87)
+- [Laura De Vega](https://github.com/devegalaura-dev)
+- [Ana María García](https://github.com/AnaMaria-Sole)
 
 Gracias por confiar en **AssecoSync**. Nuestro compromiso es facilitar tu gestión laboral y optimizar tu tiempo. ¡Estamos para ayudarte!
