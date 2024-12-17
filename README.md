@@ -2,7 +2,17 @@
 
 **AssecoSync** es la solución ideal para gestionar el tiempo laboral en **Asseco**. Nuestra plataforma no solo facilita el registro horario, sino que también transforma la forma en que empleados y administradores gestionan vacaciones, ausencias y documentación laboral, promoviendo eficiencia y transparencia.
 
-![Home AssecoSync](src\assets\images\screenshots\login.jpg)
+![Home AssecoSync](src/assets/images/screenshots/login.jpg)
+
+---
+
+## Estructura del proyecto 📁
+
+Hemos separado el proyecto en dos repositorios:
+
+- **[AssecoSync Cliente](https://github.com/LorelizDev/AssecoSync_client)**: Se enfoca exclusivamente en la interfaz de usuario (UI), lógica de presentación y experiencia del usuario.
+
+- **[AssecoSync API](https://github.com/LorelizDev/AssecoSync_API)**: Se encarga de la lógica de negocio, almacenamiento de datos, autenticación, autorizaciones, y comunicación con la base de datos.
 
 ---
 
@@ -14,7 +24,9 @@
 4. [Tecnologías Usadas](#tecnologías-usadas)
 5. [Características Principales](#características-principales)
 6. [Instalación](#instalación)
-7. [Futuras Mejoras](#futuras-mejoras)
+7. [Capturas de pantalla](#capturas-de-pantalla)
+8. [Documentación](#documentación)
+9. [Futuras Mejoras](#futuras-mejoras)
 
 ---
 
@@ -29,8 +41,7 @@ Crear una plataforma integral que optimice procesos administrativos, garantizand
 
 - Registro horario.
 - Gestión de vacaciones y ausencias.
-- Panel de administración para RRHH.
-- Sistema de alertas.
+- Panel de administración para Admin.
 
 ---
 
@@ -43,7 +54,7 @@ Proporcionar una herramienta tecnológica eficiente que mejore la experiencia de
 ## Público Objetivo 👥
 
 - **Empleados:** Gestionar su jornada laboral y vacaciones.
-- **Administradores de RRHH:** Supervisar y analizar el tiempo laboral.
+- **Administradores:** Supervisar y analizar el tiempo laboral y aprobar/rechazar las solicitudes.
 
 ---
 
@@ -65,21 +76,11 @@ Proporcionar una herramienta tecnológica eficiente que mejore la experiencia de
 - ![Husky](https://img.shields.io/badge/Husky-000000?style=for-the-badge&logo=git&logoColor=white): Pre-commit hooks para mantener estándares en el código.
 - ![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=white): Formateador de código para mantener consistencia.
 
-### Backend:
-
-- ![Node.js](https://img.shields.io/badge/Node.js-green?style=for-the-badge&logo=node.js&logoColor=white): Entorno de ejecución.
-- ![Express](https://img.shields.io/badge/Express.js-4DB33A?style=for-the-badge&logo=express&logoColor=white): Framework para crear el servidor.
-- ![Sequelize](https://img.shields.io/badge/Sequelize-5272B4?style=for-the-badge&logo=sequelize&logoColor=white): ORM para bases de datos SQL.
-- ![PostgREST](https://img.shields.io/badge/PostgREST-316192?style=for-the-badge&logo=postgresql&logoColor=white): API REST automática para bases de datos PostgreSQL.
-- ![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=json-web-tokens&logoColor=white): Para autenticación segura.
-- ![Keycloak](https://img.shields.io/badge/Keycloak-325B7C?style=for-the-badge&logo=keycloak&logoColor=white): Gestión de identidad y accesos.
-
 ### Herramientas:
 
 - ![Jest](https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=jest&logoColor=white): Pruebas unitarias.
-- ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white): Pruebas de endpoints.
-- ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=white): Documentación de la API.
-- ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white): Herramienta de contenedores para despliegue eficiente.
+- ![Jira](https://img.shields.io/badge/Jira-0052CC?style=for-the-badge&logo=jira&logoColor=white): Gestión de tareas y proyectos.
+- ![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white): Diseño de interfaces y prototipos.
 
 ---
 
@@ -88,8 +89,31 @@ Proporcionar una herramienta tecnológica eficiente que mejore la experiencia de
 - **Registro horario:** Entrada y salida con modalidades presencial o teletrabajo.
 - **Calendario:** Visualización de jornadas, vacaciones y festivos.
 - **Panel de administración:** Supervisión y gestión de fichajes.
-- **Alertas:** Notificaciones antes del fin de jornada laboral.
 - **Gestión de solicitudes:** Aprobación/rechazo de vacaciones y ausencias.
+
+---
+
+## Instalación 🛠️
+
+Sigue estos pasos para instalar y configurar el proyecto:
+
+1. **Clona el repositorio**:
+
+   ```bash
+   git clone https://github.com/LorelizDev/AssecoSync_client.git
+   ```
+
+2. **Instalar dependencias**:
+
+   ```bash
+   npm install
+   ```
+
+3. **Ejecutar el proyecto**:
+
+   ```bash
+   npm run dev
+   ```
 
 ---
 
@@ -119,14 +143,17 @@ Proporcionar una herramienta tecnológica eficiente que mejore la experiencia de
 
 ![Solicitar Vacaciones](src/assets/images/screenshots/solicitar-vacaciones.jpg)
 
+### Jira
+
+![Jira](src/assets/images/screenshots/jira.jpg)
+
 ---
 
 ## Documentación 📚
 
-- [Documentación de Visión del Proyecto](src\docs\DOCUMENTO DE VISIÓN DEL PROYECTO.pdf)
-- [Convención para la cración de ramas](src\docs\CONVENCION PARA LA CREACION DE RAMAS.pdf)
-- [Plantilla de Prompts](src\docs\PLANTILLA DE PROMPTS.pdf)
-- [Documentación de API](URL_DE_API)
+- [Documentación de Visión del Proyecto](src/docs/DOCUMENTO%20DE%20VISIÓN%20DEL%20PROYECTO.pdf)
+- [Convención para la creación de ramas](src/docs/CONVENCION%20PARA%20LA%20CREACION%20DE%20RAMAS.pdf)
+- [Plantilla de Prompts](src/docs/PLANTILLA%20DE%20PROMPTS.pdf)
 
 ---
 
@@ -135,6 +162,10 @@ Proporcionar una herramienta tecnológica eficiente que mejore la experiencia de
 - **Reportes avanzados:** Visualización gráfica de estadísticas laborales.
 - **Integración con herramientas externas:** Sincronización con calendarios corporativos.
 - **Gestor de roles:** Diferentes niveles de acceso y permisos.
+- **Tests:** Finalizar los tests
+- **Notificaciones:** Activar notificaciones sobre las solicitudes
+- **Automatización fin de jornada:** Automatizar el control de jornada con notificaciones 30min antes de que acabe la jornada
+- **Adjuntar Documentos:** Adjuntar documentos de justificantes para las ausencias
 
 ---
 
