@@ -1,6 +1,7 @@
 import React from 'react';
 import Input from './Input';
 import Button from './Button';
+import { useUserInfo } from '../context/authStore';
 
 const ModalForm = ({
   isOpen,
@@ -12,6 +13,7 @@ const ModalForm = ({
   leaveRequestTypes,
   excludeVacation = false, // Excluir vacaciones si es necesario
 }) => {
+  const { role } = useUserInfo();
   if (!isOpen) return null;
 
   return (
@@ -19,6 +21,15 @@ const ModalForm = ({
       <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 md:w-1/3">
         <h2 className="text-xl font-bold mb-4">{title}</h2>
         <form onSubmit={onSubmit}>
+          {role == 'admin' && (
+            <Input
+            label="ID del empleado"
+            name="employeeId"
+            placeholder="EMP000"
+            value={formData.employeeId}
+            onChange={handleInputChange}
+            required
+          />)}
           <Input
             label="Fecha de inicio"
             type="date"

@@ -1,12 +1,19 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
-//import Footer from '../components/Footer';
-//import Navbar from '../components/Navbar';
+import { Outlet, Navigate } from 'react-router-dom';
+import { useUserInfo } from '../context/authStore';
 
 const Layout = () => {
+  const { isAuthenticated } = useUserInfo();
   return (
     <>
       <Outlet />
+      {isAuthenticated ? (
+        <>
+          <Navigate to="/dashboard" replace />
+        </>
+      ) : (
+        <Navigate to="/login" replace />
+      )}
     </>
   );
 };

@@ -9,8 +9,11 @@ const SidebarItem = ({ icon, label, route, isPrimary = false }) => {
     <div className="relative flex flex-col items-center">
       <NavLink
         to={route}
-        className="flex flex-col items-center text-gray-600 hover:text-blue-500 transition-colors duration-200"
-        activeClassName="text-blue-500"
+        className={({ isActive }) =>
+          `flex flex-col items-center text-gray-600 hover:text-blue-500 transition-colors duration-200 ${
+            isActive ? 'text-blue-500' : ''
+          }`
+        }
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
