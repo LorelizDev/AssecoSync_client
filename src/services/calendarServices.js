@@ -80,7 +80,6 @@ export const calendarServices = {
 
       const requestData = {
         ...leaveRequestData,
-        typeId: vacationType.id, // ID del tipo "Vacaciones"
         statusId: 1, // Estado por defecto "pendiente"
       };
 
