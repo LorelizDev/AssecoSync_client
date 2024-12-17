@@ -11,7 +11,9 @@ const Navbar = () => {
       <div className="rounded-full overflow-hidden w-12 h-12">
         <RxAvatar className="w-12 h-12 text-grayicon" />
       </div>
-      <p>¡Hola, <b>{user}</b>!</p>
+      <p>
+        ¡Hola, <b>{user || 'Bienvenido a AssecoSync'}</b>!
+      </p>
     </div>
   );
 };

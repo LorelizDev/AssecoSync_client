@@ -255,10 +255,11 @@ const CalendarPage = () => {
           </Button>
         </div>
 
+        {/* Contenedor del calendario */}
         <div className="px-4 overflow-x-auto md:-right-[22%] md:w-[120%]">
           <div
             className="bg-white rounded-[14px] border border-[#b8b8b8] shadow-lg 
-                  w-full max-w-3xl md:h-[600px] h-[600px] overflow-hidden"
+                    w-full max-w-none md:h-[600px] h-[600px] overflow-hidden"
           >
             <FullCalendar
               plugins={[dayGridPlugin]}
@@ -282,7 +283,7 @@ const CalendarPage = () => {
         </div>
       </div>
 
-      {/* Modal de Solicitar Ausencia */}
+      {/* Modals y Toast */}
       <ModalForm
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -292,8 +293,6 @@ const CalendarPage = () => {
         handleInputChange={handleInputChange}
         leaveRequestTypes={leaveRequestTypes}
       />
-
-      {/* Modal de Solicitar Vacaciones */}
       <ModalForm
         isOpen={isVacationModalOpen}
         onClose={() => setIsVacationModalOpen(false)}
@@ -302,9 +301,8 @@ const CalendarPage = () => {
         formData={vacationData}
         handleInputChange={handleVacationChange}
         leaveRequestTypes={leaveRequestTypes}
-        excludeVacation={true} // Excluir "Vacaciones" de la lista
+        excludeVacation={true}
       />
-
       <ToastContainer />
 
       {/* Right Side */}
