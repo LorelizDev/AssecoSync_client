@@ -50,7 +50,7 @@ Crear una plataforma integral que optimice procesos administrativos, garantizand
 Proporcionar una herramienta tecnológica eficiente que mejore la experiencia del personal de **Asseco**, ofreciendo una gestión laboral clara, fácil y transparente.
 
 ---
-
+ 
 ## Público Objetivo👥
 
 - **Empleados:** Gestionar su jornada laboral y vacaciones.
@@ -155,7 +155,6 @@ Sigue estos pasos para instalar y configurar el proyecto:
 - [Convención para la creación de ramas](src/docs/CONVENCION%20PARA%20LA%20CREACION%20DE%20RAMAS.pdf)
 - [Plantilla de Prompts](src/docs/PLANTILLA%20DE%20PROMPTS.pdf)
 
----
 
 ## Futuras Mejoras🚀
 
@@ -168,5 +167,13 @@ Sigue estos pasos para instalar y configurar el proyecto:
 - **Adjuntar Documentos:** Adjuntar documentos de justificantes para las ausencias
 
 ---
+
+## 🧑‍🤝‍🧑 Team
+
+- [Lorena Acosta](https://github.com/LorelizDev)
+- [Anca Bacria](https://github.com/a-bac-0)
+- [Jonnatha Figueira](https://github.com/jfigueira87)
+- [Laura De Vega](https://github.com/devegalaura-dev)
+- [Ana María García](https://github.com/AnaMaria-Sole)
 
 Gracias por confiar en **AssecoSync**. Nuestro compromiso es facilitar tu gestión laboral y optimizar tu tiempo. ¡Estamos para ayudarte!
