@@ -13,7 +13,8 @@ const EmployeeFilter = ({ onSearch, onReset }) => {
   const [selectedFilter, setSelectedFilter] = useState('id');
   const [filterValue, setFilterValue] = useState('');
 
-  const currentFilterLabel = filters.find((filter) => filter.key === selectedFilter)?.label || 'Filtro';
+  const currentFilterLabel =
+    filters.find((filter) => filter.key === selectedFilter)?.label || 'Filtro';
 
   const handleSearch = () => {
     onSearch({ [selectedFilter]: filterValue });
@@ -21,13 +22,13 @@ const EmployeeFilter = ({ onSearch, onReset }) => {
 
   const handleFilterChange = (e) => {
     setSelectedFilter(e.target.value);
-    setFilterValue(''); // Reset the text input
+    setFilterValue('');
   };
 
   const handleReset = () => {
-    setSelectedFilter('id'); // Reset dropdown to default
-    setFilterValue(''); // Clear search input
-    onReset(); // Notify parent to reset the search
+    setSelectedFilter('id');
+    setFilterValue('');
+    onReset();
   };
 
   return (

@@ -8,38 +8,62 @@ const AdminEmployeeList = () => {
   const [employees, setEmployees] = useState([]);
   const [filteredEmployees, setFilteredEmployees] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [error, setError] = useState(null); // To store error messages
   const employeesPerPage = 10; // Number of employees per page
 
+  // Function to fetch employee data from the service
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
+        // Fetch employees data
         const employeesData = await getAllEmployees();
+
+        if (!Array.isArray(employeesData)) {
+          throw new Error('Employee data is not an array');
+        }
+
+        // Set employees and filtered employees
         setEmployees(employeesData || []);
         setFilteredEmployees(employeesData || []);
       } catch (error) {
+        // Log the error and set the error state
         console.error('Error fetching employees:', error);
+        setError('Failed to fetch employee data. Please try again later.');
       }
     };
+
     fetchEmployees();
   }, []);
 
+  // Handle search functionality with validation
   const handleSearch = (searchParams) => {
     const key = Object.keys(searchParams)[0];
     const value = searchParams[key];
 
+    // Validate search input
+    if (!key || !value) {
+      setError('Invalid search parameters');
+      return;
+    }
+
+    // Filter employees based on search params
     const filtered = employees.filter((employee) => {
       const targetValue = employee[key]?.toLowerCase() || '';
       return targetValue.includes(value.toLowerCase());
     });
+
+    // Update filtered employees and reset the page to 1
     setFilteredEmployees(filtered);
     setCurrentPage(1); // Reset to the first page after filtering
   };
 
+  // Handle reset functionality
   const handleReset = () => {
     setFilteredEmployees(employees);
+    setError(null); // Clear error on reset
   };
-  
-  // Calculate the employees to display on the current page
+
+  // Pagination logic
   const startIndex = (currentPage - 1) * employeesPerPage;
   const endIndex = startIndex + employeesPerPage;
   const currentEmployees = (filteredEmployees || []).slice(
@@ -47,7 +71,6 @@ const AdminEmployeeList = () => {
     endIndex
   );
 
-  // Pagination handlers
   const totalEmployees = filteredEmployees.length;
 
   const handlePreviousPage = () => {
@@ -63,10 +86,7 @@ const AdminEmployeeList = () => {
   };
 
   return (
-    <div
-      className="flex flex-col md:flex-row 
-    h-screen"
-    >
+    <div className="flex flex-col md:flex-row h-screen">
       {/* Sidebar */}
       <div className="z-10 hidden md:block md:relative md:w-20 bg-primarybg">
         <Sidebar />
@@ -78,12 +98,13 @@ const AdminEmployeeList = () => {
           <h1 className="text-2xl text-primary font-bold mb-1">
             Lista de empleados
           </h1>
-          {/* Wrapper to break out of container */}
         </div>
         <div className="relative px-4 md:pl-[1.2rem] pb-4 max-w-fit">
           <EmployeeFilter onSearch={handleSearch} onReset={handleReset} />
         </div>
         <div className="px-4 overflow-x-auto md:-right-[22%] md:w-[120%]">
+          {/* Display Error if any */}
+          {error && <div className="text-red-500">{error}</div>}
           <EmployeeList employees={currentEmployees} />
         </div>
         {/* Pagination Controls */}

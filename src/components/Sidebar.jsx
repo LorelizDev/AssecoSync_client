@@ -6,13 +6,12 @@ import { HiOutlineCog6Tooth } from 'react-icons/hi2';
 import { TbSmartHome, TbUser, TbCalendar } from 'react-icons/tb';
 
 const Sidebar = () => {
-  const logout = useAuthStore((state) => state.logout); // Obtener la función logout
+  const logout = useAuthStore((state) => state.logout);
   const navigate = useNavigate();
 
-  // Maneja el evento de cerrar sesión
   const handleLogout = () => {
-    logout(); // Limpia el estado de autenticación
-    navigate('/'); // Redirige al usuario a la página de login
+    logout();
+    navigate('/');
   };
 
   // Lista de ítems de navegación

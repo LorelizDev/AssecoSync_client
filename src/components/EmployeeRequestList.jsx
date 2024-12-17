@@ -13,15 +13,17 @@ const EmployeeRequestList = () => {
     const fetchEmployeeRequests = async () => {
       try {
         const token = localStorage.getItem('token');
-        const requests = await calendarServices.getAllLeaveRequestsWithEmployees(token);
+        const requests =
+          await calendarServices.getAllLeaveRequestsWithEmployees(token);
         setEmployeeRequests(requests);
         setFilteredRequests(requests);
 
-        // Cargar los tipos de solicitudes relacionados con las solicitudes de empleados
         const typeRequestsData = {};
         for (const request of requests) {
           if (!typeRequestsData[request.typeId]) {
-            typeRequestsData[request.typeId] = await fetchTypeRequestById(request.typeId);
+            typeRequestsData[request.typeId] = await fetchTypeRequestById(
+              request.typeId
+            );
           }
         }
         setTypeRequests(typeRequestsData);
@@ -33,7 +35,10 @@ const EmployeeRequestList = () => {
     const fetchTypeRequestById = async (typeId) => {
       try {
         const token = localStorage.getItem('token');
-        const typeRequest = await calendarServices.getLeaveRequestTypeById(typeId, token);
+        const typeRequest = await calendarServices.getLeaveRequestTypeById(
+          typeId,
+          token
+        );
         return typeRequest.type;
       } catch (error) {
         console.error('Error al obtener el tipo de solicitud:', error);
@@ -183,10 +188,10 @@ const EmployeeRequestList = () => {
                         employeeRequest.statusId === 1
                           ? 'bg-yellow-500'
                           : employeeRequest.statusId === 2
-                          ? 'bg-green-500'
-                          : employeeRequest.statusId === 3
-                          ? 'bg-red-500'
-                          : 'bg-gray-400'
+                            ? 'bg-green-500'
+                            : employeeRequest.statusId === 3
+                              ? 'bg-red-500'
+                              : 'bg-gray-400'
                       }`}
                     >
                       {getStatusText(employeeRequest.statusId)}

@@ -11,7 +11,7 @@ const ModalForm = ({
   formData,
   handleInputChange,
   leaveRequestTypes,
-  excludeVacation = false, // Excluir vacaciones si es necesario
+  excludeVacation = false,
 }) => {
   const { role } = useUserInfo();
   if (!isOpen) return null;
@@ -23,13 +23,14 @@ const ModalForm = ({
         <form onSubmit={onSubmit}>
           {role == 'admin' && (
             <Input
-            label="ID del empleado"
-            name="employeeId"
-            placeholder="EMP000"
-            value={formData.employeeId}
-            onChange={handleInputChange}
-            required
-          />)}
+              label="ID del empleado"
+              name="employeeId"
+              placeholder="EMP000"
+              value={formData.employeeId}
+              onChange={handleInputChange}
+              required
+            />
+          )}
           <Input
             label="Fecha de inicio"
             type="date"

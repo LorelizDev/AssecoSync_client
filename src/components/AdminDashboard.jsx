@@ -9,7 +9,7 @@ import StatisticsIcon from '../assets/images/icons/button clock-in.svg';
 import RequestIcon from '../assets/images/icons/peticiones.svg';
 
 const AdminDashboard = () => {
-  const navigate = useNavigate(); // Inicializar navegación
+  const navigate = useNavigate();
 
   // Define button click handlers
   const navigateToEmployees = () => navigate('/admin/employees-list');

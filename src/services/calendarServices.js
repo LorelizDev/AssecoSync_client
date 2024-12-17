@@ -3,12 +3,10 @@ import axios from 'axios';
 // URL base para solicitudes API
 const BASE_URL = 'http://localhost:8000/api';
 
-/**
- * Crear una instancia de Axios con inyección dinámica de token
- * @param {string} token - Token de autenticación
- * @returns {AxiosInstance} Instancia de Axios configurada
- */
 const createAxiosInstance = (token) => {
+  if (!token) {
+    throw new Error('El token de autenticación es requerido.');
+  }
   return axios.create({
     baseURL: BASE_URL,
     headers: {
@@ -17,36 +15,44 @@ const createAxiosInstance = (token) => {
   });
 };
 
+const handleError = (error) => {
+  if (error.response) {
+    // Respuesta del servidor con error
+    console.error('Error de respuesta:', error.response.data);
+    return `Error del servidor: ${error.response.data?.message || 'Error desconocido'}`;
+  } else if (error.request) {
+    // No se recibió respuesta del servidor
+    console.error('No se recibió respuesta del servidor:', error.request);
+    return 'No se recibió respuesta del servidor. Por favor, intente nuevamente.';
+  } else {
+    // Error en la configuración de la solicitud
+    console.error('Error en la solicitud:', error.message);
+    return `Error: ${error.message}`;
+  }
+};
+
 export const calendarServices = {
-  /**
-   * Obtener todas las solicitudes de ausencia
-   * @param {string} token - Token de autenticación
-   * @returns {Promise} Lista de solicitudes de ausencia
-   */
   getAllLeaveRequests: async (token) => {
     try {
       const axiosInstance = createAxiosInstance(token);
       const response = await axiosInstance.get('/leave-requests');
-      return response.data;
+      return response.data || []; // Aseguramos que siempre se retorne un array vacío si no hay datos
     } catch (error) {
-      console.error('Error al obtener solicitudes de ausencia:', error);
-      throw error;
+      const errorMessage = handleError(error);
+      console.error('Error al obtener solicitudes de ausencia:', errorMessage);
+      throw new Error(errorMessage);
     }
   },
 
-  /**
-   * Obtener tipos de solicitudes de ausencia
-   * @param {string} token - Token de autenticación
-   * @returns {Promise} Lista de tipos de solicitudes
-   */
   getLeaveRequestTypes: async (token) => {
     try {
       const axiosInstance = createAxiosInstance(token);
       const response = await axiosInstance.get('/type-requests');
-      return response.data;
+      return response.data || []; // Aseguramos que siempre se retorne un array vacío si no hay datos
     } catch (error) {
-      console.error('Error al obtener tipos de solicitudes:', error);
-      throw error;
+      const errorMessage = handleError(error);
+      console.error('Error al obtener tipos de solicitudes:', errorMessage);
+      throw new Error(errorMessage);
     }
   },
 
@@ -56,30 +62,21 @@ export const calendarServices = {
       const response = await axiosInstance.get(`/type-requests/${typeId}`);
       return response.data;
     } catch (error) {
-      console.error('Error al obtener el tipo de solicitud:', error);
-      throw error;
+      const errorMessage = handleError(error);
+      console.error('Error al obtener el tipo de solicitud:', errorMessage);
+      throw new Error(errorMessage);
     }
   },
 
-  /**
-   * Crear una nueva solicitud de ausencia
-   * @param {Object} leaveRequestData - Datos de la solicitud
-   * @param {string} token - Token de autenticación
-   * @returns {Promise} Solicitud creada
-   */
   createLeaveRequest: async (leaveRequestData, token) => {
     try {
       const axiosInstance = createAxiosInstance(token);
 
-      // Log de los datos iniciales recibidos
-      console.log(
-        'Datos iniciales recibidos en el servicio:',
-        leaveRequestData
-      );
-
       // Obtener el ID del tipo de vacaciones
       const typeResponse = await axiosInstance.get('/type-requests');
-      console.log('Respuesta de /type-requests:', typeResponse.data);
+      if (!typeResponse.data || typeResponse.data.length === 0) {
+        throw new Error('No se encontraron tipos de solicitud disponibles.');
+      }
 
       const vacationType = typeResponse.data.find(
         (type) => type.type === 'Vacaciones'
@@ -94,39 +91,26 @@ export const calendarServices = {
         statusId: 1, // Estado por defecto "pendiente"
       };
 
-      // Log para verificar los datos finales enviados al backend
-      console.log('Datos enviados al backend:', requestData);
-
       const response = await axiosInstance.post('/leave-requests', requestData);
-
-      // Log para confirmar la respuesta del backend
-      console.log(
-        'Respuesta del backend al crear la solicitud:',
-        response.data
-      );
-
       return response.data;
     } catch (error) {
-      console.error('Error al crear solicitud de ausencia:', error);
-
-      if (error.response) {
-        // Log adicional para depurar la respuesta del backend
-        console.error('Respuesta del backend con error:', error.response.data);
-      }
-
-      throw error;
+      const errorMessage = handleError(error);
+      console.error('Error al crear solicitud de ausencia:', errorMessage);
+      throw new Error(errorMessage);
     }
   },
-  // Obtener todas las solicitudes de ausencia con los empleados relacionados
+
   getAllLeaveRequestsWithEmployees: async (token) => {
     try {
       const axiosInstance = createAxiosInstance(token);
 
-      // Obtener las solicitudes de ausencia
       const leaveRequestsResponse = await axiosInstance.get('/leave-requests');
-
-      // Obtener todos los empleados
       const employeesResponse = await axiosInstance.get('/employees');
+
+      // Validación de que las respuestas contienen datos
+      if (!leaveRequestsResponse.data || !employeesResponse.data) {
+        throw new Error('Datos incompletos en la respuesta del servidor.');
+      }
 
       // Relacionar los empleados con las solicitudes de ausencia
       const leaveRequests = leaveRequestsResponse.data.map((request) => {
@@ -135,33 +119,35 @@ export const calendarServices = {
         );
         return {
           ...request,
-          employee, // Asociamos los datos del empleado con la solicitud
+          employee,
         };
       });
       return leaveRequests;
     } catch (error) {
+      const errorMessage = handleError(error);
       console.error(
         'Error al obtener las solicitudes de ausencia con empleados:',
-        error
+        errorMessage
       );
-      throw error;
+      throw new Error(errorMessage);
     }
   },
 
-  // Actualizar el estado de la solicitud de ausencia (Aprobar/Rechazar)
   updateLeaveRequestStatus: async (requestId, statusId, token) => {
     try {
       const axiosInstance = createAxiosInstance(token);
       const response = await axiosInstance.patch(
         `/leave-requests/${requestId}`,
-        {
-          statusId,
-        }
+        { statusId }
       );
       return response.data;
     } catch (error) {
-      console.error('Error al actualizar la solicitud de ausencia:', error);
-      throw error;
+      const errorMessage = handleError(error);
+      console.error(
+        'Error al actualizar la solicitud de ausencia:',
+        errorMessage
+      );
+      throw new Error(errorMessage);
     }
   },
 };

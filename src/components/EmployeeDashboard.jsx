@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Importar hook para navegación
+import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import CalendarComponent from '../components/Calendar';
 import Button from '../components/Button';
@@ -9,10 +9,10 @@ import { TimeRegister } from '../components/TimeRegister';
 import { StartTime } from '../components/StartTime';
 
 const EmployeeDashboard = () => {
-  const navigate = useNavigate(); // Inicializar navegación
+  const navigate = useNavigate();
 
   const handleButtonClick = () => {
-    navigate('/Calendar'); // Navegar a la ruta /Calendar
+    navigate('/Calendar');
   };
 
   return (

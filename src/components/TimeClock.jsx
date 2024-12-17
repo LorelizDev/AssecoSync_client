@@ -33,21 +33,22 @@ export const TimeClock = () => {
   const totalSecondsRef = useRef(0);
 
   const calculateProgressPercentage = () => {
-    const TOTAL_SECONDS_IN_8_HOURS = 8 * 60 * 60; // 8 horas en segundos
+    const TOTAL_SECONDS_IN_8_HOURS = 8 * 60 * 60;
     const currentProgress =
       (totalSecondsRef.current / TOTAL_SECONDS_IN_8_HOURS) * 100;
     return Math.min(currentProgress, 100);
   };
 
-  // Función para pasar los números a formato string
   const formatTime = (value) => value.toString().padStart(2, '0');
 
   const calculateElapsedSeconds = (startTime, startPause, endPause) => {
     const startDate = new Date(startTime);
     const now = new Date();
-    const breakTime = startPause ? ((endPause ? new Date(endPause) : now) - new Date(startPause)) : null;
-    const elapsedMs = now - startDate - (breakTime || 0); // Diferencia en milisegundos
-    return Math.floor(elapsedMs / 1000); // Convertir a segundos
+    const breakTime = startPause
+      ? (endPause ? new Date(endPause) : now) - new Date(startPause)
+      : null;
+    const elapsedMs = now - startDate - (breakTime || 0);
+    return Math.floor(elapsedMs / 1000);
   };
 
   const MySwal = withReactContent(Swal);
@@ -78,7 +79,6 @@ export const TimeClock = () => {
         }
       });
     } else {
-      // Si ya se ha seleccionado una ubicación anteriormente
       const location = timer.workLocation === 'office' ? 'OFICINA' : 'CASA';
       MySwal.fire({
         title: '¡Bienvenido!',
@@ -187,7 +187,6 @@ export const TimeClock = () => {
   // Función para reanudar el cronómetro
   const resumeTimer = () => {
     if (timeLog && timer.workLocation) {
-      // Si ya se ha seleccionado una ubicación anteriormente
       MySwal.fire({
         title: '¿Estás listo para continuar?',
         text: `Continuarás trabajando desde ${timer.workLocation === 'office' ? 'la oficina' : 'casa'}`,
@@ -212,7 +211,6 @@ export const TimeClock = () => {
         }
       });
     } else {
-      // Si no se ha seleccionado ubicación, mostrar el alert original
       showWorkLocationAlert();
     }
   };
@@ -289,7 +287,11 @@ export const TimeClock = () => {
             formattedEndPause = `${activeTimeLog.date}T${activeTimeLog.endPause}`;
           }
 
-          const elapsedSeconds = calculateElapsedSeconds(formattedStartTime, formattedStartPause, formattedEndPause);
+          const elapsedSeconds = calculateElapsedSeconds(
+            formattedStartTime,
+            formattedStartPause,
+            formattedEndPause
+          );
 
           totalSecondsRef.current = elapsedSeconds;
           const hours = Math.floor(elapsedSeconds / 3600);

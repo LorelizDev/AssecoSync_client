@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { jwtDecode } from 'jwt-decode'; // Make sure to install jwt-decode
+import { jwtDecode } from 'jwt-decode';
 
 export const useAuthStore = create(
   persist(
@@ -16,7 +16,7 @@ export const useAuthStore = create(
 
         try {
           const decoded = jwtDecode(token);
-          return Date.now() >= (decoded.exp * 1000);
+          return Date.now() >= decoded.exp * 1000;
         } catch (error) {
           console.error('Error decoding token:', error);
           return true;
@@ -26,17 +26,16 @@ export const useAuthStore = create(
       extractRoleFromToken: (token) => {
         try {
           const decoded = jwtDecode(token);
-          
-          // Check roles from different possible locations in the token
+
           const realmRoles = decoded.realm_access?.roles || [];
-          const apiRoles = decoded.resource_access?.['AssecoSync-API']?.roles || [];
-          
-          // Combine and find specific roles
+          const apiRoles =
+            decoded.resource_access?.['AssecoSync-API']?.roles || [];
+
           const allRoles = [...realmRoles, ...apiRoles];
-          
+
           if (allRoles.includes('admin')) return 'admin';
           if (allRoles.includes('employee')) return 'employee';
-          
+
           return null;
         } catch (error) {
           console.error('Error extracting role:', error);
@@ -48,15 +47,15 @@ export const useAuthStore = create(
 
       login: (token) => {
         const role = get().extractRoleFromToken(token);
-        
+
         try {
           const decoded = jwtDecode(token);
-          
+
           set({
             token,
             role,
             isAuthenticated: true,
-            user: decoded.given_name
+            user: decoded.given_name,
           });
           localStorage.setItem('token', token);
         } catch (error) {
@@ -65,7 +64,7 @@ export const useAuthStore = create(
             token: null,
             role: null,
             isAuthenticated: false,
-            user: null
+            user: null,
           });
         }
       },
@@ -75,10 +74,10 @@ export const useAuthStore = create(
           token: null,
           role: null,
           isAuthenticated: false,
-          user: null
+          user: null,
         });
         localStorage.removeItem('token');
-      }
+      },
     }),
     {
       name: 'keycloak-auth-storage',
@@ -86,8 +85,8 @@ export const useAuthStore = create(
         token: state.token,
         role: state.role,
         user: state.user,
-        isAuthenticated: state.isAuthenticated
-      })
+        isAuthenticated: state.isAuthenticated,
+      }),
     }
   )
 );
