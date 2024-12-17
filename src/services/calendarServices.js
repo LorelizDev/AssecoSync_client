@@ -50,6 +50,17 @@ export const calendarServices = {
     }
   },
 
+  getLeaveRequestTypeById: async (typeId, token) => {
+    try {
+      const axiosInstance = createAxiosInstance(token);
+      const response = await axiosInstance.get(`/type-requests/${typeId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error al obtener el tipo de solicitud:', error);
+      throw error;
+    }
+  },
+
   /**
    * Crear una nueva solicitud de ausencia
    * @param {Object} leaveRequestData - Datos de la solicitud
@@ -127,7 +138,6 @@ export const calendarServices = {
           employee, // Asociamos los datos del empleado con la solicitud
         };
       });
-
       return leaveRequests;
     } catch (error) {
       console.error(

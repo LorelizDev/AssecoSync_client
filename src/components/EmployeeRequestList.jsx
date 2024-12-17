@@ -7,19 +7,40 @@ const EmployeeRequestList = () => {
   const [employeeRequests, setEmployeeRequests] = useState([]);
   const [filteredRequests, setFilteredRequests] = useState([]);
   const [filterValue, setFilterValue] = useState('');
+  const [typeRequests, setTypeRequests] = useState({});
 
   useEffect(() => {
     const fetchEmployeeRequests = async () => {
       try {
         const token = localStorage.getItem('token');
-        const requests =
-          await calendarServices.getAllLeaveRequestsWithEmployees(token);
+        const requests = await calendarServices.getAllLeaveRequestsWithEmployees(token);
         setEmployeeRequests(requests);
         setFilteredRequests(requests);
+
+        // Cargar los tipos de solicitudes relacionados con las solicitudes de empleados
+        const typeRequestsData = {};
+        for (const request of requests) {
+          if (!typeRequestsData[request.typeId]) {
+            typeRequestsData[request.typeId] = await fetchTypeRequestById(request.typeId);
+          }
+        }
+        setTypeRequests(typeRequestsData);
       } catch (error) {
         console.error('Error al obtener las solicitudes:', error);
       }
     };
+
+    const fetchTypeRequestById = async (typeId) => {
+      try {
+        const token = localStorage.getItem('token');
+        const typeRequest = await calendarServices.getLeaveRequestTypeById(typeId, token);
+        return typeRequest.type;
+      } catch (error) {
+        console.error('Error al obtener el tipo de solicitud:', error);
+        return 'Desconocido';
+      }
+    };
+
     fetchEmployeeRequests();
   }, []);
 
@@ -121,6 +142,9 @@ const EmployeeRequestList = () => {
                 Apellidos
               </th>
               <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                Motivo
+              </th>
+              <th className="px-4 py-2 text-left font-semibold text-gray-700">
                 Estatus
               </th>
               <th className="px-4 py-2 text-left font-semibold text-gray-700">
@@ -151,15 +175,18 @@ const EmployeeRequestList = () => {
                     {employeeRequest.employee?.lastName || 'N/A'}
                   </td>
                   <td className="px-4 py-2">
+                    {typeRequests[employeeRequest.typeId] || 'N/A'}
+                  </td>
+                  <td className="px-4 py-2">
                     <span
                       className={`px-2 py-1 rounded-full text-white ${
                         employeeRequest.statusId === 1
                           ? 'bg-yellow-500'
                           : employeeRequest.statusId === 2
-                            ? 'bg-green-500'
-                            : employeeRequest.statusId === 3
-                              ? 'bg-red-500'
-                              : 'bg-gray-400'
+                          ? 'bg-green-500'
+                          : employeeRequest.statusId === 3
+                          ? 'bg-red-500'
+                          : 'bg-gray-400'
                       }`}
                     >
                       {getStatusText(employeeRequest.statusId)}
@@ -185,7 +212,7 @@ const EmployeeRequestList = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="6" className="text-center px-4 py-4">
+                <td colSpan="7" className="text-center px-4 py-4">
                   No se encontraron solicitudes de permiso.
                 </td>
               </tr>
