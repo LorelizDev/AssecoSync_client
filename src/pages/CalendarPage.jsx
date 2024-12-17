@@ -36,6 +36,14 @@ const CalendarPage = () => {
   });
   const [leaveRequestTypes, setLeaveRequestTypes] = useState([]);
 
+  // Validación de fechas
+  const validateDates = (startDate, endDate) => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    return !isNaN(start) && !isNaN(end) && start <= end;
+  };
+
+  // Fetch inicial de datos
   const fetchInitialData = useCallback(async () => {
     if (!token) {
       toast.error('No se encontró token de autenticación');
@@ -51,7 +59,8 @@ const CalendarPage = () => {
           const startDate = new Date(request.startDate);
           const endDate = new Date(request.endDate);
 
-          if (isNaN(startDate) || isNaN(endDate)) {
+          // Validación de fechas inválidas
+          if (!validateDates(startDate, endDate)) {
             console.error('Fecha inválida:', request);
             return null;
           }
@@ -86,6 +95,7 @@ const CalendarPage = () => {
     }
   }, [fetchInitialData, token]);
 
+  // Manejo de cambios en los inputs
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -102,12 +112,19 @@ const CalendarPage = () => {
     }));
   };
 
+  // Enviar solicitud de ausencia
   const handleSubmitLeaveRequest = async (e) => {
     e.preventDefault();
 
     try {
       if (!formData.startDate || !formData.endDate || !formData.typeId) {
         toast.error('Por favor complete todos los campos requeridos');
+        return;
+      }
+
+      // Validación de fechas
+      if (!validateDates(formData.startDate, formData.endDate)) {
+        toast.error('Las fechas son inválidas o inconsistentes');
         return;
       }
 
@@ -155,12 +172,19 @@ const CalendarPage = () => {
     }
   };
 
+  // Enviar solicitud de vacaciones
   const handleSubmitVacationRequest = async (e) => {
     e.preventDefault();
 
     try {
       if (!vacationData.startDate || !vacationData.endDate) {
         toast.error('Por favor complete las fechas de inicio y fin');
+        return;
+      }
+
+      // Validación de fechas
+      if (!validateDates(vacationData.startDate, vacationData.endDate)) {
+        toast.error('Las fechas son inválidas o inconsistentes');
         return;
       }
 
@@ -231,10 +255,11 @@ const CalendarPage = () => {
           </Button>
         </div>
 
+        {/* Contenedor del calendario */}
         <div className="px-4 overflow-x-auto md:-right-[22%] md:w-[120%]">
           <div
             className="bg-white rounded-[14px] border border-[#b8b8b8] shadow-lg 
-                  w-full max-w-3xl md:h-[600px] h-[600px] overflow-hidden"
+                    w-full max-w-none md:h-[600px] h-[600px] overflow-hidden"
           >
             <FullCalendar
               plugins={[dayGridPlugin]}
@@ -258,7 +283,7 @@ const CalendarPage = () => {
         </div>
       </div>
 
-      {/* Modal de Solicitar Ausencia */}
+      {/* Modals y Toast */}
       <ModalForm
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -268,8 +293,6 @@ const CalendarPage = () => {
         handleInputChange={handleInputChange}
         leaveRequestTypes={leaveRequestTypes}
       />
-
-      {/* Modal de Solicitar Vacaciones */}
       <ModalForm
         isOpen={isVacationModalOpen}
         onClose={() => setIsVacationModalOpen(false)}
@@ -278,9 +301,8 @@ const CalendarPage = () => {
         formData={vacationData}
         handleInputChange={handleVacationChange}
         leaveRequestTypes={leaveRequestTypes}
-        excludeVacation={true} // Excluir "Vacaciones" de la lista
+        excludeVacation={true}
       />
-
       <ToastContainer />
 
       {/* Right Side */}

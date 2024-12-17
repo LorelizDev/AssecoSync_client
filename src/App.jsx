@@ -33,17 +33,7 @@ const TokenValidator = ({ token }) => {
     setIsAuthenticated(!!token); // Si el token existe, establece true
   }, [token]);
 
-  // Renderiza el contenido según el estado de autenticación
   return isAuthenticated ? <AuthenticatedRoutes /> : <LoginPage />;
-};
-
-// Componentes de ejemplo (debemos reemplazarlos con los componentes reales)
-const AuthenticatedRoutes = () => {
-  return <div>Rutas autenticadas</div>;
-};
-
-const LoginPage = () => {
-  return <div>Página de Login</div>;
 };
 
 export default App;

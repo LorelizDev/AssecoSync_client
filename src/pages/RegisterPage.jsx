@@ -7,7 +7,7 @@ import BlockedInput from '../components/BlockedInput';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import Sidebar from '../components/Sidebar';
-import { BiSolidBadgeCheck, BiSearchAlt } from "react-icons/bi";
+import { BiSolidBadgeCheck, BiSearchAlt } from 'react-icons/bi';
 
 export const RegisterPage = () => {
   const [employeeId, setEmployeeId] = useState('');
@@ -16,15 +16,18 @@ export const RegisterPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const fetchEmployee = async () => {
+  // Validación de ID de empleado
+  const validateEmployeeId = () => {
     if (!employeeId) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Atención',
-        text: 'Por favor, introduce un ID de empleado',
-      });
-      return;
+      setError('Por favor, introduce un ID de empleado');
+      return false;
     }
+    return true;
+  };
+
+  // Función para buscar al empleado
+  const fetchEmployee = async () => {
+    if (!validateEmployeeId()) return;
 
     setIsLoading(true);
     setError(null);
@@ -32,7 +35,7 @@ export const RegisterPage = () => {
 
     try {
       const employeeData = await getEmployeeByIdFromExternalDb(employeeId);
-      
+
       if (employeeData) {
         setEmployee(employeeData);
       } else {
@@ -46,6 +49,7 @@ export const RegisterPage = () => {
     }
   };
 
+  // Función para manejar el registro
   const handleRegister = async () => {
     if (!employee || !employee.data) {
       Swal.fire({
@@ -56,15 +60,15 @@ export const RegisterPage = () => {
       return;
     }
 
-    const { 
-      id, 
-      firstName, 
-      lastName, 
-      jobTitle, 
-      department, 
-      weeklyHours, 
-      email, 
-      dateJoined 
+    const {
+      id,
+      firstName,
+      lastName,
+      jobTitle,
+      department,
+      weeklyHours,
+      email,
+      dateJoined,
     } = employee.data;
 
     try {
@@ -76,7 +80,7 @@ export const RegisterPage = () => {
         department,
         weeklyHours,
         email,
-        dateJoined
+        dateJoined,
       });
 
       if (result.success) {
@@ -84,7 +88,7 @@ export const RegisterPage = () => {
           icon: 'success',
           title: 'Registro Exitoso',
           text: `${firstName} ${lastName} ha sido registrado correctamente`,
-          confirmButtonText: 'Aceptar'
+          confirmButtonText: 'Aceptar',
         });
 
         navigate('/dashboard');
@@ -93,17 +97,17 @@ export const RegisterPage = () => {
           icon: 'error',
           title: 'Error de Registro',
           text: result.message || 'No se pudo registrar al empleado',
-          confirmButtonText: 'Aceptar'
+          confirmButtonText: 'Aceptar',
         });
       }
     } catch (error) {
       console.error('Error en el registro:', error);
-      
+
       await Swal.fire({
         icon: 'error',
         title: 'Error',
         text: 'Ocurrió un error inesperado',
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   };
@@ -116,7 +120,9 @@ export const RegisterPage = () => {
       <div className="flex flex-col w-4/5 bg-primarybg p-8">
         <div className="flex flex-row space-x-4">
           <BiSolidBadgeCheck className="size-7 text-primary" />
-          <h3 className="text-lg font-medium mb-4">Registrar a un nuevo empleado</h3>
+          <h3 className="text-lg font-medium mb-4">
+            Registrar a un nuevo empleado
+          </h3>
         </div>
         <div className="flex flex-col items-center justify-center bg-white p-8 rounded-lg shadow-md">
           <div className="flex flex-row w-full items-end space-x-4">
@@ -127,26 +133,26 @@ export const RegisterPage = () => {
               placeholder="EMP000"
               value={employeeId}
               onChange={(e) => setEmployeeId(e.target.value)}
-              // className=" flex-grow"
             />
-            <button 
-              onClick={fetchEmployee} 
+            <button
+              onClick={fetchEmployee}
               className="text-primary border border-round border-black p-3 px-6 mb-3 rounded hover:bg-hoverButton flex justify-center items-center"
               disabled={isLoading}
             >
-              {isLoading ? 'Buscando...' : <BiSearchAlt className="size-6 ml-2" />}
+              {isLoading ? (
+                'Buscando...'
+              ) : (
+                <BiSearchAlt className="size-6 ml-2" />
+              )}
             </button>
           </div>
-          
+
           {error && <p className="text-red-500 mt-2">{error}</p>}
-          
+
           {employee && (
             <div className="flex flex-row flex-wrap bg-white p-6 space-x-44 w-full">
               <div className="flex flex-col">
-                <BlockedInput
-                  label="Nombre"
-                  value={employee.data.firstName}
-                />
+                <BlockedInput label="Nombre" value={employee.data.firstName} />
                 <BlockedInput
                   label="Apellidos"
                   value={employee.data.lastName}
@@ -155,34 +161,31 @@ export const RegisterPage = () => {
                   label="Correo corporativo"
                   value={employee.data.email}
                 />
-                <BlockedInput 
+                <BlockedInput
                   label="Fecha de inicio"
                   value={employee.data.dateJoined}
-                /> 
+                />
               </div>
               <div className="flex flex-col">
+                <BlockedInput label="Puesto" value={employee.data.jobTitle} />
                 <BlockedInput
-                  label="Puesto"
-                  value={employee.data.jobTitle}
-                />
-                <BlockedInput 
                   label="Departamento"
                   value={employee.data.department}
                 />
-                <BlockedInput 
+                <BlockedInput
                   label="Jornada laboral"
                   value={employee.data.weeklyHours}
                 />
-                <Button 
-                  className="mt-6 justify-center" 
+                <Button
+                  className="mt-6 justify-center"
                   onClick={handleRegister}
                 >
                   Registrar
                 </Button>
-              </div>   
+              </div>
             </div>
           )}
-        </div> 
+        </div>
       </div>
       <div className="w-1/5 bg-secondarybg"></div>
     </div>

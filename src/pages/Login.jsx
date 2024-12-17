@@ -7,37 +7,55 @@ import { loginEmployee } from '../services/authService';
 import { useAuthStore } from '../context/authStore';
 
 const LoginPage = () => {
-const { login } = useAuthStore();
+  const { login } = useAuthStore();
+  const navigate = useNavigate();
 
-const navigate = useNavigate();
-const [loginError, setLoginError] = useState(null);
-const [email, setEmail] = useState('');
-const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState(null);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-const handleEmailChange = (event) => {
-  setEmail(event.target.value);
-};
+  // Validación de campos
+  const validateForm = () => {
+    if (!email || !password) {
+      setLoginError('Por favor, complete todos los campos.');
+      return false;
+    }
 
-const handlePasswordChange = (event) => {
-  setPassword(event.target.value);
-};
+    // Expresión regular simple para validar el formato del correo
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setLoginError('El correo electrónico no es válido.');
+      return false;
+    }
 
-const handleLogin = async () => {
-  const loginData = {email, password};
-      
-      const result = await loginEmployee(loginData);
-      
-      const session_token = result.token;
-
-      if (result.success) {
-        login(session_token);
-        navigate("/dashboard");
-      } else {
-        setLoginError(result.message);
-      }
-   
+    return true;
   };
 
+  // Manejo de cambios en los campos
+  const handleEmailChange = (event) => setEmail(event.target.value);
+  const handlePasswordChange = (event) => setPassword(event.target.value);
+
+  // Función para manejar el login
+  const handleLogin = async () => {
+    // Validación antes de proceder con el login
+    if (!validateForm()) return;
+
+    try {
+      const loginData = { email, password };
+      const result = await loginEmployee(loginData);
+
+      if (result.success) {
+        const session_token = result.token;
+        login(session_token); // Guardamos el token en el estado global
+        navigate('/dashboard');
+      } else {
+        setLoginError(result.message || 'Error desconocido');
+      }
+    } catch (error) {
+      console.error('Error en el login:', error);
+      setLoginError('Hubo un problema al intentar iniciar sesión.');
+    }
+  };
 
   return (
     <div className="flex h-screen">
@@ -64,6 +82,9 @@ const handleLogin = async () => {
             onChange={handlePasswordChange}
             placeholder="Ingresa tu contraseña"
           />
+          {loginError && (
+            <div className="text-red-500 text-sm mt-2">{loginError}</div>
+          )}
           <Button onClick={handleLogin}>Iniciar sesión</Button>
         </div>
       </div>
