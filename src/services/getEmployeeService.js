@@ -1,8 +1,9 @@
 import axios from 'axios';
 
 const URL = 'http://localhost:8000/api/external/employees';
+const token = localStorage.getItem('token');
 const headers = {
-  Authorization: `Bearer ${localStorage.getItem('token')}`,
+  Authorization: `Bearer ${token}`,
 };
 
 const handleError = (error) => {
